@@ -1,0 +1,42 @@
+baseURL = 'https://ukesjtu.github.io'
+languageCode = 'en-us'
+title = 'My Tech Blog'
+# theme = 'PaperMod'
+
+# 方法1：自动生成菜单
+[menu]
+  [[menu.main]]
+    name = "Home"
+    url = "/"
+    weight = 1
+  [[menu.main]]
+    name = "Archives"
+    url = "/archives"
+    weight = 5
+
+# 自动添加所有顶级部分到菜单
+sectionPagesMenu = "main"
+
+[params]
+  description = "My personal tech blog"
+  author = "Your Name"
+  
+  # 显示目录结构的配置
+  [params.homeInfoParams]
+    Title = "Welcome to my blog"
+    Content = "Here you can find all my tech writings"
+
+  [[params.socialIcons]]
+    name = "github"
+    url = "https://github.com/yourusername"
+
+# 确保生成所有页面，包括没有内容的目录页
+[outputs]
+  home = ["HTML", "RSS", "JSON"]
+  section = ["HTML", "RSS"]
+
+# 允许生成目录列表
+[taxonomies]
+  category = "categories"
+  tag = "tags"
+
