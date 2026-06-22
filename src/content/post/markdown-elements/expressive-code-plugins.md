@@ -2,6 +2,7 @@
 title: "Expressive Code plugin examples"
 description: "A compact showcase of extra Expressive Code plugins used by this site"
 publishDate: "22 Jun 2026"
+series: astro-cactus
 tags: ["test", "markdown", "expressive-code"]
 ---
 
