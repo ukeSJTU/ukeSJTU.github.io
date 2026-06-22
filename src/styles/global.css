@@ -117,6 +117,7 @@
 
 @layer components {
 	@import "./components/admonition.css";
+	@import "./components/expressive-code-plugins.css";
 	@import "./components/github-card.css";
 
 	.cactus-link {
