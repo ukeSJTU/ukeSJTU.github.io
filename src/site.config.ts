@@ -1,5 +1,17 @@
+import { createRequire } from "node:module";
+import { pluginCodeCaption } from "@fujocoded/expressive-code-caption";
+import { pluginFileIcons } from "@xt0rted/expressive-code-file-icons";
 import type { AstroExpressiveCodeOptions } from "astro-expressive-code";
+import { pluginColorChips } from "expressive-code-color-chips";
+import { pluginFullscreen } from "expressive-code-fullscreen";
+import { pluginTypewriter } from "expressive-code-typewriter";
 import type { SiteConfig } from "@/types";
+
+const requireModule = createRequire(import.meta.url);
+const { pluginCodeOutput } = requireModule(
+	"@fujocoded/expressive-code-output",
+) as typeof import("@fujocoded/expressive-code-output");
+type AstroExpressiveCodePlugin = NonNullable<AstroExpressiveCodeOptions["plugins"]>[number];
 
 export const siteConfig: SiteConfig = {
 	// ! Please remember to replace the following site property with your own domain, used in astro.config.ts
@@ -52,6 +64,38 @@ export const menuLinks: { path: string; title: string }[] = [
 
 // https://expressive-code.com/reference/configuration/
 export const expressiveCodeOptions: AstroExpressiveCodeOptions = {
+	plugins: [
+		pluginCodeCaption(),
+		pluginCodeOutput() as unknown as AstroExpressiveCodePlugin,
+		pluginFileIcons({
+			iconClass: "ec-file-icon",
+			titleClass: "ec-title-with-icon",
+		}) as unknown as AstroExpressiveCodePlugin,
+		pluginColorChips(),
+		pluginTypewriter({
+			speed: 40,
+			trigger: "visible",
+			startDelay: 300,
+			lineDelay: 150,
+			showReplayButton: true,
+			replayButtonText: "Replay",
+			showSkipButton: false,
+			outputDelay: 0,
+			loop: false,
+			typingVariance: 0,
+		}),
+		pluginFullscreen({
+			fullscreenButtonTooltip: "Toggle fullscreen view",
+			enableEscapeKey: true,
+			exitOnBrowserBack: true,
+			addToUntitledBlocks: false,
+			showOnHoverOnly: true,
+			animationDuration: 180,
+		}),
+	],
+	frames: {
+		extractFileNameFromCode: true,
+	},
 	styleOverrides: {
 		borderRadius: "4px",
 		codeFontFamily:
