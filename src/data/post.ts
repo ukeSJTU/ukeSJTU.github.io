@@ -1,4 +1,9 @@
 import { type CollectionEntry, getCollection } from "astro:content";
+import { collectionDateSort } from "@/utils/date";
+
+export type SeriesWithPostCount = CollectionEntry<"series"> & {
+	postCount: number;
+};
 
 /** filter out draft posts based on the environment */
 export async function getAllPosts(): Promise<CollectionEntry<"post">[]> {
@@ -13,6 +18,28 @@ export async function getTagMeta(tag: string): Promise<CollectionEntry<"tag"> | 
 		return entry.id === tag;
 	});
 	return tagEntries[0];
+}
+
+/** Get posts that reference a series slug. */
+export async function getPostsBySeries(seriesSlug: string): Promise<CollectionEntry<"post">[]> {
+	const posts = await getAllPosts();
+	return posts.filter((post) => post.data.series.id === seriesSlug).sort(collectionDateSort);
+}
+
+/** Get every series with its associated post count. */
+export async function getAllSeriesWithPostCount(): Promise<SeriesWithPostCount[]> {
+	const [seriesEntries, posts] = await Promise.all([getCollection("series"), getAllPosts()]);
+	const counts = posts.reduce((acc, post) => {
+		const seriesId = post.data.series.id;
+		return acc.set(seriesId, (acc.get(seriesId) ?? 0) + 1);
+	}, new Map<string, number>());
+
+	return seriesEntries
+		.map((series) => ({
+			...series,
+			postCount: counts.get(series.id) ?? 0,
+		}))
+		.sort((a, b) => a.data.title.localeCompare(b.data.title));
 }
 
 /** groups posts by year (based on option siteConfig.sortPostsByUpdatedDate), using the year as the key
