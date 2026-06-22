@@ -11,6 +11,10 @@ permissions:
   id-token: write
   actions: read
 
+env:
+  WEBMENTION_URL: https://webmention.io/ukesjtu.github.io/webmention
+  WEBMENTION_API_KEY: ${{ secrets.WEBMENTION_API_KEY }}
+
 concurrency:
   group: "pages"
   cancel-in-progress: false
