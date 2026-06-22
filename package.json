@@ -19,6 +19,7 @@
 		"@astrojs/mdx": "5.0.6",
 		"@astrojs/rss": "4.0.18",
 		"@astrojs/sitemap": "3.7.2",
+		"@expressive-code/core": "0.42.0",
 		"@fujocoded/expressive-code-caption": "^0.0.3",
 		"@fujocoded/expressive-code-output": "^0.1.0",
 		"@pagefind/component-ui": "^1.5.2",
