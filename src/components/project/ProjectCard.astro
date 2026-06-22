@@ -1,0 +1,51 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { getProjectSlug } from "@/data/project";
+
+interface Props {
+	project: CollectionEntry<"project">;
+}
+
+const { project } = Astro.props;
+const { data } = project;
+const projectUrl = `/projects/${getProjectSlug(project)}/`;
+const statusLabel = `${data.status.charAt(0).toUpperCase()}${data.status.slice(1)}`;
+const year = data.publishDate.getFullYear();
+---
+
+<article class="border-global-text/10 h-full rounded-md border p-4">
+	<div class="text-muted flex flex-wrap items-center gap-x-3 gap-y-1">
+		<span>{statusLabel}</span>
+		<span aria-hidden="true">/</span>
+		<span>{year}</span>
+	</div>
+	<h2 class="title mt-3 text-lg">
+		<a class="cactus-link" href={projectUrl}>{data.title}</a>
+	</h2>
+	<p class="mt-3">{data.description}</p>
+	{
+		data.techStack.length > 0 && (
+			<ul class="mt-4 flex flex-wrap gap-2" aria-label="Tech stack">
+				{data.techStack.map((tech) => (
+					<li class="bg-global-text/5 rounded-md px-2 py-1 text-xs">{tech}</li>
+				))}
+			</ul>
+		)
+	}
+	{
+		(data.demoUrl || data.repoUrl) && (
+			<div class="mt-4 flex flex-wrap gap-4">
+				{data.demoUrl && (
+					<a class="cactus-link" href={data.demoUrl} rel="noreferrer" target="_blank">
+						Demo
+					</a>
+				)}
+				{data.repoUrl && (
+					<a class="cactus-link" href={data.repoUrl} rel="noreferrer" target="_blank">
+						Repository
+					</a>
+				)}
+			</div>
+		)
+	}
+</article>

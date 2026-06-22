@@ -1,0 +1,36 @@
+---
+import { render } from "astro:content";
+import type { GetStaticPaths, InferGetStaticPropsType } from "astro";
+import ProjectMasthead from "@/components/project/ProjectMasthead.astro";
+import { getAllProjects, getProjectSlug } from "@/data/project";
+import PageLayout from "@/layouts/Base.astro";
+
+export const getStaticPaths = (async () => {
+	const projects = await getAllProjects();
+	return projects.map((project) => ({
+		params: { slug: getProjectSlug(project) },
+		props: { project },
+	}));
+}) satisfies GetStaticPaths;
+
+type Props = InferGetStaticPropsType<typeof getStaticPaths>;
+
+const { project } = Astro.props as Props;
+const { Content } = await render(project);
+
+const meta = {
+	description: project.data.description,
+	title: project.data.title,
+};
+---
+
+<PageLayout meta={meta}>
+	<article class="grow break-words">
+		<ProjectMasthead project={project} />
+		<div
+			class="prose prose-sm prose-headings:font-semibold prose-headings:text-accent-2 prose-headings:before:absolute prose-headings:before:-ms-4 prose-headings:before:text-muted prose-headings:hover:before:text-accent sm:prose-headings:before:content-['#'] sm:prose-th:before:content-none"
+		>
+			<Content />
+		</div>
+	</article>
+</PageLayout>
