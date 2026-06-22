@@ -3,6 +3,7 @@
 @import "tailwindcss/theme.css" layer(theme);
 @import "tailwindcss/preflight.css" layer(base);
 @import "tailwindcss/utilities.css" layer(utilities);
+@import "./components/expressive-code-plugins.css";
 
 /* tailwind to ignore satori generated og-image */
 @source not "../pages/og-image";
@@ -117,7 +118,6 @@
 
 @layer components {
 	@import "./components/admonition.css";
-	@import "./components/expressive-code-plugins.css";
 	@import "./components/github-card.css";
 
 	.cactus-link {
