@@ -14,7 +14,7 @@ type AstroExpressiveCodePlugin = NonNullable<AstroExpressiveCodeOptions["plugins
 
 export const siteConfig: SiteConfig = {
 	// ! Please remember to replace the following site property with your own domain, used in astro.config.ts
-	url: "https://ukeSJTU.github.io/",
+	url: "https://ukesjtu.github.io/",
 	/*
 		- Used to construct the meta title property found in src/components/BaseHead.astro L:11
 		- The webmanifest name found in astro.config.ts L:42
