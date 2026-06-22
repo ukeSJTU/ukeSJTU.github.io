@@ -5,6 +5,7 @@
 	"private": false,
 	"scripts": {
 		"postinstall": "npm rebuild sharp --force",
+		"prepare": "simple-git-hooks",
 		"dev": "astro dev",
 		"start": "astro dev",
 		"build": "astro build",
@@ -58,14 +59,24 @@
 		"@types/mdast": "^4.0.4",
 		"@types/node": "^25.8.0",
 		"autoprefixer": "^10.5.0",
+		"lint-staged": "^17.0.8",
 		"pagefind": "^1.5.2",
 		"prettier": "^3.8.3",
 		"prettier-plugin-astro": "0.14.1",
 		"prettier-plugin-tailwindcss": "^0.8.0",
 		"reading-time": "^1.5.0",
+		"simple-git-hooks": "^2.13.1",
 		"typescript": "^6.0.3"
 	},
 	"overrides": {
 		"sharp": "^0.34.5"
+	},
+	"simple-git-hooks": {
+		"pre-commit": "pnpm exec lint-staged",
+		"pre-push": "pnpm check"
+	},
+	"lint-staged": {
+		"*.{js,jsx,ts,tsx,json,jsonc,css}": ["biome check --write --no-errors-on-unmatched"],
+		"*.{astro,md,mdx,yml,yaml}": ["prettier --write --cache --ignore-unknown"]
 	}
 }
