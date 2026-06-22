@@ -26,10 +26,12 @@
 ### Task 1: Install Missing Plugin Dependencies
 
 **Files:**
+
 - Modify: `package.json`
 - Modify: `pnpm-lock.yaml`
 
 **Interfaces:**
+
 - Consumes: Existing `astro-expressive-code@0.42.0` integration and the already-installed `@xt0rted/expressive-code-file-icons`.
 - Produces: Importable packages for later tasks:
   - `@fujocoded/expressive-code-caption`
@@ -105,9 +107,11 @@ A commit is created containing only package.json and pnpm-lock.yaml.
 ### Task 2: Register Expressive Code Plugins
 
 **Files:**
+
 - Modify: `src/site.config.ts`
 
 **Interfaces:**
+
 - Consumes:
   - Packages installed in Task 1.
   - Existing `expressiveCodeOptions: AstroExpressiveCodeOptions`.
@@ -218,10 +222,12 @@ A commit is created containing only src/site.config.ts.
 ### Task 3: Add Targeted Plugin Styles
 
 **Files:**
+
 - Create: `src/styles/components/expressive-code-plugins.css`
 - Modify: `src/styles/global.css`
 
 **Interfaces:**
+
 - Consumes:
   - `ec-file-icon` and `ec-title-with-icon` class names configured in Task 2.
   - Caption plugin output: `.expressive-code > figcaption:last-child`.
@@ -332,9 +338,11 @@ A commit is created containing only the new component stylesheet and global impo
 ### Task 4: Add the Public Plugin Showcase Post
 
 **Files:**
+
 - Create: `src/content/post/markdown-elements/expressive-code-plugins.md`
 
 **Interfaces:**
+
 - Consumes:
   - Plugin configuration from Task 2.
   - Plugin styling from Task 3.
@@ -475,11 +483,13 @@ A commit is created containing only the new Markdown post.
 ### Task 5: Run Full Verification and Inspect Rendering
 
 **Files:**
+
 - Read: `src/site.config.ts`
 - Read: `src/styles/components/expressive-code-plugins.css`
 - Read: `src/content/post/markdown-elements/expressive-code-plugins.md`
 
 **Interfaces:**
+
 - Consumes:
   - All implementation commits from Tasks 1-4.
 - Produces:

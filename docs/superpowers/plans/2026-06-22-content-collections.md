@@ -54,6 +54,7 @@
 ### Task 1: Add Content Schemas And Seed Content
 
 **Files:**
+
 - Modify: `src/content.config.ts`
 - Create: `src/content/series/astro-cactus.md`
 - Create: `src/content/project/personal-blog.md`
@@ -67,6 +68,7 @@
 - Modify: `src/content/post/testing/draft-post.md`
 
 **Interfaces:**
+
 - Consumes: existing Astro content collection setup.
 - Produces: `post.data.series` as a required `reference("series")`; `series` collection entries; `project` collection entries.
 
@@ -252,6 +254,7 @@ Expected: commit succeeds.
 ### Task 2: Normalize Post Slugs And Display Series On Posts
 
 **Files:**
+
 - Create: `src/utils/content.ts`
 - Modify: `src/pages/posts/[...slug].astro`
 - Modify: `src/components/blog/PostPreview.astro`
@@ -260,6 +263,7 @@ Expected: commit succeeds.
 - Modify: `src/pages/og-image/[...slug].png.ts`
 
 **Interfaces:**
+
 - Consumes: `post.data.series` from Task 1.
 - Produces: `normalizeContentSlug(id: string): string`; normalized post links and route params; `Masthead` requires a `series: CollectionEntry<"series">` prop.
 
@@ -325,7 +329,10 @@ const { as: Tag = "div", post, withDesc = false } = Astro.props;
 const postUrl = `/posts/${normalizeContentSlug(post.id)}/`;
 ---
 
-<FormattedDate class="text-muted min-w-30 font-semibold" date={post.data.publishDate} />
+<FormattedDate
+	class="text-muted min-w-30 font-semibold"
+	date={post.data.publishDate}
+/>
 <Tag>
 	{post.data.draft && <span class="text-red-500">(Draft) </span>}
 	<a class="cactus-link" href={postUrl}>
@@ -364,7 +371,9 @@ const readingTime: string = remarkPluginFrontmatter.readingTime;
 const series = await getEntry(post.data.series);
 
 if (!series) {
-	throw new Error(`Post "${post.id}" references missing series "${post.data.series.id}".`);
+	throw new Error(
+		`Post "${post.id}" references missing series "${post.data.series.id}".`,
+	);
 }
 ---
 
@@ -380,7 +389,9 @@ if (!series) {
 		<div id="blog-hero" class="mb-12">
 			<Masthead content={post} readingTime={readingTime} series={series} />
 		</div>
-		<div class="flex flex-col gap-10 lg:flex-row lg:items-start lg:justify-between">
+		<div
+			class="flex flex-col gap-10 lg:flex-row lg:items-start lg:justify-between"
+		>
 			{!!headings.length && <TOC headings={headings} />}
 			<div
 				class="prose prose-sm prose-headings:font-semibold prose-headings:text-accent-2 prose-headings:before:absolute prose-headings:before:-ms-4 prose-headings:before:text-muted prose-headings:hover:before:text-accent sm:prose-headings:before:content-['#'] sm:prose-th:before:content-none"
@@ -406,7 +417,10 @@ if (!series) {
 			viewBox="0 0 24 24"
 			xmlns="http://www.w3.org/2000/svg"
 		>
-			<path d="M4.5 15.75l7.5-7.5 7.5 7.5" stroke-linecap="round" stroke-linejoin="round"></path>
+			<path
+				d="M4.5 15.75l7.5-7.5 7.5 7.5"
+				stroke-linecap="round"
+				stroke-linejoin="round"></path>
 		</svg>
 	</button>
 </BaseLayout>
@@ -478,14 +492,22 @@ const dateTimeOptions: Intl.DateTimeFormatOptions = {
 </h1>
 <div class="flex flex-wrap items-center gap-x-3 gap-y-2">
 	<p class="font-semibold">
-		<FormattedDate date={data.publishDate} dateTimeOptions={dateTimeOptions} /> /{" "}
-		{readingTime} / <a class="cactus-link" href={`/series/${series.id}/`}>{series.data.title}</a>
+		<FormattedDate date={data.publishDate} dateTimeOptions={dateTimeOptions} /> /{
+			" "
+		}
+		{readingTime} / <a class="cactus-link" href={`/series/${series.id}/`}
+			>{series.data.title}</a
+		>
 	</p>
 	{
 		data.updatedDate && (
 			<span class="bg-quote/5 text-quote rounded-lg px-2 py-1">
 				Updated:
-				<FormattedDate class="ms-1" date={data.updatedDate} dateTimeOptions={dateTimeOptions} />
+				<FormattedDate
+					class="ms-1"
+					date={data.updatedDate}
+					dateTimeOptions={dateTimeOptions}
+				/>
 			</span>
 		)
 	}
@@ -566,12 +588,14 @@ Expected: commit succeeds.
 ### Task 3: Add Series Helpers And Pages
 
 **Files:**
+
 - Modify: `src/data/post.ts`
 - Create: `src/components/series/SeriesPreview.astro`
 - Create: `src/pages/series/index.astro`
 - Create: `src/pages/series/[series]/[...page].astro`
 
 **Interfaces:**
+
 - Consumes: `post.data.series.id`, `normalizeContentSlug()`, `PostPreview`.
 - Produces: `SeriesWithPostCount`, `getPostsBySeries(seriesSlug)`, `getAllSeriesWithPostCount()`, `/series/`, and `/series/<slug>/`.
 
@@ -595,7 +619,9 @@ export async function getAllPosts(): Promise<CollectionEntry<"post">[]> {
 }
 
 /** Get tag metadata by tag name */
-export async function getTagMeta(tag: string): Promise<CollectionEntry<"tag"> | undefined> {
+export async function getTagMeta(
+	tag: string,
+): Promise<CollectionEntry<"tag"> | undefined> {
 	const tagEntries = await getCollection("tag", (entry) => {
 		return entry.id === tag;
 	});
@@ -603,7 +629,9 @@ export async function getTagMeta(tag: string): Promise<CollectionEntry<"tag"> | 
 }
 
 /** Get posts that reference a series slug. */
-export async function getPostsBySeries(seriesSlug: string): Promise<CollectionEntry<"post">[]> {
+export async function getPostsBySeries(
+	seriesSlug: string,
+): Promise<CollectionEntry<"post">[]> {
 	const posts = await getAllPosts();
 	return posts
 		.filter((post) => post.data.series.id === seriesSlug)
@@ -611,8 +639,13 @@ export async function getPostsBySeries(seriesSlug: string): Promise<CollectionEn
 }
 
 /** Get every series with its associated post count. */
-export async function getAllSeriesWithPostCount(): Promise<SeriesWithPostCount[]> {
-	const [seriesEntries, posts] = await Promise.all([getCollection("series"), getAllPosts()]);
+export async function getAllSeriesWithPostCount(): Promise<
+	SeriesWithPostCount[]
+> {
+	const [seriesEntries, posts] = await Promise.all([
+		getCollection("series"),
+		getAllPosts(),
+	]);
 	const counts = posts.reduce((acc, post) => {
 		const seriesId = post.data.series.id;
 		return acc.set(seriesId, (acc.get(seriesId) ?? 0) + 1);
@@ -630,7 +663,9 @@ export async function getAllSeriesWithPostCount(): Promise<SeriesWithPostCount[]
  *  Note: This function doesn't filter draft posts, pass it the result of getAllPosts above to do so.
  */
 export function groupPostsByYear(posts: CollectionEntry<"post">[]) {
-	return Object.groupBy(posts, (post) => post.data.publishDate.getFullYear().toString());
+	return Object.groupBy(posts, (post) =>
+		post.data.publishDate.getFullYear().toString(),
+	);
 }
 
 /** returns all tags created from posts (inc duplicate tags)
@@ -650,7 +685,9 @@ export function getUniqueTags(posts: CollectionEntry<"post">[]) {
 /** returns a count of each unique tag - [[tagName, count], ...]
  *  Note: This function doesn't filter draft posts, pass it the result of getAllPosts above to do so.
  *  */
-export function getUniqueTagsWithCount(posts: CollectionEntry<"post">[]): [string, number][] {
+export function getUniqueTagsWithCount(
+	posts: CollectionEntry<"post">[],
+): [string, number][] {
 	return [
 		...getAllTags(posts).reduce(
 			(acc, t) => acc.set(t, (acc.get(t) ?? 0) + 1),
@@ -678,11 +715,17 @@ const postLabel = series.postCount === 1 ? "Post" : "Posts";
 
 <article>
 	<h2 class="title text-lg">
-		<a class="cactus-link" href={`/series/${series.id}/`}>{series.data.title}</a>
+		<a class="cactus-link" href={`/series/${series.id}/`}>{series.data.title}</a
+		>
 	</h2>
-	{series.data.description && <p class="mt-2 text-muted">{series.data.description}</p>}
+	{
+		series.data.description && (
+			<p class="text-muted mt-2">{series.data.description}</p>
+		)
+	}
 	<p class="mt-2 text-sm">
-		{series.postCount} {postLabel}
+		{series.postCount}
+		{postLabel}
 	</p>
 </article>
 ```
@@ -756,7 +799,9 @@ const { page, seriesEntry } = Astro.props as Props;
 const { Content } = await render(seriesEntry);
 
 const meta = {
-	description: seriesEntry.data.description ?? `View all posts in the ${seriesEntry.data.title} series`,
+	description:
+		seriesEntry.data.description ??
+		`View all posts in the ${seriesEntry.data.title} series`,
 	title: seriesEntry.data.title,
 };
 
@@ -832,6 +877,7 @@ Expected: commit succeeds.
 ### Task 4: Add Project Helpers, Components, And Pages
 
 **Files:**
+
 - Modify: `src/utils/date.ts`
 - Create: `src/data/project.ts`
 - Create: `src/components/project/ProjectCard.astro`
@@ -840,6 +886,7 @@ Expected: commit succeeds.
 - Create: `src/pages/projects/[...slug].astro`
 
 **Interfaces:**
+
 - Consumes: `project` collection from Task 1 and `normalizeContentSlug()` from Task 2.
 - Produces: `getAllProjects()`, `getProjectSlug(project)`, `/projects/`, and `/projects/<slug>/`.
 
@@ -915,8 +962,8 @@ const statusLabel = `${data.status.charAt(0).toUpperCase()}${data.status.slice(1
 const year = data.publishDate.getFullYear();
 ---
 
-<article class="h-full rounded-md border border-global-text/10 p-4">
-	<div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-muted">
+<article class="border-global-text/10 h-full rounded-md border p-4">
+	<div class="text-muted flex flex-wrap items-center gap-x-3 gap-y-1">
 		<span>{statusLabel}</span>
 		<span aria-hidden="true">/</span>
 		<span>{year}</span>
@@ -929,7 +976,7 @@ const year = data.publishDate.getFullYear();
 		data.techStack.length > 0 && (
 			<ul class="mt-4 flex flex-wrap gap-2" aria-label="Tech stack">
 				{data.techStack.map((tech) => (
-					<li class="rounded-md bg-global-text/5 px-2 py-1 text-xs">{tech}</li>
+					<li class="bg-global-text/5 rounded-md px-2 py-1 text-xs">{tech}</li>
 				))}
 			</ul>
 		)
@@ -938,12 +985,22 @@ const year = data.publishDate.getFullYear();
 		(data.demoUrl || data.repoUrl) && (
 			<div class="mt-4 flex flex-wrap gap-4">
 				{data.demoUrl && (
-					<a class="cactus-link" href={data.demoUrl} rel="noreferrer" target="_blank">
+					<a
+						class="cactus-link"
+						href={data.demoUrl}
+						rel="noreferrer"
+						target="_blank"
+					>
 						Demo
 					</a>
 				)}
 				{data.repoUrl && (
-					<a class="cactus-link" href={data.repoUrl} rel="noreferrer" target="_blank">
+					<a
+						class="cactus-link"
+						href={data.repoUrl}
+						rel="noreferrer"
+						target="_blank"
+					>
 						Repository
 					</a>
 				)}
@@ -972,7 +1029,7 @@ const statusLabel = `${data.status.charAt(0).toUpperCase()}${data.status.slice(1
 ---
 
 <div class="mb-12">
-	<div class="mb-3 flex flex-wrap items-center gap-x-3 gap-y-2 text-muted">
+	<div class="text-muted mb-3 flex flex-wrap items-center gap-x-3 gap-y-2">
 		<span>{statusLabel}</span>
 		<span aria-hidden="true">/</span>
 		<FormattedDate date={data.publishDate} />
@@ -993,7 +1050,7 @@ const statusLabel = `${data.status.charAt(0).toUpperCase()}${data.status.slice(1
 		data.techStack.length > 0 && (
 			<ul class="mt-5 flex flex-wrap gap-2" aria-label="Tech stack">
 				{data.techStack.map((tech) => (
-					<li class="rounded-md bg-global-text/5 px-2 py-1 text-xs">{tech}</li>
+					<li class="bg-global-text/5 rounded-md px-2 py-1 text-xs">{tech}</li>
 				))}
 			</ul>
 		)
@@ -1002,12 +1059,22 @@ const statusLabel = `${data.status.charAt(0).toUpperCase()}${data.status.slice(1
 		(data.demoUrl || data.repoUrl) && (
 			<div class="mt-5 flex flex-wrap gap-4">
 				{data.demoUrl && (
-					<a class="cactus-link" href={data.demoUrl} rel="noreferrer" target="_blank">
+					<a
+						class="cactus-link"
+						href={data.demoUrl}
+						rel="noreferrer"
+						target="_blank"
+					>
 						Demo
 					</a>
 				)}
 				{data.repoUrl && (
-					<a class="cactus-link" href={data.repoUrl} rel="noreferrer" target="_blank">
+					<a
+						class="cactus-link"
+						href={data.repoUrl}
+						rel="noreferrer"
+						target="_blank"
+					>
 						Repository
 					</a>
 				)}
@@ -1120,9 +1187,11 @@ Expected: commit succeeds.
 ### Task 5: Add Navigation And Final Verification
 
 **Files:**
+
 - Modify: `src/site.config.ts`
 
 **Interfaces:**
+
 - Consumes: `/projects/` from Task 4 and `/series/` from Task 3.
 - Produces: header and footer navigation links for Projects and Series.
 

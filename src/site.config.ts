@@ -72,12 +72,12 @@ export const expressiveCodeOptions: AstroExpressiveCodeOptions = {
 		}) as unknown as AstroExpressiveCodePlugin,
 		pluginColorChips(),
 		pluginFullscreen({
-			fullscreenButtonTooltip: "Toggle fullscreen view",
+			enabled: true,
+			fullscreenButtonTooltip: "View in fullscreen",
 			enableEscapeKey: true,
 			exitOnBrowserBack: true,
-			addToUntitledBlocks: false,
+			addToUntitledBlocks: true,
 			showOnHoverOnly: true,
-			animationDuration: 180,
 		}),
 	],
 	frames: {
@@ -94,6 +94,10 @@ export const expressiveCodeOptions: AstroExpressiveCodeOptions = {
 			frameBoxShadowCssValue: "none",
 		},
 		uiLineHeight: "inherit",
+		colorChips: {
+			// borderRadius: 0,
+			size: "1em",
+		},
 	},
 	themeCssSelector(theme, { styleVariants }) {
 		// If one dark and one light theme are available
