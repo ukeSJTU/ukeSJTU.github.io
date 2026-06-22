@@ -4,7 +4,6 @@ import { pluginFileIcons } from "@xt0rted/expressive-code-file-icons";
 import type { AstroExpressiveCodeOptions } from "astro-expressive-code";
 import { pluginColorChips } from "expressive-code-color-chips";
 import { pluginFullscreen } from "expressive-code-fullscreen";
-import { pluginTypewriter } from "expressive-code-typewriter";
 import type { SiteConfig } from "@/types";
 
 const requireModule = createRequire(import.meta.url);
@@ -72,18 +71,6 @@ export const expressiveCodeOptions: AstroExpressiveCodeOptions = {
 			titleClass: "ec-title-with-icon",
 		}) as unknown as AstroExpressiveCodePlugin,
 		pluginColorChips(),
-		pluginTypewriter({
-			speed: 40,
-			trigger: "visible",
-			startDelay: 300,
-			lineDelay: 150,
-			showReplayButton: true,
-			replayButtonText: "Replay",
-			showSkipButton: false,
-			outputDelay: 0,
-			loop: false,
-			typingVariance: 0,
-		}),
 		pluginFullscreen({
 			fullscreenButtonTooltip: "Toggle fullscreen view",
 			enableEscapeKey: true,

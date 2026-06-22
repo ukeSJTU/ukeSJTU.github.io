@@ -33,7 +33,6 @@
 		"cssnano": "^8.0.1",
 		"expressive-code-color-chips": "^0.1.4",
 		"expressive-code-fullscreen": "^1.1.0",
-		"expressive-code-typewriter": "^0.1.2",
 		"hastscript": "^9.0.0",
 		"mdast-util-directive": "^3.0.0",
 		"mdast-util-to-markdown": "^2.1.2",

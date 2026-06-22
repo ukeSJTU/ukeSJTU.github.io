@@ -19,15 +19,6 @@ export default {
 };
 ```
 
-## [Typewriter](https://frostybee.github.io/expressive-code-typewriter/)
-
-The `typed` flag animates short terminal examples so commands appear as if they are being entered.
-
-```bash typed title="Terminal demo" speed=35 delay=200
-$ pnpm build
-Done in 4.2s
-```
-
 ## [Fullscreen](https://frostybee.github.io/expressive-code-fullscreen/configuration/)
 
 Fullscreen adds a button to titled code blocks so longer examples can be read in a focused overlay.
