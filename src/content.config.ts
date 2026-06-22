@@ -1,4 +1,4 @@
-import { defineCollection } from "astro:content";
+import { defineCollection, reference } from "astro:content";
 import { glob } from "astro/loaders";
 import { z } from "astro/zod";
 
@@ -11,6 +11,17 @@ const titleSchema = z.string().max(60);
 const baseSchema = z.object({
 	title: titleSchema,
 });
+
+const postDateSchema = z
+	.string()
+	.or(z.date())
+	.transform((val) => new Date(val));
+
+const optionalDateSchema = z
+	.string()
+	.or(z.date())
+	.optional()
+	.transform((val) => (val ? new Date(val) : undefined));
 
 const post = defineCollection({
 	loader: glob({ base: "./src/content/post", pattern: "**/*.{md,mdx}" }),
@@ -25,15 +36,10 @@ const post = defineCollection({
 				.optional(),
 			draft: z.boolean().default(false),
 			ogImage: z.string().optional(),
+			series: reference("series"),
 			tags: z.array(z.string()).default([]).transform(removeDupsAndLowerCase),
-			publishDate: z
-				.string()
-				.or(z.date())
-				.transform((val) => new Date(val)),
-			updatedDate: z
-				.string()
-				.optional()
-				.transform((str) => (str ? new Date(str) : undefined)),
+			publishDate: postDateSchema,
+			updatedDate: optionalDateSchema,
 			pinned: z.boolean().default(false),
 		}),
 });
@@ -56,4 +62,25 @@ const tag = defineCollection({
 	}),
 });
 
-export const collections = { post, note, tag };
+const series = defineCollection({
+	loader: glob({ base: "./src/content/series", pattern: "**/*.{md,mdx}" }),
+	schema: baseSchema.extend({
+		description: z.string().optional(),
+	}),
+});
+
+const project = defineCollection({
+	loader: glob({ base: "./src/content/project", pattern: "**/*.{md,mdx}" }),
+	schema: baseSchema.extend({
+		description: z.string(),
+		publishDate: postDateSchema,
+		updatedDate: optionalDateSchema,
+		status: z.enum(["active", "completed", "archived"]),
+		techStack: z.array(z.string()).default([]),
+		repoUrl: z.url().optional(),
+		demoUrl: z.url().optional(),
+		featured: z.boolean().default(false),
+	}),
+});
+
+export const collections = { post, note, tag, series, project };

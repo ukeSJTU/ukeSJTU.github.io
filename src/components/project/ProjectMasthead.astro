@@ -1,0 +1,57 @@
+---
+import type { CollectionEntry } from "astro:content";
+import FormattedDate from "@/components/FormattedDate.astro";
+
+interface Props {
+	project: CollectionEntry<"project">;
+}
+
+const { project } = Astro.props;
+const { data } = project;
+const statusLabel = `${data.status.charAt(0).toUpperCase()}${data.status.slice(1)}`;
+---
+
+<div class="mb-12">
+	<div class="text-muted mb-3 flex flex-wrap items-center gap-x-3 gap-y-2">
+		<span>{statusLabel}</span>
+		<span aria-hidden="true">/</span>
+		<FormattedDate date={data.publishDate} />
+		{
+			data.updatedDate && (
+				<>
+					<span aria-hidden="true">/</span>
+					<span>
+						Updated <FormattedDate date={data.updatedDate} />
+					</span>
+				</>
+			)
+		}
+	</div>
+	<h1 class="title">{data.title}</h1>
+	<p class="mt-4 text-base">{data.description}</p>
+	{
+		data.techStack.length > 0 && (
+			<ul class="mt-5 flex flex-wrap gap-2" aria-label="Tech stack">
+				{data.techStack.map((tech) => (
+					<li class="bg-global-text/5 rounded-md px-2 py-1 text-xs">{tech}</li>
+				))}
+			</ul>
+		)
+	}
+	{
+		(data.demoUrl || data.repoUrl) && (
+			<div class="mt-5 flex flex-wrap gap-4">
+				{data.demoUrl && (
+					<a class="cactus-link" href={data.demoUrl} rel="noreferrer" target="_blank">
+						Demo
+					</a>
+				)}
+				{data.repoUrl && (
+					<a class="cactus-link" href={data.repoUrl} rel="noreferrer" target="_blank">
+						Repository
+					</a>
+				)}
+			</div>
+		)
+	}
+</div>

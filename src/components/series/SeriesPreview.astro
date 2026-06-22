@@ -1,0 +1,21 @@
+---
+import type { SeriesWithPostCount } from "@/data/post";
+
+interface Props {
+	series: SeriesWithPostCount;
+}
+
+const { series } = Astro.props;
+const postLabel = series.postCount === 1 ? "Post" : "Posts";
+---
+
+<article>
+	<h2 class="title text-lg">
+		<a class="cactus-link" href={`/series/${series.id}/`}>{series.data.title}</a>
+	</h2>
+	{series.data.description && <p class="text-muted mt-2">{series.data.description}</p>}
+	<p class="mt-2 text-sm">
+		{series.postCount}
+		{postLabel}
+	</p>
+</article>

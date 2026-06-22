@@ -1,0 +1,25 @@
+---
+import ProjectCard from "@/components/project/ProjectCard.astro";
+import { getAllProjects } from "@/data/project";
+import PageLayout from "@/layouts/Base.astro";
+
+const projects = await getAllProjects();
+
+const meta = {
+	description: "A collection of completed and active projects",
+	title: "Projects",
+};
+---
+
+<PageLayout meta={meta}>
+	<h1 class="title mb-6">Projects</h1>
+	<ul class="grid gap-4 sm:grid-cols-2" role="list">
+		{
+			projects.map((project) => (
+				<li>
+					<ProjectCard project={project} />
+				</li>
+			))
+		}
+	</ul>
+</PageLayout>

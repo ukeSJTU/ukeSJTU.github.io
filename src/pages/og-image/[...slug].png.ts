@@ -4,6 +4,7 @@ import sharp from "sharp";
 import RobotoMonoBold from "@/assets/roboto-mono-700.ttf";
 import RobotoMono from "@/assets/roboto-mono-regular.ttf";
 import { getAllPosts } from "@/data/post";
+import { normalizeContentSlug } from "@/utils/content";
 import { getFormattedDate } from "@/utils/date";
 import { readCache, writeToCache } from "./_cacheUtil";
 import { ogMarkup } from "./_ogMarkup";
@@ -60,7 +61,7 @@ export async function getStaticPaths() {
 		.values()
 		.filter(({ data }) => !data.ogImage)
 		.map((post) => ({
-			params: { slug: post.id },
+			params: { slug: normalizeContentSlug(post.id) },
 			props: {
 				pubDate: post.data.updatedDate ?? post.data.publishDate,
 				title: post.data.title,
