@@ -33,7 +33,10 @@ export default function Home() {
   };
 
   return (
-    <main className="mx-auto flex min-h-screen w-full max-w-3xl flex-col gap-10 px-6 py-16 sm:px-10">
+    <main
+      className="mx-auto flex min-h-screen w-full max-w-3xl flex-col gap-10 px-6 pt-6 pb-16 sm:px-10 sm:pt-8"
+      id="main-content"
+    >
       <JsonLd data={jsonLd} />
       <header className="flex flex-col gap-3">
         <p className="text-muted-foreground text-sm font-medium tracking-widest uppercase">

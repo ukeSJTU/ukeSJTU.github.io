@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import "katex/dist/katex.min.css";
+import { SiteHeader } from "@/components/layout/site-header";
 import { ThemeProvider } from "@/components/theme-provider";
-import { ThemeToggle } from "@/components/theme-toggle";
 import { absoluteUrl, siteConfig, socialImageConfig } from "@/lib/site/config";
 import { fontVariables } from "./fonts";
 import "./globals.css";
@@ -97,9 +97,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           enableColorScheme
           enableSystem
         >
-          <div className="fixed top-4 right-4">
-            <ThemeToggle />
-          </div>
+          <SiteHeader />
           {children}
         </ThemeProvider>
       </body>

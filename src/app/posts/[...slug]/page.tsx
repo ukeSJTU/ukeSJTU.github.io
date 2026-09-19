@@ -126,7 +126,10 @@ export default async function PostPage({
   }).format(parsePostDate(post.publishedAt));
 
   return (
-    <main className="mx-auto min-h-screen w-full max-w-3xl px-6 py-16 sm:px-10">
+    <main
+      className="mx-auto min-h-screen w-full max-w-3xl px-6 pt-6 pb-16 sm:px-10 sm:pt-8"
+      id="main-content"
+    >
       <JsonLd data={jsonLd} />
       <Link
         className="text-muted-foreground text-sm underline underline-offset-4"

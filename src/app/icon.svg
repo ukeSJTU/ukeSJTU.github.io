@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" width="256" height="256" viewBox="0 0 256 256">
+  <title>迷你火山</title>
+  <desc>等距立体个人网站图标。暖灰色岩体、橙色熔岩与一块漂浮的烟。纯矢量色块，透明背景。</desc>
+  <g id="volcano" inkscape:groupmode="layer" inkscape:label="迷你火山" stroke="none" stroke-linejoin="round">
+    <g id="mountain" inkscape:label="山体">
+      <path id="mountain-left" inkscape:label="岩体 · 亮面" fill="#79737f" d="M28 172 94 96 128 116 128 230Z"/>
+      <path id="mountain-right" inkscape:label="岩体 · 暗面" fill="#46434f" d="M128 116 162 96 228 172 128 230Z"/>
+    </g>
+    <g id="lava" inkscape:label="火山口与熔岩">
+      <path id="lava-flow" inkscape:label="熔岩 · 折线" fill="#f08354" d="M116 109 128 116 121 136 108 143 107 160 92 169 98 137 112 129Z"/>
+      <path id="crater-rim" inkscape:label="火山口 · 橙色边缘" fill="#f08354" d="M128 76 162 96 128 116 94 96Z"/>
+      <path id="crater-inside" inkscape:label="火山口 · 内壁" fill="#9b4538" d="M128 85 148 97 128 109 108 97Z"/>
+      <path id="crater-glow" inkscape:label="火山口 · 熔岩亮面" fill="#ffc078" d="M128 97 138 103 128 109 118 103Z"/>
+    </g>
+    <g id="smoke" inkscape:label="一小块烟">
+      <path id="smoke-left" inkscape:label="烟 · 左面" fill="#d5c6bc" d="M119 34 136 44 136 64 119 54Z"/>
+      <path id="smoke-right" inkscape:label="烟 · 右面" fill="#ada0a1" d="M136 44 153 34 153 54 136 64Z"/>
+      <path id="smoke-top" inkscape:label="烟 · 顶面" fill="#efe4d8" d="M136 24 153 34 136 44 119 34Z"/>
+    </g>
+  </g>
+</svg>
