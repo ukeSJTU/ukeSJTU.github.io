@@ -6,6 +6,7 @@ import {
   transformerNotationWordHighlight,
 } from "@shikijs/transformers";
 import type { Options as RehypePrettyCodeOptions } from "rehype-pretty-code";
+import { monokaiProDarkTheme, monokaiProLightSunTheme } from "./shiki-themes";
 
 const notationTransformerOptions = {
   matchAlgorithm: "v3",
@@ -13,8 +14,8 @@ const notationTransformerOptions = {
 
 export const prettyCodeOptions = {
   theme: {
-    light: "github-light-default",
-    dark: "github-dark-default",
+    light: monokaiProLightSunTheme,
+    dark: monokaiProDarkTheme,
   },
   keepBackground: false,
   grid: true,

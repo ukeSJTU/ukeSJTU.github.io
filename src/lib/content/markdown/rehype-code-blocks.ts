@@ -75,7 +75,6 @@ export const rehypeCodeBlocks: Plugin<[], Root> = () => (tree) => {
     const languageLabel = createToolbarItem(
       "span",
       {
-        "aria-label": `代码语言：${language}`,
         "data-code-block-language": "",
       },
       [{ type: "text", value: language }],

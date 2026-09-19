@@ -105,10 +105,10 @@
 }
 
 .prose pre {
-  background: var(--muted);
-  border: 1px solid var(--border);
+  background: var(--code-background);
+  border: 1px solid var(--code-border);
   border-radius: var(--radius-lg);
-  color: var(--foreground);
+  color: var(--code-foreground);
   overflow-x: auto;
   padding: 1rem;
 }
@@ -153,7 +153,6 @@
   inset-block-end: 0.4rem;
   inset-inline-end: 0.75rem;
   line-height: 1;
-  opacity: 0.8;
   position: absolute;
   user-select: none;
 }
@@ -269,7 +268,7 @@
 }
 
 .prose [class~="has-focused"] [data-line]:not([class~="focused"]) {
-  opacity: 0.45;
+  opacity: 0.92;
 }
 
 .prose [class~="has-focused"] [class~="focused"] {
@@ -297,7 +296,6 @@
 
 .prose [class~="diff"][class~="remove"] {
   background: var(--code-removed);
-  opacity: 0.75;
 }
 
 .prose [class~="diff"]::after {

@@ -1,8 +1,7 @@
 import type { Element, Root } from "hast";
 import type { Plugin } from "unified";
 import { visit } from "unist-util-visit";
-
-export const mermaidIdPrefix = "content-mermaid";
+import { mermaidIdPrefix } from "./mermaid-options";
 
 function getStringProperty(value: unknown) {
   return typeof value === "string" ? value : undefined;

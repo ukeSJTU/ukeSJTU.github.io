@@ -3,24 +3,16 @@ import { siteConfig, socialImageConfig } from "@/lib/site/config";
 
 const palettes = [
   {
-    background: "#1428a0",
-    colors: ["#7f8cff", "#55d8ff", "#cb8cff", "#1847d7"],
+    background: "#2d2a2e",
+    colors: ["#ff6188", "#fc9867", "#ffd866", "#ab9df2"],
   },
   {
-    background: "#a73500",
-    colors: ["#ff8a00", "#ffca76", "#ff3d00", "#ff7a45"],
+    background: "#221f22",
+    colors: ["#a9dc76", "#78dce8", "#ab9df2", "#ffd866"],
   },
   {
-    background: "#006f67",
-    colors: ["#16c784", "#68ead2", "#23b7ef", "#b4ef5a"],
-  },
-  {
-    background: "#7136a8",
-    colors: ["#f173d2", "#8db6ff", "#536dfe", "#d6a4ff"],
-  },
-  {
-    background: "#8a1f54",
-    colors: ["#ff5f9e", "#ff9b71", "#725cff", "#55d8ff"],
+    background: "#19181a",
+    colors: ["#ff6188", "#78dce8", "#a9dc76", "#ab9df2"],
   },
 ] as const;
 
@@ -96,7 +88,7 @@ function renderSocialImage({ eyebrow, seed, title }: SocialImageOptions) {
       style={{
         alignItems: "stretch",
         backgroundColor: palette.background,
-        color: "#ffffff",
+        color: "#fcfcfa",
         display: "flex",
         height: "100%",
         overflow: "hidden",
@@ -124,7 +116,7 @@ function renderSocialImage({ eyebrow, seed, title }: SocialImageOptions) {
       <div
         style={{
           backgroundImage:
-            "linear-gradient(90deg, rgba(4, 8, 20, 0.6) 0%, rgba(4, 8, 20, 0.28) 58%, rgba(4, 8, 20, 0.08) 100%)",
+            "linear-gradient(90deg, #19181abf 0%, #19181abf 42%, transparent 100%)",
           bottom: 0,
           left: 0,
           position: "absolute",
@@ -148,8 +140,8 @@ function renderSocialImage({ eyebrow, seed, title }: SocialImageOptions) {
           style={{
             alignItems: "center",
             alignSelf: "flex-start",
-            backgroundColor: "rgba(4, 8, 20, 0.2)",
-            border: "2px solid rgba(255, 255, 255, 0.48)",
+            backgroundColor: "#19181abf",
+            border: "2px solid #fcfcfa59",
             borderRadius: 999,
             display: "flex",
             fontSize: 25,
@@ -169,7 +161,7 @@ function renderSocialImage({ eyebrow, seed, title }: SocialImageOptions) {
             letterSpacing: "-0.045em",
             lineHeight: 1.08,
             maxWidth: 1_030,
-            textShadow: "0 4px 28px rgba(0, 0, 0, 0.3)",
+            textShadow: "0 4px 28px #19181abf",
           }}
         >
           {title}
