@@ -6,6 +6,8 @@ import { absoluteUrl, siteConfig, socialImageConfig } from "@/lib/site/config";
 import { fontVariables } from "./fonts";
 import "./globals.css";
 
+const siteBasePath = process.env.PAGES_BASE_PATH ?? "";
+
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
   title: {
@@ -97,7 +99,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           enableColorScheme
           enableSystem
         >
-          <SiteHeader />
+          <SiteHeader basePath={siteBasePath} />
           {children}
         </ThemeProvider>
       </body>

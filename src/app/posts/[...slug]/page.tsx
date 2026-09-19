@@ -92,6 +92,7 @@ export default async function PostPage({
     notFound();
   }
 
+  const postPath = getPostPath(post._meta.path);
   const postUrl = getPostUrl(post._meta.path);
   const ogImage = getPostOgImage(post);
   const jsonLd = {
@@ -138,12 +139,27 @@ export default async function PostPage({
         ← All posts
       </Link>
 
-      <article className="mt-10">
+      <article
+        className="mt-10"
+        data-pagefind-body
+        data-pagefind-meta={`url:${postPath}`}
+      >
         <header className="border-border border-b pb-8">
-          <h1 className="text-4xl font-semibold sm:text-5xl">{post.title}</h1>
-          <p className="text-muted-foreground mt-4 text-lg">{post.summary}</p>
+          <h1
+            className="text-4xl font-semibold sm:text-5xl"
+            data-pagefind-meta="title"
+          >
+            {post.title}
+          </h1>
+          <p
+            className="text-muted-foreground mt-4 text-lg"
+            data-pagefind-meta="summary"
+          >
+            {post.summary}
+          </p>
           <time
             className="text-muted-foreground mt-3 block text-sm"
+            data-pagefind-meta="date[datetime]"
             dateTime={post.publishedAt}
           >
             发布于 {formattedPublishedAt}

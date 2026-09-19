@@ -14,14 +14,24 @@ export default function AboutPage() {
   return (
     <main
       className="mx-auto min-h-screen w-full max-w-3xl px-6 pt-6 pb-16 sm:px-10 sm:pt-8"
+      data-pagefind-body
+      data-pagefind-meta="url:/about"
       id="main-content"
     >
       <header className="max-w-2xl">
         <p className="text-muted-foreground text-sm font-medium tracking-widest uppercase">
           About
         </p>
-        <h1 className="mt-3 text-4xl font-semibold sm:text-5xl">关于这里</h1>
-        <p className="text-muted-foreground mt-4 text-lg leading-relaxed">
+        <h1
+          className="mt-3 text-4xl font-semibold sm:text-5xl"
+          data-pagefind-meta="title"
+        >
+          关于这里
+        </h1>
+        <p
+          className="text-muted-foreground mt-4 text-lg leading-relaxed"
+          data-pagefind-meta="summary"
+        >
           {siteConfig.description}
         </p>
       </header>

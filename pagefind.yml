@@ -1,0 +1,3 @@
+site: out
+output_subdir: pagefind
+include_characters: "<>_+#.@$-"

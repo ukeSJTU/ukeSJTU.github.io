@@ -56,7 +56,9 @@ export function parsePostDate(value: string) {
 pnpm check
 ```
 
-`pnpm build` writes the static site to `out/`, including the sitemap, robots file, RSS feed, manifest, and social preview images.
+`pnpm build` writes the static site to `out/`, including the sitemap, robots file, RSS feed, manifest, social preview images, and Pagefind search index.
+
+Use `pnpm preview` for a fresh production build and local preview, or `pnpm serve` to re-index and serve the existing `out/` directory.
 
 ## Git hooks
 

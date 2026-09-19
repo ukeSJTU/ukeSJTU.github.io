@@ -1,11 +1,10 @@
 "use client";
 
-import { SearchIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { SiteSearch } from "@/components/search/site-search";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 const navigation = [
@@ -22,7 +21,7 @@ function isCurrentPath(pathname: string, href: string) {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
-export function SiteHeader() {
+export function SiteHeader({ basePath = "" }: { basePath?: string }) {
   const pathname = usePathname();
 
   return (
@@ -84,17 +83,7 @@ export function SiteHeader() {
         </div>
 
         <div className="ml-auto flex shrink-0 items-center">
-          <Button
-            aria-label="搜索（即将推出）"
-            className="size-10 disabled:opacity-70"
-            disabled
-            size="icon-lg"
-            title="搜索功能即将推出"
-            type="button"
-            variant="ghost"
-          >
-            <SearchIcon aria-hidden="true" className="size-5" />
-          </Button>
+          <SiteSearch basePath={basePath} />
           <ThemeToggle />
         </div>
       </header>

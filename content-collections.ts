@@ -3,6 +3,7 @@ import { compileMarkdown } from "@content-collections/markdown";
 import rehypeKatex from "rehype-katex";
 import rehypeMermaid from "rehype-mermaid";
 import rehypePrettyCode from "rehype-pretty-code";
+import rehypeSlug from "rehype-slug";
 import remarkCjkFriendlyParseOnly from "remark-cjk-friendly/parseOnly";
 import remarkCjkFriendlyGfmParseOnly from "remark-cjk-friendly-gfm-strikethrough/parseOnly";
 import remarkGfm from "remark-gfm";
@@ -45,6 +46,7 @@ const posts = defineCollection({
         remarkCodeMeta,
       ],
       rehypePlugins: [
+        rehypeSlug,
         rehypeKatex,
         [rehypeMermaid, mermaidOptions],
         rehypeMermaidTheme,
