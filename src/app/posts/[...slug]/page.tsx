@@ -1,11 +1,13 @@
 import { allPosts } from "content-collections";
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { JsonLd } from "@/components/json-ld";
 import { MarkdownRenderer } from "@/components/markdown/markdown-renderer";
 import {
   getPostModifiedAt,
+  getPostOgImage,
   getPostPath,
   getPostUrl,
   parsePostDate,
@@ -31,6 +33,7 @@ export async function generateMetadata({
   }
 
   const postPath = getPostPath(post._meta.path);
+  const ogImage = getPostOgImage(post);
   const publishedTime = parsePostDate(post.publishedAt).toISOString();
   const modifiedTime = getPostModifiedAt(post).toISOString();
 
@@ -55,10 +58,10 @@ export async function generateMetadata({
       authors: [siteConfig.author.name],
       images: [
         {
-          url: absoluteUrl("/social-image.png"),
+          url: ogImage.url,
           width: socialImageConfig.width,
           height: socialImageConfig.height,
-          alt: socialImageConfig.alt,
+          alt: ogImage.alt,
         },
       ],
     },
@@ -68,10 +71,10 @@ export async function generateMetadata({
       description: post.summary,
       images: [
         {
-          url: absoluteUrl("/social-image.png"),
+          url: ogImage.url,
           width: socialImageConfig.width,
           height: socialImageConfig.height,
-          alt: socialImageConfig.alt,
+          alt: ogImage.alt,
         },
       ],
     },
@@ -90,6 +93,7 @@ export default async function PostPage({
   }
 
   const postUrl = getPostUrl(post._meta.path);
+  const ogImage = getPostOgImage(post);
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
@@ -98,7 +102,7 @@ export default async function PostPage({
     mainEntityOfPage: postUrl,
     headline: post.title,
     description: post.summary,
-    image: absoluteUrl("/social-image.png"),
+    image: ogImage.url,
     datePublished: post.publishedAt,
     dateModified: post.updatedAt ?? post.publishedAt,
     inLanguage: siteConfig.language,
@@ -144,6 +148,18 @@ export default async function PostPage({
             发布于 {formattedPublishedAt}
           </time>
         </header>
+
+        <div className="bg-muted mt-8 aspect-[40/21] overflow-hidden rounded-2xl">
+          <Image
+            alt={ogImage.alt}
+            className="size-full object-cover"
+            height={630}
+            loading="eager"
+            sizes="(min-width: 768px) 704px, calc(100vw - 48px)"
+            src={ogImage.path}
+            width={1200}
+          />
+        </div>
 
         <MarkdownRenderer className="mt-10" html={post.html} />
       </article>

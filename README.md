@@ -23,21 +23,32 @@ Posts live in `content/posts`. Each Markdown file must include the following fro
 title: "Post title"
 summary: "A short description of the post."
 publishedAt: "2026-09-19"
+# Optional: use a repository image instead of an auto-generated OG image.
+ogImage: "/og/my-post.png"
 ---
 ```
 
-An optional `updatedAt` field can be used when a post is revised. Nested directories are supported and become part of the post URL.
+Optional `updatedAt` and `ogImage` fields can be used when a post is revised or needs a custom social image. Custom images belong in `public/` and `ogImage` contains their site-absolute path. Without `ogImage`, the build creates a deterministic gradient image from the post path and overlays the title. Nested directories are supported and become part of the post URL.
 
 The Markdown pipeline supports CommonMark, GitHub Flavored Markdown, CJK-friendly parsing, KaTeX, Shiki syntax highlighting, and Mermaid diagrams with light and dark themes.
 
 ## Checks
 
 ```bash
-pnpm lint
-pnpm build
+pnpm check
 ```
 
 `pnpm build` writes the static site to `out/`, including the sitemap, robots file, RSS feed, manifest, and social preview images.
+
+## Git hooks
+
+Lefthook installs the repository hooks automatically during `pnpm install`:
+
+- `pre-commit` checks staged files with Biome.
+- `commit-msg` enforces [Conventional Commits](https://www.conventionalcommits.org/) with Commitlint, for example `feat: add post search`.
+- `pre-push` runs the full lint and static build checks.
+
+Run a hook manually with `pnpm exec lefthook run <hook>`, such as `pnpm exec lefthook run pre-push`.
 
 ## Deployment
 

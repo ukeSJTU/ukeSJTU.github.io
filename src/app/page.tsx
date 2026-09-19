@@ -1,6 +1,12 @@
+import Image from "next/image";
 import Link from "next/link";
 import { JsonLd } from "@/components/json-ld";
-import { getPostPath, getPostUrl, sortedPosts } from "@/lib/posts";
+import {
+  getPostOgImage,
+  getPostPath,
+  getPostUrl,
+  sortedPosts,
+} from "@/lib/posts";
 import { siteConfig } from "@/lib/site";
 
 export default function Home() {
@@ -22,6 +28,7 @@ export default function Home() {
       "@id": getPostUrl(post._meta.path),
       url: getPostUrl(post._meta.path),
       headline: post.title,
+      image: getPostOgImage(post).url,
     })),
   };
 
@@ -39,23 +46,40 @@ export default function Home() {
       </header>
 
       <section className="flex flex-col gap-6">
-        {sortedPosts.map((post) => (
-          <Link
-            className="group border-border hover:bg-muted rounded-2xl border p-6 transition-colors"
-            href={getPostPath(post._meta.path)}
-            key={post._meta.path}
-          >
-            <article className="flex flex-col gap-2">
-              <h2 className="text-2xl font-semibold tracking-tight underline-offset-4 group-hover:underline">
-                {post.title}
-              </h2>
-              <p className="text-muted-foreground">{post.summary}</p>
-              <code className="text-muted-foreground block text-sm">
-                /{post._meta.path}
-              </code>
-            </article>
-          </Link>
-        ))}
+        {sortedPosts.map((post, index) => {
+          const ogImage = getPostOgImage(post);
+
+          return (
+            <Link
+              className="group border-border hover:bg-muted rounded-2xl border p-3 transition-colors"
+              href={getPostPath(post._meta.path)}
+              key={post._meta.path}
+            >
+              <article className="grid gap-5 sm:grid-cols-[16rem_minmax(0,1fr)] sm:items-center">
+                <div className="bg-muted aspect-[40/21] overflow-hidden rounded-xl">
+                  <Image
+                    alt={ogImage.alt}
+                    className="size-full object-cover transition-transform duration-300 group-hover:scale-[1.02]"
+                    height={630}
+                    loading={index === 0 ? "eager" : "lazy"}
+                    sizes="(min-width: 640px) 256px, calc(100vw - 72px)"
+                    src={ogImage.path}
+                    width={1200}
+                  />
+                </div>
+                <div className="flex min-w-0 flex-col gap-2 px-2 pb-2 sm:px-0 sm:pb-0 sm:pr-3">
+                  <h2 className="text-2xl font-semibold tracking-tight underline-offset-4 group-hover:underline">
+                    {post.title}
+                  </h2>
+                  <p className="text-muted-foreground">{post.summary}</p>
+                  <code className="text-muted-foreground block text-sm">
+                    /{post._meta.path}
+                  </code>
+                </div>
+              </article>
+            </Link>
+          );
+        })}
       </section>
     </main>
   );

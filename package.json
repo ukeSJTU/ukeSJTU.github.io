@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "biome check",
-    "format": "biome format --write"
+    "format": "biome format --write",
+    "commitlint": "commitlint --verbose",
+    "check": "pnpm lint && pnpm build"
   },
   "dependencies": {
     "@base-ui/react": "^1.8.0",
@@ -24,6 +26,8 @@
   },
   "devDependencies": {
     "@biomejs/biome": "2.4.2",
+    "@commitlint/cli": "^21.2.2",
+    "@commitlint/config-conventional": "^21.2.2",
     "@content-collections/core": "^0.15.2",
     "@content-collections/markdown": "^0.1.4",
     "@content-collections/next": "^0.2.11",
@@ -34,6 +38,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "katex": "^0.18.7",
+    "lefthook": "^2.1.14",
     "playwright": "^1.63.0",
     "rehype-katex": "^7.0.1",
     "rehype-mermaid": "^3.0.0",

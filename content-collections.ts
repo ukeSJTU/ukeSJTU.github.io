@@ -95,6 +95,13 @@ const posts = defineCollection({
     summary: z.string(),
     publishedAt: z.iso.date(),
     updatedAt: z.iso.date().optional(),
+    ogImage: z
+      .string()
+      .regex(
+        /^\/.*\.(?:png|jpe?g)$/i,
+        "ogImage must be an absolute site path to a PNG or JPEG image",
+      )
+      .optional(),
     content: z.string(),
   }),
   transform: async (post, context) => ({

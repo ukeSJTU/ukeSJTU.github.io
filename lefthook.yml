@@ -1,0 +1,16 @@
+min_version: 2.1.14
+
+pre-commit:
+  jobs:
+    - name: biome
+      run: pnpm exec biome check --staged --no-errors-on-unmatched
+
+commit-msg:
+  jobs:
+    - name: commitlint
+      run: pnpm commitlint --edit {1}
+
+pre-push:
+  jobs:
+    - name: verify
+      run: pnpm check
