@@ -55,7 +55,7 @@ export async function generateMetadata({
       authors: [siteConfig.author.name],
       images: [
         {
-          url: absoluteUrl("/opengraph-image"),
+          url: absoluteUrl("/social-image.png"),
           width: socialImageConfig.width,
           height: socialImageConfig.height,
           alt: socialImageConfig.alt,
@@ -68,7 +68,7 @@ export async function generateMetadata({
       description: post.summary,
       images: [
         {
-          url: absoluteUrl("/twitter-image"),
+          url: absoluteUrl("/social-image.png"),
           width: socialImageConfig.width,
           height: socialImageConfig.height,
           alt: socialImageConfig.alt,
@@ -98,7 +98,7 @@ export default async function PostPage({
     mainEntityOfPage: postUrl,
     headline: post.title,
     description: post.summary,
-    image: absoluteUrl("/opengraph-image"),
+    image: absoluteUrl("/social-image.png"),
     datePublished: post.publishedAt,
     dateModified: post.updatedAt ?? post.publishedAt,
     inLanguage: siteConfig.language,

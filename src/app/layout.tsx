@@ -3,7 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "katex/dist/katex.min.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { absoluteUrl, siteConfig } from "@/lib/site";
+import { absoluteUrl, siteConfig, socialImageConfig } from "@/lib/site";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -49,11 +49,27 @@ export const metadata: Metadata = {
     siteName: siteConfig.name,
     title: siteConfig.name,
     description: siteConfig.description,
+    images: [
+      {
+        url: absoluteUrl("/social-image.png"),
+        width: socialImageConfig.width,
+        height: socialImageConfig.height,
+        alt: socialImageConfig.alt,
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: siteConfig.name,
     description: siteConfig.description,
+    images: [
+      {
+        url: absoluteUrl("/social-image.png"),
+        width: socialImageConfig.width,
+        height: socialImageConfig.height,
+        alt: socialImageConfig.alt,
+      },
+    ],
   },
   robots: {
     index: true,
