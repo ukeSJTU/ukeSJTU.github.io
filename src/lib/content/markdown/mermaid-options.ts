@@ -2,6 +2,9 @@ import type { RehypeMermaidOptions } from "rehype-mermaid";
 
 export const mermaidIdPrefix = "content-mermaid";
 
+const diagramFontFamily =
+  'Arial, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", sans-serif';
+
 export const mermaidOptions = {
   strategy: "img-svg",
   colorScheme: "light",
@@ -9,7 +12,7 @@ export const mermaidOptions = {
   mermaidConfig: {
     theme: "base",
     securityLevel: "strict",
-    fontFamily: "Arial, sans-serif",
+    fontFamily: diagramFontFamily,
     themeVariables: {
       background: "#f8efe7",
       primaryColor: "#fdf7f3",
@@ -31,7 +34,7 @@ export const mermaidOptions = {
   dark: {
     theme: "base",
     securityLevel: "strict",
-    fontFamily: "Arial, sans-serif",
+    fontFamily: diagramFontFamily,
     themeVariables: {
       background: "#2d2a2e",
       primaryColor: "#403e41",

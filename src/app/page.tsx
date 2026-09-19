@@ -68,7 +68,7 @@ export default function Home() {
                   />
                 </div>
                 <div className="flex min-w-0 flex-col gap-2 px-2 pb-2 sm:px-0 sm:pb-0 sm:pr-3">
-                  <h2 className="text-2xl font-semibold tracking-tight underline-offset-4 group-hover:underline">
+                  <h2 className="text-2xl font-semibold underline-offset-4 group-hover:underline">
                     {post.title}
                   </h2>
                   <p className="text-muted-foreground">{post.summary}</p>

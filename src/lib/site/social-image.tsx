@@ -57,6 +57,10 @@ function getTitleFontSize(title: string) {
   return 52;
 }
 
+function containsCjk(value: string) {
+  return /[\u3400-\u9fff\uf900-\ufaff]/u.test(value);
+}
+
 type SocialImageOptions = {
   eyebrow: string;
   seed: string;
@@ -64,6 +68,7 @@ type SocialImageOptions = {
 };
 
 function renderSocialImage({ eyebrow, seed, title }: SocialImageOptions) {
+  const hasCjkTitle = containsCjk(title);
   const random = createRandom(hashSeed(seed));
   const palette = palettes[Math.floor(random() * palettes.length)];
   const blobs = palette.colors.map((color, index) => {
@@ -158,8 +163,8 @@ function renderSocialImage({ eyebrow, seed, title }: SocialImageOptions) {
             display: "flex",
             fontSize: getTitleFontSize(title),
             fontWeight: 700,
-            letterSpacing: "-0.045em",
-            lineHeight: 1.08,
+            letterSpacing: hasCjkTitle ? "0" : "-0.045em",
+            lineHeight: hasCjkTitle ? 1.16 : 1.08,
             maxWidth: 1_030,
             textShadow: "0 4px 28px #19181abf",
           }}

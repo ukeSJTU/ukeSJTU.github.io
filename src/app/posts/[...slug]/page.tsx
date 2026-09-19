@@ -137,9 +137,7 @@ export default async function PostPage({
 
       <article className="mt-10">
         <header className="border-border border-b pb-8">
-          <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl">
-            {post.title}
-          </h1>
+          <h1 className="text-4xl font-semibold sm:text-5xl">{post.title}</h1>
           <p className="text-muted-foreground mt-4 text-lg">{post.summary}</p>
           <time
             className="text-muted-foreground mt-3 block text-sm"
