@@ -4,7 +4,7 @@ import {
   getPostUrl,
   sortedPosts,
 } from "@/lib/content/posts";
-import { siteConfig } from "@/lib/site/config";
+import { absoluteUrl, siteConfig } from "@/lib/site/config";
 
 export const dynamic = "force-static";
 
@@ -17,6 +17,17 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: latestPost ? getPostModifiedDate(latestPost) : undefined,
       changeFrequency: "weekly",
       priority: 1,
+    },
+    {
+      url: absoluteUrl("/posts"),
+      lastModified: latestPost ? getPostModifiedDate(latestPost) : undefined,
+      changeFrequency: "weekly",
+      priority: 0.9,
+    },
+    {
+      url: absoluteUrl("/about"),
+      changeFrequency: "monthly",
+      priority: 0.6,
     },
     ...sortedPosts.map((post) => ({
       url: getPostUrl(post._meta.path),
