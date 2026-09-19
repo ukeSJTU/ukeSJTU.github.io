@@ -1,5 +1,5 @@
 import { ImageResponse } from "next/og";
-import { siteConfig, socialImageConfig } from "@/lib/site";
+import { siteConfig, socialImageConfig } from "@/lib/site/config";
 
 const palettes = [
   {

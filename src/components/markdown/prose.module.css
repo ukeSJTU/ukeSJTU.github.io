@@ -121,35 +121,126 @@
 }
 
 .prose [data-rehype-pretty-code-figure] {
-  margin-block: 1.25rem;
+  margin-block: 1.75rem;
+  position: relative;
 }
 
-.prose [data-rehype-pretty-code-title] {
-  background: var(--muted);
+.prose [data-code-block-title] {
+  background: var(--background);
   border: 1px solid var(--border);
-  border-bottom: 0;
-  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-  color: var(--muted-foreground);
+  border-radius: var(--radius-sm);
+  color: var(--foreground);
   font-family: var(--font-geist-mono), monospace;
   font-size: 0.75rem;
-  padding: 0.5rem 1rem;
+  font-weight: 500;
+  inset-block-start: 0;
+  inset-inline-start: 0.75rem;
+  line-height: 1.5;
+  max-width: calc(100% - 4.75rem);
+  overflow: hidden;
+  padding: 0.25rem 0.55rem;
+  position: absolute;
+  text-overflow: ellipsis;
+  transform: translateY(-50%);
+  white-space: nowrap;
+  z-index: 1;
 }
 
-.prose [data-rehype-pretty-code-title] + pre {
-  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+.prose [data-code-block-language] {
+  color: var(--muted-foreground);
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 0.6875rem;
+  inset-block-end: 0.4rem;
+  inset-inline-end: 0.75rem;
+  line-height: 1;
+  opacity: 0.8;
+  position: absolute;
+  user-select: none;
+}
+
+.prose [data-code-block-actions] {
+  display: flex;
+  inset-block-start: 0;
+  inset-inline-end: 0.75rem;
+  position: absolute;
+  transform: translateY(-50%);
+  z-index: 1;
+}
+
+.prose [data-copy-code] {
+  align-items: center;
+  background: var(--secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--secondary-foreground);
+  cursor: pointer;
+  display: inline-flex;
+  height: 1.75rem;
+  justify-content: center;
+  padding: 0;
+  transition:
+    background-color 150ms ease,
+    color 150ms ease,
+    border-color 150ms ease;
+  width: 1.75rem;
+}
+
+.prose [data-copy-code]:hover {
+  background: var(--accent);
+  border-color: color-mix(in oklch, var(--border) 60%, var(--foreground));
+  color: var(--accent-foreground);
+}
+
+.prose [data-copy-code]:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+.prose [data-copy-code][data-copy-state="copied"] {
+  color: var(--code-added-foreground);
+}
+
+.prose [data-copy-code][data-copy-state="error"] {
+  color: var(--destructive);
+}
+
+.prose [data-copy-icon] {
+  display: none;
+  height: 0.875rem;
+  pointer-events: none;
+  width: 0.875rem;
+}
+
+.prose [data-copy-state="idle"] [data-copy-icon="copy"],
+.prose [data-copy-state="copied"] [data-copy-icon="copied"],
+.prose [data-copy-state="error"] [data-copy-icon="error"] {
+  display: block;
+}
+
+.prose [data-copy-code-status] {
+  clip: rect(0, 0, 0, 0);
+  clip-path: inset(50%);
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
 }
 
 .prose [data-rehype-pretty-code-caption] {
   color: var(--muted-foreground);
   font-size: 0.8125rem;
-  margin-top: 0.5rem;
+  margin-top: 0.625rem;
+  padding-inline: 0.75rem;
   text-align: center;
 }
 
 .prose [data-rehype-pretty-code-figure] pre {
+  border-radius: var(--radius-lg);
   margin: 0;
-  padding-block: 1rem;
+  padding-block: 1.5rem 1.75rem;
   padding-inline: 0;
+  position: relative;
 }
 
 .prose [data-rehype-pretty-code-figure] code {
@@ -161,11 +252,43 @@
   display: inline-block;
   min-height: 1lh;
   padding-inline: 1rem;
+  position: relative;
   width: 100%;
 }
 
-.prose [class~="highlighted"] {
+.prose [class~="highlighted"],
+.prose [data-highlighted-line] {
   background: var(--code-highlight);
+}
+
+.prose [data-highlighted-chars],
+.prose [class~="highlighted-word"] {
+  background: var(--code-highlight);
+  border-radius: var(--radius-sm);
+  box-shadow: 0 0 0 2px var(--code-highlight);
+}
+
+.prose [class~="has-focused"] [data-line]:not([class~="focused"]) {
+  opacity: 0.45;
+}
+
+.prose [class~="has-focused"] [class~="focused"] {
+  background: var(--code-highlight);
+}
+
+.prose code[data-line-numbers] {
+  counter-reset: line;
+}
+
+.prose code[data-line-numbers] > [data-line]::before {
+  color: var(--muted-foreground);
+  content: counter(line);
+  counter-increment: line;
+  display: inline-block;
+  margin-right: 1rem;
+  min-width: 2ch;
+  text-align: right;
+  user-select: none;
 }
 
 .prose [class~="diff"][class~="add"] {
@@ -177,17 +300,18 @@
   opacity: 0.75;
 }
 
-.prose [class~="diff"]::before {
+.prose [class~="diff"]::after {
   display: inline-block;
-  width: 1rem;
+  inset-inline-start: 0.35rem;
+  position: absolute;
 }
 
-.prose [class~="diff"][class~="add"]::before {
+.prose [class~="diff"][class~="add"]::after {
   color: var(--code-added-foreground);
   content: "+";
 }
 
-.prose [class~="diff"][class~="remove"]::before {
+.prose [class~="diff"][class~="remove"]::after {
   color: var(--code-removed-foreground);
   content: "−";
 }
@@ -204,14 +328,14 @@
   background: var(--code-info);
 }
 
-.prose [data-rehype-pretty-code-figure] span {
+.prose [data-rehype-pretty-code-figure] code span[style] {
   color: var(--shiki-light);
   font-style: var(--shiki-light-font-style);
   font-weight: var(--shiki-light-font-weight);
   text-decoration: var(--shiki-light-text-decoration);
 }
 
-html[class~="dark"] .prose [data-rehype-pretty-code-figure] span {
+html[class~="dark"] .prose [data-rehype-pretty-code-figure] code span[style] {
   /* biome-ignore lint/complexity/noImportantStyles: Shiki emits the light theme as an inline style. */
   color: var(--shiki-dark) !important;
   /* biome-ignore lint/complexity/noImportantStyles: Shiki emits the light theme as an inline style. */

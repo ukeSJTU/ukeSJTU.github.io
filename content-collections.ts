@@ -1,40 +1,20 @@
 import { defineCollection, defineConfig } from "@content-collections/core";
 import { compileMarkdown } from "@content-collections/markdown";
-import {
-  transformerNotationDiff,
-  transformerNotationErrorLevel,
-  transformerNotationHighlight,
-} from "@shikijs/transformers";
 import rehypeKatex from "rehype-katex";
 import rehypeMermaid, { type RehypeMermaidOptions } from "rehype-mermaid";
-import rehypePrettyCode, {
-  type Options as RehypePrettyCodeOptions,
-} from "rehype-pretty-code";
+import rehypePrettyCode from "rehype-pretty-code";
 import remarkCjkFriendlyParseOnly from "remark-cjk-friendly/parseOnly";
 import remarkCjkFriendlyGfmParseOnly from "remark-cjk-friendly-gfm-strikethrough/parseOnly";
 import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
 import { z } from "zod";
+import { prettyCodeOptions } from "./src/lib/content/markdown/pretty-code";
+import { rehypeCodeBlocks } from "./src/lib/content/markdown/rehype-code-blocks";
 import {
   mermaidIdPrefix,
   rehypeMermaidTheme,
-} from "./src/lib/rehype-mermaid-theme";
-
-const prettyCodeOptions = {
-  theme: {
-    light: "github-light-default",
-    dark: "github-dark-default",
-  },
-  keepBackground: false,
-  defaultLang: {
-    block: "plaintext",
-  },
-  transformers: [
-    transformerNotationDiff(),
-    transformerNotationHighlight(),
-    transformerNotationErrorLevel(),
-  ],
-} satisfies RehypePrettyCodeOptions;
+} from "./src/lib/content/markdown/rehype-mermaid-theme";
+import { remarkCodeMeta } from "./src/lib/content/markdown/remark-code-meta";
 
 const mermaidOptions = {
   strategy: "img-svg",
@@ -113,12 +93,14 @@ const posts = defineCollection({
         remarkCjkFriendlyParseOnly,
         remarkCjkFriendlyGfmParseOnly,
         remarkMath,
+        remarkCodeMeta,
       ],
       rehypePlugins: [
         rehypeKatex,
         [rehypeMermaid, mermaidOptions],
         rehypeMermaidTheme,
         [rehypePrettyCode, prettyCodeOptions],
+        rehypeCodeBlocks,
       ],
     }),
   }),

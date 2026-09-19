@@ -4,7 +4,7 @@ import { visit } from "unist-util-visit";
 
 export const mermaidIdPrefix = "content-mermaid";
 
-function readString(value: unknown) {
+function getStringProperty(value: unknown) {
   return typeof value === "string" ? value : undefined;
 }
 
@@ -27,9 +27,9 @@ export const rehypeMermaidTheme: Plugin<[], Root> = () => (tree) => {
       return;
     }
 
-    const lightId = readString(image.properties.id);
-    const darkId = readString(source.properties.id);
-    const darkSource = readString(
+    const lightId = getStringProperty(image.properties.id);
+    const darkId = getStringProperty(source.properties.id);
+    const darkSource = getStringProperty(
       source.properties.srcSet ?? source.properties.srcset,
     );
 

@@ -160,6 +160,16 @@ const greeting: Post = {
 console.log(greeting);
 ```
 
+代码块元信息可以提供文件名、说明、行号，以及行和单词高亮：
+
+```ts title="src/lib/content/posts.ts" caption="日期解析函数示例" showLineNumbers {2-3} /parsePostDate/
+type PostDate = `${number}-${number}-${number}`;
+
+export function parsePostDate(value: PostDate) {
+  return new Date(`${value}T00:00:00Z`);
+}
+```
+
 Shiki notation transformer（注释本身不会出现在渲染结果中）：
 
 ```ts
@@ -169,6 +179,16 @@ console.log(after); // [!code highlight]
 console.error("错误示例"); // [!code error]
 console.warn("警告示例"); // [!code warning]
 console.info("信息示例"); // [!code info]
+```
+
+较长的代码可以聚焦某一行，也可以高亮后续代码中的特定单词：
+
+```ts
+const greeting = "你好";
+console.log(greeting); // [!code focus]
+console.info(greeting);
+// [!code word:greeting]
+console.debug(greeting);
 ```
 
 没有语言标记的代码块：

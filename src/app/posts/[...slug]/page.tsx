@@ -11,8 +11,8 @@ import {
   getPostPath,
   getPostUrl,
   parsePostDate,
-} from "@/lib/posts";
-import { absoluteUrl, siteConfig, socialImageConfig } from "@/lib/site";
+} from "@/lib/content/posts";
+import { absoluteUrl, siteConfig, socialImageConfig } from "@/lib/site/config";
 
 export function generateStaticParams() {
   return allPosts.map((post) => ({ slug: post._meta.path.split("/") }));
@@ -161,7 +161,11 @@ export default async function PostPage({
           />
         </div>
 
-        <MarkdownRenderer className="mt-10" html={post.html} />
+        <MarkdownRenderer
+          className="mt-10"
+          contentKey={post._meta.path}
+          html={post.html}
+        />
       </article>
     </main>
   );

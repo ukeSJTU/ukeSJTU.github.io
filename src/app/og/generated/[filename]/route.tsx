@@ -1,6 +1,9 @@
 import { allPosts } from "content-collections";
-import { getGeneratedPostOgImageFilename, type Post } from "@/lib/posts";
-import { createPostSocialImage } from "@/lib/social-image";
+import {
+  getGeneratedPostOgImageFilename,
+  type Post,
+} from "@/lib/content/posts";
+import { createPostSocialImage } from "@/lib/site/social-image";
 
 export const dynamic = "force-static";
 

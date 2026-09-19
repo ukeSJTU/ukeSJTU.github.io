@@ -32,6 +32,24 @@ Optional `updatedAt` and `ogImage` fields can be used when a post is revised or 
 
 The Markdown pipeline supports CommonMark, GitHub Flavored Markdown, CJK-friendly parsing, KaTeX, Shiki syntax highlighting, and Mermaid diagrams with light and dark themes.
 
+### Code blocks
+
+Code highlighting runs at build time. Fence metadata controls presentation without introducing MDX components:
+
+````md
+```ts title="src/lib/content/posts.ts" caption="Optional caption" showLineNumbers {2,4-6} /parsePostDate/
+export function parsePostDate(value: string) {
+  return new Date(value);
+}
+```
+````
+
+- `{2,4-6}` highlights lines and `/parsePostDate/` highlights matching text.
+- `showLineNumbers` enables line numbers; `showLineNumbers{20}` starts at 20.
+- `title` supplies a filename or context and `caption` supplies an accessible figure caption.
+- Shiki comments support `[!code highlight]`, `[!code focus]`, `[!code word:name]`, `[!code ++]`, `[!code --]`, `[!code error]`, `[!code warning]`, and `[!code info]`.
+- Add `{:js}` after inline code to opt into inline syntax highlighting.
+
 ## Checks
 
 ```bash

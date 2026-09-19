@@ -1,4 +1,4 @@
-import { createSocialImage } from "@/lib/social-image";
+import { createSocialImage } from "@/lib/site/social-image";
 
 export const dynamic = "force-static";
 

@@ -1,5 +1,5 @@
 import { allPosts } from "content-collections";
-import { absoluteUrl } from "@/lib/site";
+import { absoluteUrl } from "@/lib/site/config";
 
 export type Post = (typeof allPosts)[number];
 

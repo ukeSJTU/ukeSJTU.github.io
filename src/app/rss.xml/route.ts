@@ -4,8 +4,8 @@ import {
   getPostUrl,
   parsePostDate,
   sortedPosts,
-} from "@/lib/posts";
-import { absoluteUrl, siteConfig } from "@/lib/site";
+} from "@/lib/content/posts";
+import { absoluteUrl, siteConfig } from "@/lib/site/config";
 
 export const dynamic = "force-static";
 

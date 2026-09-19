@@ -16,6 +16,6 @@ export const socialImageConfig = {
   height: 630,
 } as const;
 
-export function absoluteUrl(pathname = "/") {
-  return new URL(pathname, `${siteConfig.url}/`).toString();
+export function absoluteUrl(path = "/") {
+  return new URL(path, `${siteConfig.url}/`).toString();
 }

@@ -1,6 +1,10 @@
 import type { MetadataRoute } from "next";
-import { getPostModifiedDate, getPostUrl, sortedPosts } from "@/lib/posts";
-import { siteConfig } from "@/lib/site";
+import {
+  getPostModifiedDate,
+  getPostUrl,
+  sortedPosts,
+} from "@/lib/content/posts";
+import { siteConfig } from "@/lib/site/config";
 
 export const dynamic = "force-static";
 

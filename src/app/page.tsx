@@ -6,8 +6,8 @@ import {
   getPostPath,
   getPostUrl,
   sortedPosts,
-} from "@/lib/posts";
-import { siteConfig } from "@/lib/site";
+} from "@/lib/content/posts";
+import { siteConfig } from "@/lib/site/config";
 
 export default function Home() {
   const jsonLd = {
