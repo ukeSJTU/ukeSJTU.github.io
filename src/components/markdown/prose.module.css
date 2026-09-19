@@ -1,0 +1,354 @@
+.prose {
+  color: var(--foreground);
+  line-height: 1.75;
+  overflow-wrap: anywhere;
+}
+
+.prose > * + * {
+  margin-top: 1.25rem;
+}
+
+.prose h1,
+.prose h2,
+.prose h3,
+.prose h4,
+.prose h5,
+.prose h6 {
+  color: var(--foreground);
+  font-weight: 650;
+  letter-spacing: -0.025em;
+  line-height: 1.25;
+  margin-top: 2.5rem;
+}
+
+.prose h1 {
+  font-size: 2.25rem;
+}
+
+.prose h2 {
+  font-size: 1.75rem;
+}
+
+.prose h3 {
+  font-size: 1.5rem;
+}
+
+.prose h4 {
+  font-size: 1.25rem;
+}
+
+.prose h5 {
+  font-size: 1.125rem;
+}
+
+.prose h6 {
+  font-size: 1rem;
+}
+
+.prose a {
+  color: var(--primary);
+  font-weight: 500;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+.prose ul,
+.prose ol {
+  padding-left: 1.5rem;
+}
+
+.prose ul {
+  list-style: disc;
+}
+
+.prose ol {
+  list-style: decimal;
+}
+
+.prose li + li {
+  margin-top: 0.375rem;
+}
+
+.prose li > ul,
+.prose li > ol {
+  margin-top: 0.375rem;
+}
+
+.prose [class~="contains-task-list"] {
+  list-style: none;
+  padding-left: 0;
+}
+
+.prose [class~="task-list-item"] input {
+  accent-color: var(--primary);
+  margin-right: 0.5rem;
+}
+
+.prose blockquote {
+  border-left: 3px solid var(--border);
+  color: var(--muted-foreground);
+  padding-left: 1rem;
+}
+
+.prose blockquote > * + * {
+  margin-top: 0.75rem;
+}
+
+.prose code {
+  background: var(--muted);
+  border-radius: var(--radius-sm);
+  color: var(--foreground);
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 0.875em;
+  padding: 0.125rem 0.375rem;
+}
+
+.prose pre {
+  background: var(--muted);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  color: var(--foreground);
+  overflow-x: auto;
+  padding: 1rem;
+}
+
+.prose pre code {
+  background: transparent;
+  border-radius: 0;
+  color: inherit;
+  padding: 0;
+}
+
+.prose [data-rehype-pretty-code-figure] {
+  margin-block: 1.25rem;
+}
+
+.prose [data-rehype-pretty-code-title] {
+  background: var(--muted);
+  border: 1px solid var(--border);
+  border-bottom: 0;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  color: var(--muted-foreground);
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 0.75rem;
+  padding: 0.5rem 1rem;
+}
+
+.prose [data-rehype-pretty-code-title] + pre {
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+}
+
+.prose [data-rehype-pretty-code-caption] {
+  color: var(--muted-foreground);
+  font-size: 0.8125rem;
+  margin-top: 0.5rem;
+  text-align: center;
+}
+
+.prose [data-rehype-pretty-code-figure] pre {
+  margin: 0;
+  padding-block: 1rem;
+  padding-inline: 0;
+}
+
+.prose [data-rehype-pretty-code-figure] code {
+  display: grid;
+  min-width: 100%;
+}
+
+.prose [data-line] {
+  display: inline-block;
+  min-height: 1lh;
+  padding-inline: 1rem;
+  width: 100%;
+}
+
+.prose [class~="highlighted"] {
+  background: var(--code-highlight);
+}
+
+.prose [class~="diff"][class~="add"] {
+  background: var(--code-added);
+}
+
+.prose [class~="diff"][class~="remove"] {
+  background: var(--code-removed);
+  opacity: 0.75;
+}
+
+.prose [class~="diff"]::before {
+  display: inline-block;
+  width: 1rem;
+}
+
+.prose [class~="diff"][class~="add"]::before {
+  color: var(--code-added-foreground);
+  content: "+";
+}
+
+.prose [class~="diff"][class~="remove"]::before {
+  color: var(--code-removed-foreground);
+  content: "−";
+}
+
+.prose [class~="highlighted"][class~="error"] {
+  background: var(--code-error);
+}
+
+.prose [class~="highlighted"][class~="warning"] {
+  background: var(--code-warning);
+}
+
+.prose [class~="highlighted"][class~="info"] {
+  background: var(--code-info);
+}
+
+.prose [data-rehype-pretty-code-figure] span {
+  color: var(--shiki-light);
+  font-style: var(--shiki-light-font-style);
+  font-weight: var(--shiki-light-font-weight);
+  text-decoration: var(--shiki-light-text-decoration);
+}
+
+html[class~="dark"] .prose [data-rehype-pretty-code-figure] span {
+  /* biome-ignore lint/complexity/noImportantStyles: Shiki emits the light theme as an inline style. */
+  color: var(--shiki-dark) !important;
+  /* biome-ignore lint/complexity/noImportantStyles: Shiki emits the light theme as an inline style. */
+  font-style: var(--shiki-dark-font-style) !important;
+  /* biome-ignore lint/complexity/noImportantStyles: Shiki emits the light theme as an inline style. */
+  font-weight: var(--shiki-dark-font-weight) !important;
+  /* biome-ignore lint/complexity/noImportantStyles: Shiki emits the light theme as an inline style. */
+  text-decoration: var(--shiki-dark-text-decoration) !important;
+}
+
+.prose [data-mermaid-diagram] {
+  margin-block: 1.5rem;
+}
+
+.prose [data-mermaid-diagram] img {
+  display: block;
+  margin-inline: auto;
+}
+
+.prose [data-mermaid-diagram] [data-mermaid-theme="dark"] {
+  display: none;
+}
+
+html[class~="dark"] .prose [data-mermaid-diagram] [data-mermaid-theme="light"] {
+  display: none;
+}
+
+html[class~="dark"] .prose [data-mermaid-diagram] [data-mermaid-theme="dark"] {
+  display: block;
+}
+
+.prose table {
+  border-collapse: collapse;
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+  width: max-content;
+}
+
+.prose th,
+.prose td {
+  border: 1px solid var(--border);
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+}
+
+.prose th {
+  background: var(--muted);
+  color: var(--foreground);
+  font-weight: 600;
+}
+
+.prose th[align="center"],
+.prose td[align="center"] {
+  text-align: center;
+}
+
+.prose th[align="right"],
+.prose td[align="right"] {
+  text-align: right;
+}
+
+.prose hr {
+  border-color: var(--border);
+}
+
+.prose img {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  height: auto;
+  max-width: 100%;
+  padding: 1rem;
+}
+
+.prose details {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 0.75rem 1rem;
+}
+
+.prose summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.prose details[open] summary {
+  margin-bottom: 0.75rem;
+}
+
+.prose mark {
+  background: var(--accent);
+  border-radius: var(--radius-sm);
+  color: var(--accent-foreground);
+  padding: 0.0625rem 0.2rem;
+}
+
+.prose kbd {
+  background: var(--muted);
+  border: 1px solid var(--border);
+  border-bottom-width: 2px;
+  border-radius: var(--radius-sm);
+  color: var(--foreground);
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 0.8em;
+  padding: 0.125rem 0.375rem;
+}
+
+.prose [class~="footnotes"] {
+  border-top: 1px solid var(--border);
+  color: var(--muted-foreground);
+  font-size: 0.875rem;
+  margin-top: 3rem;
+  padding-top: 1rem;
+}
+
+.prose [class~="footnotes"] ol {
+  padding-left: 1.25rem;
+}
+
+.prose [class~="data-footnote-backref"] {
+  margin-left: 0.25rem;
+  text-decoration: none;
+}
+
+.prose [class~="sr-only"] {
+  clip: rect(0, 0, 0, 0);
+  clip-path: inset(50%);
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}
+
+.prose [class~="katex-display"] {
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-block: 0.25rem;
+}

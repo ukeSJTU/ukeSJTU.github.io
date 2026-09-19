@@ -39,3 +39,10 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Content Collections
+.content-collections
+
+# Local agent skills
+/.agents/skills/
+/.claude/skills/
