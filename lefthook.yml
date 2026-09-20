@@ -1,16 +1,26 @@
 min_version: 2.1.14
 
 pre-commit:
+  parallel: true
   jobs:
     - name: biome
-      run: pnpm exec biome check --staged --no-errors-on-unmatched
+      run: mise exec -- pnpm exec biome check --staged --no-errors-on-unmatched
+    - name: markdown
+      glob: "*.{md,markdown}"
+      group:
+        piped: true
+        jobs:
+          - name: format
+            run: mise exec -- rumdl fmt --check --deny-config-warnings -- {staged_files}
+          - name: lint
+            run: mise exec -- rumdl check --deny-config-warnings -- {staged_files}
 
 commit-msg:
   jobs:
     - name: commitlint
-      run: pnpm exec commitlint --edit {1}
+      run: mise exec -- pnpm exec commitlint --edit {1}
 
 pre-push:
   jobs:
     - name: verify
-      run: pnpm check
+      run: mise exec -- pnpm check

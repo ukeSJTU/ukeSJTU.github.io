@@ -51,3 +51,6 @@ next-env.d.ts
 /mise.local.toml
 /mise.local.lock
 /.mise/locks/mise.local/
+
+# rumdl cache
+/.rumdl_cache/

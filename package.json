@@ -9,8 +9,12 @@
     "build": "pnpm build:site && pnpm build:search",
     "preview": "pnpm build:site && pagefind --serve",
     "serve": "pagefind --serve",
-    "lint": "biome check",
-    "format": "biome format --write",
+    "lint": "pnpm lint:code && pnpm lint:md",
+    "lint:code": "biome check",
+    "lint:md": "rumdl fmt --check --deny-config-warnings . && rumdl check --deny-config-warnings .",
+    "format": "pnpm format:code && pnpm format:md",
+    "format:code": "biome format --write",
+    "format:md": "rumdl fmt --deny-config-warnings .",
     "check": "pnpm lint && pnpm build"
   },
   "dependencies": {

@@ -4,9 +4,10 @@ The source code for [ukesjtu.github.io](https://ukesjtu.github.io), a statically
 
 ## Development
 
-This project uses Node.js 24 and pnpm.
+This project uses [mise](https://mise.jdx.dev/) to manage Node.js, pnpm, and rumdl. With mise activated in your shell, install the locked tool versions before installing dependencies:
 
 ```bash
+mise install
 pnpm install
 pnpm exec playwright install chromium
 pnpm dev
@@ -59,6 +60,8 @@ export function parsePostDate(value: string) {
 pnpm check
 ```
 
+`pnpm lint` checks source files with Biome and Markdown files with rumdl. Use `pnpm format` to format both, or the `:code` and `:md` variants to run either tool independently.
+
 `pnpm build` writes the static site to `out/`, including the sitemap, robots file, RSS feed, manifest, and Pagefind search index.
 
 Use `pnpm preview` for a fresh production build and local preview, or `pnpm serve` to re-index and serve the existing `out/` directory.
@@ -67,7 +70,7 @@ Use `pnpm preview` for a fresh production build and local preview, or `pnpm serv
 
 Lefthook installs the repository hooks automatically during `pnpm install`:
 
-- `pre-commit` checks staged files with Biome.
+- `pre-commit` checks staged source files with Biome and verifies staged Markdown formatting and lint rules with rumdl. It does not modify or stage files automatically.
 - `commit-msg` enforces [Conventional Commits](https://www.conventionalcommits.org/) with Commitlint, for example `feat: add blog search`.
 - `pre-push` runs the full lint and static build checks.
 

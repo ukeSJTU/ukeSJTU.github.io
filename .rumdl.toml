@@ -1,0 +1,25 @@
+[global]
+flavor = "gfm"
+respect-gitignore = true
+cache = true
+cache-dir = ".rumdl_cache"
+disable = ["MD013", "MD033"]
+
+[MD041]
+front-matter-title-pattern = "^(title|name):"
+
+# This post is also the site's Markdown syntax showcase, so it deliberately
+# exercises equivalent heading, list, fence, block, and link styles.
+[per-file-ignores]
+"CLAUDE.md" = ["MD041"]
+"content/blog/hello-world.md" = [
+  "MD003",
+  "MD004",
+  "MD025",
+  "MD034",
+  "MD035",
+  "MD040",
+  "MD046",
+  "MD048",
+  "MD076",
+]
