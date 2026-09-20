@@ -43,6 +43,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "hast-util-from-html": "^2.0.3",
     "katex": "^0.18.7",
     "lefthook": "^2.1.14",
     "pagefind": "1.5.2",

@@ -1,4 +1,13 @@
+import {
+  IconCheck,
+  IconCopy,
+  IconX,
+  type TablerIcon,
+} from "@tabler/icons-react";
 import type { Element, ElementContent, Root } from "hast";
+import { fromHtml } from "hast-util-from-html";
+import { createElement } from "react";
+import { renderToStaticMarkup } from "react-dom/server";
 import type { Plugin } from "unified";
 import { visit } from "unist-util-visit";
 
@@ -21,24 +30,24 @@ const createToolbarItem = (
 
 const createCopyIcon = (
   state: "copy" | "copied" | "error",
-  children: ElementContent[],
-) =>
-  createToolbarItem(
-    "svg",
-    {
-      "aria-hidden": "true",
-      "data-copy-icon": state,
-      fill: "none",
-      height: "16",
-      stroke: "currentColor",
-      strokeLinecap: "round",
-      strokeLinejoin: "round",
-      strokeWidth: "2",
-      viewBox: "0 0 24 24",
-      width: "16",
-    },
-    children,
+  Icon: TablerIcon,
+): Element => {
+  const markup = renderToStaticMarkup(
+    createElement(Icon, {
+      "aria-hidden": true,
+      size: 16,
+    }),
   );
+  const [icon] = fromHtml(markup, { fragment: true }).children;
+
+  if (icon?.type !== "element") {
+    throw new Error(`Could not render the ${state} code block icon`);
+  }
+
+  icon.properties["data-copy-icon"] = state;
+
+  return icon;
+};
 
 export const rehypeCodeBlocks: Plugin<[], Root> = () => (tree) => {
   let nextCodeBlockIndex = 0;
@@ -89,22 +98,9 @@ export const rehypeCodeBlocks: Plugin<[], Root> = () => (tree) => {
         type: "button",
       },
       [
-        createCopyIcon("copy", [
-          // Tabler Icons (MIT): copy, check, and x, rendered at build time.
-          createToolbarItem("path", {
-            d: "M7 9.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667l0 -8.666",
-          }),
-          createToolbarItem("path", {
-            d: "M4.012 16.737a2.005 2.005 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1",
-          }),
-        ]),
-        createCopyIcon("copied", [
-          createToolbarItem("path", { d: "M5 12l5 5l10 -10" }),
-        ]),
-        createCopyIcon("error", [
-          createToolbarItem("path", { d: "M18 6l-12 12" }),
-          createToolbarItem("path", { d: "M6 6l12 12" }),
-        ]),
+        createCopyIcon("copy", IconCopy),
+        createCopyIcon("copied", IconCheck),
+        createCopyIcon("error", IconX),
       ],
     );
     const copyStatus = createToolbarItem("span", {

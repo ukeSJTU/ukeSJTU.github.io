@@ -84,5 +84,3 @@ The deployment workflow installs Chromium because Mermaid diagrams are rendered 
 The source code in this repository, excluding `content/`, is licensed under the [MIT License](LICENSE).
 
 Unless otherwise noted, original written content under `content/` is licensed under the [Creative Commons Attribution 4.0 International License](content/LICENSE).
-
-Third-party assets remain subject to their respective licenses, which are recorded under `licenses/` where applicable.
