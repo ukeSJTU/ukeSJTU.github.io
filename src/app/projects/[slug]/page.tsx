@@ -8,6 +8,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { JsonLd } from "@/components/json-ld";
 import { MarkdownRenderer } from "@/components/markdown/markdown-renderer";
+import { PageTransition } from "@/components/page-transition";
 import {
   getProjectPath,
   getProjectUrl,
@@ -94,73 +95,77 @@ export default async function ProjectPage({
   };
 
   return (
-    <main className="page-content" id="main-content">
-      <JsonLd data={jsonLd} />
-      <Link
-        className="text-muted-foreground inline-flex items-center gap-2 text-sm underline underline-offset-4"
-        href="/projects"
-      >
-        <IconArrowLeft aria-hidden="true" className="size-4" /> Back to projects
-      </Link>
+    <PageTransition>
+      <main className="page-content" id="main-content">
+        <JsonLd data={jsonLd} />
+        <Link
+          className="text-muted-foreground inline-flex items-center gap-2 text-sm underline underline-offset-4"
+          href="/projects"
+          transitionTypes={["nav-back"]}
+        >
+          <IconArrowLeft aria-hidden="true" className="size-4" /> Back to
+          projects
+        </Link>
 
-      <article
-        className="mt-6"
-        data-pagefind-body
-        data-pagefind-meta={`url:${projectPath}`}
-      >
-        <header className="border-border border-b pb-6">
-          <p className="text-muted-foreground text-sm font-medium tabular-nums">
-            {project.year}
-          </p>
-          <h1
-            className="mt-3 text-4xl font-semibold tracking-tight sm:text-5xl"
-            data-pagefind-meta="title"
-          >
-            {project.name}
-          </h1>
-          <p
-            className="text-muted-foreground mt-4 max-w-2xl text-lg leading-relaxed"
-            data-pagefind-meta="summary"
-          >
-            {project.description}
-          </p>
-          <nav
-            aria-label={`${project.name} links`}
-            className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-3 text-sm font-medium"
-          >
-            {project.demo ? (
-              <a
-                className="text-primary inline-flex items-center gap-1.5 underline underline-offset-4"
-                href={project.demo}
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                <IconExternalLink aria-hidden="true" className="size-4" />
-                Demo
-                <span className="sr-only"> (opens in a new tab)</span>
-              </a>
-            ) : null}
-            {project.source ? (
-              <a
-                className="text-primary inline-flex items-center gap-1.5 underline underline-offset-4"
-                href={project.source}
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                <IconBrandGithub aria-hidden="true" className="size-4" />
-                Source
-                <span className="sr-only"> (opens in a new tab)</span>
-              </a>
-            ) : null}
-          </nav>
-        </header>
+        <article
+          className="mt-6"
+          data-pagefind-body
+          data-pagefind-meta={`url:${projectPath}`}
+        >
+          <header className="border-border border-b pb-6">
+            <p className="text-muted-foreground text-sm font-medium tabular-nums">
+              {project.year}
+            </p>
+            <h1
+              className="mt-3 text-4xl font-semibold tracking-tight sm:text-5xl"
+              data-pagefind-meta="title"
+            >
+              {project.name}
+            </h1>
+            <p
+              className="text-muted-foreground mt-4 max-w-2xl text-lg leading-relaxed"
+              data-pagefind-meta="summary"
+            >
+              {project.description}
+            </p>
+            <nav
+              aria-label={`${project.name} links`}
+              className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-3 text-sm font-medium"
+            >
+              {project.demo ? (
+                <a
+                  className="text-primary inline-flex items-center gap-1.5 underline underline-offset-4"
+                  href={project.demo}
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  <IconExternalLink aria-hidden="true" className="size-4" />
+                  Demo
+                  <span className="sr-only"> (opens in a new tab)</span>
+                </a>
+              ) : null}
+              {project.source ? (
+                <a
+                  className="text-primary inline-flex items-center gap-1.5 underline underline-offset-4"
+                  href={project.source}
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  <IconBrandGithub aria-hidden="true" className="size-4" />
+                  Source
+                  <span className="sr-only"> (opens in a new tab)</span>
+                </a>
+              ) : null}
+            </nav>
+          </header>
 
-        <MarkdownRenderer
-          className="mt-6 max-w-3xl"
-          contentKey={project._meta.path}
-          html={project.html}
-        />
-      </article>
-    </main>
+          <MarkdownRenderer
+            className="mt-6 max-w-3xl"
+            contentKey={project._meta.path}
+            html={project.html}
+          />
+        </article>
+      </main>
+    </PageTransition>
   );
 }

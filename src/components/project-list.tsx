@@ -30,6 +30,7 @@ export function ProjectList({ entries }: { entries: Project[] }) {
                   <Link
                     className="underline-offset-4 hover:underline"
                     href={projectPath}
+                    transitionTypes={["nav-forward"]}
                   >
                     {project.name}
                   </Link>
@@ -76,6 +77,7 @@ export function ProjectList({ entries }: { entries: Project[] }) {
                   <Link
                     className="text-primary inline-flex items-center gap-1.5 underline-offset-4 hover:underline"
                     href={projectPath}
+                    transitionTypes={["nav-forward"]}
                   >
                     <IconArticle aria-hidden="true" className="size-4" />
                     Read article

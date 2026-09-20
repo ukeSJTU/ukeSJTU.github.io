@@ -52,6 +52,100 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
+@keyframes page-fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes page-fade-out {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes page-slide {
+  from {
+    translate: var(--slide-offset);
+  }
+
+  to {
+    translate: 0;
+  }
+}
+
+::view-transition-old(.page-exit) {
+  animation: 140ms ease-in both page-fade-out;
+}
+
+::view-transition-new(.page-enter) {
+  animation: 200ms ease-out 80ms both page-fade-in;
+}
+
+::view-transition-old(.slide-to-left) {
+  --slide-offset: -48px;
+  animation:
+    140ms ease-in both page-fade-out,
+    320ms ease-in-out both page-slide reverse;
+}
+
+::view-transition-new(.slide-from-right) {
+  --slide-offset: 48px;
+  animation:
+    200ms ease-out 100ms both page-fade-in,
+    320ms ease-in-out both page-slide;
+}
+
+::view-transition-old(.slide-to-right) {
+  --slide-offset: 48px;
+  animation:
+    140ms ease-in both page-fade-out,
+    320ms ease-in-out both page-slide reverse;
+}
+
+::view-transition-new(.slide-from-left) {
+  --slide-offset: -48px;
+  animation:
+    200ms ease-out 100ms both page-fade-in,
+    320ms ease-in-out both page-slide;
+}
+
+::view-transition-group(site-sidebar) {
+  z-index: 100;
+  animation: none;
+}
+
+::view-transition-old(site-sidebar) {
+  display: none;
+}
+
+::view-transition-new(site-sidebar) {
+  animation: none;
+}
+
+::view-transition {
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(.page-exit),
+  ::view-transition-new(.page-enter),
+  ::view-transition-old(.slide-to-left),
+  ::view-transition-new(.slide-from-right),
+  ::view-transition-old(.slide-to-right),
+  ::view-transition-new(.slide-from-left) {
+    animation: none;
+  }
+}
+
 :root {
   --font-ui:
     var(--font-geist-sans), "PingFang SC", "Hiragino Sans GB",
@@ -234,6 +328,7 @@
     flex-direction: column;
     padding: 16px 24px;
     border-bottom: 1px solid var(--border);
+    view-transition-name: site-sidebar;
   }
 
   .sidebar-brand {

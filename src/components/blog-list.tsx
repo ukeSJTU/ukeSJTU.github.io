@@ -17,7 +17,11 @@ export function BlogList({ entries }: { entries: Post[] }) {
     <ul className="blog-list">
       {entries.map((post) => (
         <li key={post.slug}>
-          <Link className="blog-list-link group" href={getPostPath(post)}>
+          <Link
+            className="blog-list-link group"
+            href={getPostPath(post)}
+            transitionTypes={["nav-forward"]}
+          >
             <div className="flex flex-col gap-2 sm:flex-row sm:items-baseline sm:justify-between sm:gap-6">
               <h3 className="text-xl font-semibold underline-offset-4 group-hover:underline">
                 {post.title}
