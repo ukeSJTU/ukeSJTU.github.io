@@ -4,6 +4,9 @@ title: "Linux CLI by Experiment: What ln Really Links"
 summary: "Six hands-on experiments reveal how hard links, symbolic links, inodes, unlinking, path resolution, and atomic release switches actually work on Linux."
 publishedAt: "2025-03-18"
 updatedAt: "2026-09-20"
+topics:
+  - "linux"
+  - "command-line"
 ---
 
 The shortest explanation of `ln` is easy to memorize:

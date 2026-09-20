@@ -3,6 +3,8 @@ slug: "hello-world"
 title: "Hello, Markdown 世界"
 summary: "CommonMark、GFM、数学公式与中文排版的综合测试页。"
 publishedAt: "2026-09-19"
+topics:
+  - "markdown"
 ---
 
 这是一篇用于验证 Markdown 渲染管线的综合测试文章，覆盖常用的

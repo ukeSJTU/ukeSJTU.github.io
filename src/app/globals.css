@@ -385,7 +385,8 @@
     gap: 7px;
   }
 
-  .sidebar-footer a:hover {
+  .sidebar-footer a:hover,
+  .sidebar-footer a[aria-current="page"] {
     color: var(--primary);
   }
 

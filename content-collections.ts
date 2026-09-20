@@ -44,24 +44,72 @@ function createMarkdownOptions(afterSlug: Pluggable[] = []) {
 
 const markdownOptions = createMarkdownOptions();
 
+const slugSchema = z
+  .string()
+  .regex(
+    /^[a-z0-9]+(?:-[a-z0-9]+)*$/,
+    "Slug must contain lowercase letters, numbers, and single hyphens only",
+  );
+
+const topics = defineCollection({
+  name: "topics",
+  directory: "content/topics",
+  include: "**/*.yaml",
+  parser: "yaml",
+  schema: z.object({
+    slug: slugSchema,
+    name: z.string().trim().min(1),
+  }),
+  onSuccess: (entries) => {
+    const topicPathsBySlug = new Map<string, string>();
+
+    for (const topic of entries) {
+      const existingPath = topicPathsBySlug.get(topic.slug);
+
+      if (existingPath) {
+        throw new Error(
+          `Duplicate topic slug "${topic.slug}" in "${existingPath}" and "${topic._meta.path}"`,
+        );
+      }
+
+      topicPathsBySlug.set(topic.slug, topic._meta.path);
+    }
+  },
+});
+
 const blog = defineCollection({
   name: "blog",
   directory: "content/blog",
   include: "**/*.md",
   schema: z.object({
-    slug: z
-      .string()
-      .regex(
-        /^[a-z0-9]+(?:-[a-z0-9]+)*$/,
-        "Slug must contain lowercase letters, numbers, and single hyphens only",
-      ),
+    slug: slugSchema,
     title: z.string(),
     summary: z.string(),
     publishedAt: z.iso.date(),
     updatedAt: z.iso.date().optional(),
+    topics: z
+      .array(slugSchema)
+      .min(1)
+      .max(3)
+      .refine((values) => new Set(values).size === values.length, {
+        error: "Topics must not contain duplicates",
+      }),
     content: z.string(),
   }),
   transform: async (post, context) => {
+    const knownTopicSlugs = new Set(
+      context.documents(topics).map((topic) => topic.slug),
+    );
+    const unknownTopicSlugs = post.topics.filter(
+      (topic) => !knownTopicSlugs.has(topic),
+    );
+
+    if (unknownTopicSlugs.length > 0) {
+      throw new Error(
+        `Unknown topics in "${post._meta.path}": ${unknownTopicSlugs.join(", ")}`,
+      );
+    }
+
     const compiled = await compileMarkdownWithTableOfContents(
       context,
       post,
@@ -102,5 +150,5 @@ const projects = defineCollection({
 });
 
 export default defineConfig({
-  content: [blog, projects],
+  content: [topics, blog, projects],
 });

@@ -6,6 +6,7 @@ import {
   IconFolderCode,
   IconHome,
   IconRss,
+  IconTags,
   IconUser,
 } from "@tabler/icons-react";
 import Image from "next/image";
@@ -100,10 +101,18 @@ export function SiteSidebar({ basePath = "" }: { basePath?: string }) {
           })}
         </nav>
 
-        <nav aria-label="Follow and subscribe" className="sidebar-footer">
+        <nav aria-label="Topics and external links" className="sidebar-footer">
           <a href={siteConfig.author.url}>
             <IconBrandGithub aria-hidden="true" className="size-4" /> GitHub
           </a>
+          <Link
+            aria-current={
+              isCurrentPath(pathname, "/topics") ? "page" : undefined
+            }
+            href="/topics"
+          >
+            <IconTags aria-hidden="true" className="size-4" /> Topics
+          </Link>
           <a href={`${basePath}/rss.xml`}>
             <IconRss aria-hidden="true" className="size-4" /> RSS
           </a>

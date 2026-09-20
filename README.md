@@ -24,10 +24,14 @@ slug: "note-title"
 title: "Note title"
 summary: "A short description of the note."
 publishedAt: "2026-09-19"
+topics:
+  - "markdown"
 ---
 ```
 
 The slug must be unique and use lowercase letters, numbers, and single hyphens. It controls the public URL, so Markdown files can move into nested directories without changing their URLs. An optional `updatedAt` field records when a note was revised. Images used within Markdown belong in `public/` and can be referenced by their site-absolute path.
+
+Each note must reference between one and three topics by slug. Topics are defined as YAML files in `content/topics` and contain a unique `slug` and display `name`; builds fail when a note references an unknown topic. Topic slugs control their public URLs at `/topics/<slug>`.
 
 The Markdown pipeline supports CommonMark, GitHub Flavored Markdown, CJK-friendly parsing, KaTeX, Shiki syntax highlighting, and Mermaid diagrams with light and dark themes.
 
