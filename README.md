@@ -78,3 +78,11 @@ Run a hook manually with `pnpm exec lefthook run <hook>`, such as `pnpm exec lef
 Pull requests are checked by the CI workflow. Pushes to `main` are built and deployed to GitHub Pages by `.github/workflows/deploy-pages.yml`.
 
 The deployment workflow installs Chromium because Mermaid diagrams are rendered to SVG during the build.
+
+## License
+
+The source code in this repository, excluding `content/`, is licensed under the [MIT License](LICENSE).
+
+Unless otherwise noted, original written content under `content/` is licensed under the [Creative Commons Attribution 4.0 International License](content/LICENSE).
+
+Third-party assets remain subject to their respective licenses, which are recorded under `licenses/` where applicable.

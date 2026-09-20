@@ -3,8 +3,13 @@ import { siteConfig } from "@/lib/site/config";
 export function SiteFooter({ basePath = "" }: { basePath?: string }) {
   return (
     <footer className="site-footer">
-      <p>
-        © {new Date().getFullYear()} {siteConfig.author.name}
+      <p className="flex flex-wrap items-center gap-x-4 gap-y-1">
+        <span>
+          © {new Date().getFullYear()} {siteConfig.author.name}
+        </span>
+        <a href="https://creativecommons.org/licenses/by/4.0/" rel="license">
+          Content: CC BY 4.0
+        </a>
       </p>
       <nav aria-label="Footer navigation">
         <a href={siteConfig.author.url}>GitHub</a>
