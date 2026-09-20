@@ -1,0 +1,39 @@
+@layer components {
+  .shell {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 1376px;
+    min-height: 100svh;
+    margin-inline: auto;
+  }
+
+  .content {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-width: 0;
+    padding: 28px 24px 20px;
+  }
+
+  .content > main {
+    margin-bottom: 48px;
+  }
+
+  @media (min-width: 768px) {
+    .content {
+      padding: 32px 32px 20px;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .shell {
+      display: grid;
+      grid-template-columns: 260px minmax(0, 1fr);
+    }
+
+    .content {
+      padding: 40px 40px 20px;
+    }
+  }
+}

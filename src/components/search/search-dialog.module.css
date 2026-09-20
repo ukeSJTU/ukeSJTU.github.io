@@ -1,0 +1,26 @@
+@layer components {
+  .dialog {
+    --search-top: calc(var(--search-viewport-top, 0px) + 12px);
+    max-height: calc(var(--search-viewport-height, 100dvh) - 24px);
+  }
+
+  .secondary {
+    color: color-mix(in srgb, var(--foreground) 75%, var(--background));
+  }
+
+  .excerpt mark {
+    background: transparent;
+    color: var(--primary);
+    font-weight: 600;
+  }
+
+  @media (min-width: 640px) {
+    .dialog {
+      --search-top: calc(var(--search-viewport-top, 0px) + min(12vh, 80px));
+      max-height: min(
+        560px,
+        calc(var(--search-viewport-height, 100dvh) - min(12vh, 80px) - 24px)
+      );
+    }
+  }
+}

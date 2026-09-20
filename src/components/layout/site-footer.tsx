@@ -1,8 +1,9 @@
 import { siteConfig } from "@/lib/site/config";
+import styles from "./site-footer.module.css";
 
 export function SiteFooter({ basePath = "" }: { basePath?: string }) {
   return (
-    <footer className="site-footer">
+    <footer className={styles.footer}>
       <p className="flex flex-wrap items-center gap-x-4 gap-y-1">
         <span>
           © {new Date().getFullYear()} {siteConfig.author.name}

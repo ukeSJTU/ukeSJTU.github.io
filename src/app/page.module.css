@@ -1,0 +1,18 @@
+@layer components {
+  .intro {
+    display: grid;
+    gap: 20px;
+  }
+
+  .introCopy {
+    min-width: 0;
+  }
+
+  @media (min-width: 768px) {
+    .intro {
+      align-items: center;
+      gap: 32px;
+      grid-template-columns: minmax(0, 1fr) minmax(13rem, 17rem);
+    }
+  }
+}

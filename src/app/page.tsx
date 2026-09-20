@@ -10,6 +10,7 @@ import {
   siteAuthor,
 } from "@/lib/site/structured-data";
 import { VolcanoHero } from "./_components/volcano-hero";
+import styles from "./page.module.css";
 
 export default function Home() {
   const jsonLd = {
@@ -28,8 +29,8 @@ export default function Home() {
     <PageTransition>
       <main className="page-content" id="main-content">
         <JsonLd data={jsonLd} />
-        <header className="home-intro">
-          <div className="home-intro-copy">
+        <header className={styles.intro}>
+          <div className={styles.introCopy}>
             <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
               Hey, I'm {siteConfig.author.name}!
             </h1>

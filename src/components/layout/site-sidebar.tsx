@@ -16,6 +16,7 @@ import { SiteSearch } from "@/components/search/site-search";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { siteConfig } from "@/lib/site/config";
 import { cn } from "@/lib/utils";
+import styles from "./site-sidebar.module.css";
 
 const navigation = [
   { href: "/", label: "Home", icon: IconHome },
@@ -44,8 +45,8 @@ export function SiteSidebar({ basePath = "" }: { basePath?: string }) {
         Skip to content
       </a>
 
-      <header className="site-sidebar">
-        <div className="sidebar-brand">
+      <header className={cn(styles.sidebar, "site-sidebar")}>
+        <div className={styles.brand}>
           <Link
             aria-label={`${siteConfig.name} home`}
             className="flex min-w-0 items-center gap-2 rounded-md font-semibold tracking-tight"
@@ -68,7 +69,7 @@ export function SiteSidebar({ basePath = "" }: { basePath?: string }) {
           </div>
         </div>
 
-        <p className="sidebar-intro">
+        <p className={styles.intro}>
           I'm{" "}
           <Link
             className="text-primary font-semibold underline underline-offset-4"
@@ -80,17 +81,14 @@ export function SiteSidebar({ basePath = "" }: { basePath?: string }) {
           making things.
         </p>
 
-        <nav aria-label="Main navigation" className="sidebar-navigation">
+        <nav aria-label="Main navigation" className={styles.navigation}>
           {navigation.map(({ href, label, icon: Icon }) => {
             const isCurrent = isCurrentPath(pathname, href);
 
             return (
               <Link
                 aria-current={isCurrent ? "page" : undefined}
-                className={cn(
-                  "sidebar-link",
-                  isCurrent && "sidebar-link-current",
-                )}
+                className={cn(styles.link, isCurrent && styles.current)}
                 href={href}
                 key={href}
               >
@@ -101,7 +99,7 @@ export function SiteSidebar({ basePath = "" }: { basePath?: string }) {
           })}
         </nav>
 
-        <nav aria-label="Topics and external links" className="sidebar-footer">
+        <nav aria-label="Topics and external links" className={styles.footer}>
           <a href={siteConfig.author.url}>
             <IconBrandGithub aria-hidden="true" className="size-4" /> GitHub
           </a>

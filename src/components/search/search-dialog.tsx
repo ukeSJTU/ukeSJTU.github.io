@@ -15,6 +15,8 @@ import {
 } from "@/components/ui/command";
 import { DialogClose } from "@/components/ui/dialog";
 import { InputGroupButton } from "@/components/ui/input-group";
+import { cn } from "@/lib/utils";
+import styles from "./search-dialog.module.css";
 import { useSearchViewport } from "./use-search-viewport";
 import { searchResultLimit, useSiteSearch } from "./use-site-search";
 
@@ -79,7 +81,10 @@ export function SearchDialog({
 
   return (
     <CommandDialog
-      className="site-search-dialog top-[var(--search-top)] flex flex-col gap-0 sm:max-w-xl [--popover:var(--background)] [--popover-foreground:var(--foreground)]"
+      className={cn(
+        styles.dialog,
+        "top-[var(--search-top)] flex flex-col gap-0 sm:max-w-xl [--popover:var(--background)] [--popover-foreground:var(--foreground)]",
+      )}
       contentProps={{
         initialFocus: inputRef,
         finalFocus: () =>
@@ -157,7 +162,7 @@ export function SearchDialog({
             >
               <p>{emptyTitle}</p>
               {emptyHint ? (
-                <p className="search-secondary mt-2">{emptyHint}</p>
+                <p className={cn(styles.secondary, "mt-2")}>{emptyHint}</p>
               ) : null}
               {status === "error" ? (
                 <Button
@@ -226,12 +231,16 @@ export function SearchDialog({
                         </span>
                       ) : null}
                       <p
-                        className="search-excerpt search-secondary line-clamp-2 leading-relaxed"
+                        className={cn(
+                          styles.excerpt,
+                          styles.secondary,
+                          "line-clamp-2 leading-relaxed",
+                        )}
                         // biome-ignore lint/security/noDangerouslySetInnerHtml: Pagefind escapes indexed HTML before inserting its own mark tags.
                         dangerouslySetInnerHTML={{ __html: result.excerpt }}
                       />
                       {result.date ? (
-                        <span className="search-secondary text-xs">
+                        <span className={cn(styles.secondary, "text-xs")}>
                           {result.date}
                         </span>
                       ) : null}
@@ -248,7 +257,12 @@ export function SearchDialog({
             : emptyTitle}
         </span>
       </Command>
-      <div className="search-secondary flex shrink-0 items-center justify-between gap-3 border-t px-4 py-1 text-xs">
+      <div
+        className={cn(
+          styles.secondary,
+          "flex shrink-0 items-center justify-between gap-3 border-t px-4 py-1 text-xs",
+        )}
+      >
         <span aria-hidden="true" className="hidden items-center gap-3 sm:flex">
           <span>
             <kbd>↑↓</kbd> Navigate

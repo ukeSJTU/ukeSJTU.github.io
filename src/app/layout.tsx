@@ -1,12 +1,15 @@
 import type { Metadata, Viewport } from "next";
 import "katex/dist/katex.min.css";
+// Establish Tailwind's layer order before any component stylesheets.
+import "./globals.css";
+import "@/components/page-transition.css";
 import { SiteFooter } from "@/components/layout/site-footer";
+import styles from "@/components/layout/site-shell.module.css";
 import { SiteSidebar } from "@/components/layout/site-sidebar";
 import { ThemeProvider } from "@/components/theme-provider";
 import { siteConfig } from "@/lib/site/config";
 import { createPageMetadata } from "@/lib/site/metadata";
 import { fontVariables } from "./fonts";
-import "./globals.css";
 
 const siteBasePath = process.env.PAGES_BASE_PATH ?? "";
 
@@ -70,9 +73,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           enableColorScheme
           enableSystem
         >
-          <div className="site-shell">
+          <div className={styles.shell}>
             <SiteSidebar basePath={siteBasePath} />
-            <div className="site-content">
+            <div className={styles.content}>
               {children}
               <SiteFooter basePath={siteBasePath} />
             </div>

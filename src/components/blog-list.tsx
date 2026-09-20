@@ -6,6 +6,8 @@ import {
   type Post,
 } from "@/lib/content/blog";
 import { siteConfig } from "@/lib/site/config";
+import { cn } from "@/lib/utils";
+import styles from "./blog-list.module.css";
 
 const dateFormatter = new Intl.DateTimeFormat(siteConfig.language, {
   dateStyle: "medium",
@@ -14,11 +16,11 @@ const dateFormatter = new Intl.DateTimeFormat(siteConfig.language, {
 
 export function BlogList({ entries }: { entries: Post[] }) {
   return (
-    <ul className="blog-list">
+    <ul className={styles.list}>
       {entries.map((post) => (
         <li key={post.slug}>
           <Link
-            className="blog-list-link group"
+            className={cn(styles.link, "group")}
             href={getPostPath(post)}
             transitionTypes={["nav-forward"]}
           >
