@@ -1,0 +1,26 @@
+.contentLayout {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-areas:
+    "toc"
+    "article";
+  margin-top: 1.5rem;
+}
+
+.articleBody {
+  grid-area: article;
+  min-width: 0;
+}
+
+.tableOfContents {
+  grid-area: toc;
+}
+
+@media (min-width: 1280px) {
+  .contentLayout {
+    align-items: start;
+    gap: 3.5rem;
+    grid-template-areas: "article toc";
+    grid-template-columns: minmax(0, 1fr) 14rem;
+  }
+}

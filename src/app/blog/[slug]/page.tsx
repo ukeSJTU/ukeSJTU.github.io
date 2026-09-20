@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { BlogComments } from "@/components/blog-comments";
+import { BlogTableOfContents } from "@/components/blog-table-of-contents";
 import { JsonLd } from "@/components/json-ld";
 import { MarkdownRenderer } from "@/components/markdown/markdown-renderer";
 import { PageTransition } from "@/components/page-transition";
@@ -15,6 +16,7 @@ import {
   parsePostDate,
 } from "@/lib/content/blog";
 import { absoluteUrl, siteConfig } from "@/lib/site/config";
+import styles from "./page.module.css";
 
 export function generateStaticParams() {
   return allBlogs.map((post) => ({ slug: post.slug }));
@@ -148,11 +150,17 @@ export default async function BlogPostPage({
             </time>
           </header>
 
-          <MarkdownRenderer
-            className="mt-6"
-            contentKey={post.slug}
-            html={post.html}
-          />
+          <div className={styles.contentLayout}>
+            <MarkdownRenderer
+              className={styles.articleBody}
+              contentKey={post.slug}
+              html={post.html}
+            />
+            <BlogTableOfContents
+              className={styles.tableOfContents}
+              items={post.tableOfContents}
+            />
+          </div>
         </article>
 
         <BlogComments />
