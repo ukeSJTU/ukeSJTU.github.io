@@ -8,6 +8,7 @@ import remarkCjkFriendlyParseOnly from "remark-cjk-friendly/parseOnly";
 import remarkCjkFriendlyGfmParseOnly from "remark-cjk-friendly-gfm-strikethrough/parseOnly";
 import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
+import type { Pluggable } from "unified";
 import { z } from "zod";
 import { mermaidOptions } from "./src/lib/content/markdown/mermaid-options";
 import { prettyCodeOptions } from "./src/lib/content/markdown/pretty-code";
@@ -15,6 +16,26 @@ import { rehypeCodeBlocks } from "./src/lib/content/markdown/rehype-code-blocks"
 import { rehypeMermaidTheme } from "./src/lib/content/markdown/rehype-mermaid-theme";
 import { rehypeTaskListLabels } from "./src/lib/content/markdown/rehype-task-list-labels";
 import { remarkCodeMeta } from "./src/lib/content/markdown/remark-code-meta";
+
+const markdownOptions = {
+  allowDangerousHtml: true,
+  remarkPlugins: [
+    [remarkGfm, { singleTilde: false }],
+    remarkCjkFriendlyParseOnly,
+    remarkCjkFriendlyGfmParseOnly,
+    remarkMath,
+    remarkCodeMeta,
+  ] as Pluggable[],
+  rehypePlugins: [
+    rehypeSlug,
+    rehypeKatex,
+    [rehypeMermaid, mermaidOptions],
+    rehypeMermaidTheme,
+    [rehypePrettyCode, prettyCodeOptions],
+    rehypeCodeBlocks,
+    rehypeTaskListLabels,
+  ] as Pluggable[],
+};
 
 const blog = defineCollection({
   name: "blog",
@@ -35,28 +56,36 @@ const blog = defineCollection({
   }),
   transform: async (post, context) => ({
     ...post,
-    html: await compileMarkdown(context, post, {
-      allowDangerousHtml: true,
-      remarkPlugins: [
-        [remarkGfm, { singleTilde: false }],
-        remarkCjkFriendlyParseOnly,
-        remarkCjkFriendlyGfmParseOnly,
-        remarkMath,
-        remarkCodeMeta,
-      ],
-      rehypePlugins: [
-        rehypeSlug,
-        rehypeKatex,
-        [rehypeMermaid, mermaidOptions],
-        rehypeMermaidTheme,
-        [rehypePrettyCode, prettyCodeOptions],
-        rehypeCodeBlocks,
-        rehypeTaskListLabels,
-      ],
-    }),
+    html: await compileMarkdown(context, post, markdownOptions),
   }),
 });
 
+const projects = defineCollection({
+  name: "projects",
+  directory: "content/projects",
+  include: "**/*.md",
+  schema: z.object({
+    name: z.string(),
+    description: z.string(),
+    year: z.number().int(),
+    order: z.number().int(),
+    demo: z.url().optional(),
+    source: z.url().optional(),
+    content: z.string(),
+  }),
+  transform: async (project, context) => {
+    const hasArticle = project.content.trim().length > 0;
+
+    return {
+      ...project,
+      hasArticle,
+      html: hasArticle
+        ? await compileMarkdown(context, project, markdownOptions)
+        : undefined,
+    };
+  },
+});
+
 export default defineConfig({
-  content: [blog],
+  content: [blog, projects],
 });

@@ -3,6 +3,7 @@
 import {
   IconBrandGithub,
   IconFileText,
+  IconFolderCode,
   IconHome,
   IconRss,
   IconUser,
@@ -18,6 +19,7 @@ import { cn } from "@/lib/utils";
 const navigation = [
   { href: "/", label: "Home", icon: IconHome },
   { href: "/blog", label: "Blog", icon: IconFileText },
+  { href: "/projects", label: "Projects", icon: IconFolderCode },
   { href: "/about", label: "About", icon: IconUser },
 ] as const;
 
