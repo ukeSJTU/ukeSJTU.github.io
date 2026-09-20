@@ -1,5 +1,5 @@
 import { IconArrowLeft } from "@tabler/icons-react";
-import { allPosts } from "content-collections";
+import { allBlogs } from "content-collections";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -10,23 +10,23 @@ import {
   getPostPath,
   getPostUrl,
   parsePostDate,
-} from "@/lib/content/posts";
+} from "@/lib/content/blog";
 import { absoluteUrl, siteConfig } from "@/lib/site/config";
 
 export function generateStaticParams() {
-  return allPosts.map((post) => ({ slug: post._meta.path.split("/") }));
+  return allBlogs.map((post) => ({ slug: post._meta.path.split("/") }));
 }
 
 export async function generateMetadata({
   params,
-}: PageProps<"/posts/[...slug]">): Promise<Metadata> {
+}: PageProps<"/blog/[...slug]">): Promise<Metadata> {
   const { slug } = await params;
   const path = slug.join("/");
-  const post = allPosts.find((candidate) => candidate._meta.path === path);
+  const post = allBlogs.find((candidate) => candidate._meta.path === path);
 
   if (!post) {
     return {
-      title: "Post not found",
+      title: "Note not found",
       robots: { index: false, follow: false },
     };
   }
@@ -63,12 +63,12 @@ export async function generateMetadata({
   };
 }
 
-export default async function PostPage({
+export default async function BlogPostPage({
   params,
-}: PageProps<"/posts/[...slug]">) {
+}: PageProps<"/blog/[...slug]">) {
   const { slug } = await params;
   const path = slug.join("/");
-  const post = allPosts.find((candidate) => candidate._meta.path === path);
+  const post = allBlogs.find((candidate) => candidate._meta.path === path);
 
   if (!post) {
     notFound();
@@ -111,9 +111,9 @@ export default async function PostPage({
       <JsonLd data={jsonLd} />
       <Link
         className="text-muted-foreground inline-flex items-center gap-2 text-sm underline underline-offset-4"
-        href="/posts"
+        href="/blog"
       >
-        <IconArrowLeft aria-hidden="true" className="size-4" /> All posts
+        <IconArrowLeft aria-hidden="true" className="size-4" /> Back to blog
       </Link>
 
       <article

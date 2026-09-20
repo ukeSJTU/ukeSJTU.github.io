@@ -4,7 +4,7 @@ import {
   getPostModifiedDate,
   getPostPath,
   type Post,
-} from "@/lib/content/posts";
+} from "@/lib/content/blog";
 import { siteConfig } from "@/lib/site/config";
 
 const dateFormatter = new Intl.DateTimeFormat(siteConfig.language, {
@@ -12,13 +12,13 @@ const dateFormatter = new Intl.DateTimeFormat(siteConfig.language, {
   timeZone: "Asia/Shanghai",
 });
 
-export function PostList({ posts }: { posts: Post[] }) {
+export function BlogList({ entries }: { entries: Post[] }) {
   return (
-    <ul className="post-list">
-      {posts.map((post) => (
+    <ul className="blog-list">
+      {entries.map((post) => (
         <li key={post._meta.path}>
           <Link
-            className="post-list-link group"
+            className="blog-list-link group"
             href={getPostPath(post._meta.path)}
           >
             <div className="flex flex-col gap-2 sm:flex-row sm:items-baseline sm:justify-between sm:gap-6">

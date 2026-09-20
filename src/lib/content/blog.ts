@@ -1,14 +1,14 @@
-import { allPosts } from "content-collections";
+import { allBlogs } from "content-collections";
 import { absoluteUrl } from "@/lib/site/config";
 
-export type Post = (typeof allPosts)[number];
+export type Post = (typeof allBlogs)[number];
 
 export function parsePostDate(date: string) {
   return new Date(`${date}T00:00:00.000Z`);
 }
 
 export function getPostPath(path: string) {
-  return `/posts/${path}`;
+  return `/blog/${path}`;
 }
 
 export function getPostUrl(path: string) {
@@ -23,7 +23,7 @@ export function getPostModifiedDate(post: Post) {
   return post.updatedAt ?? post.publishedAt;
 }
 
-export const sortedPosts = [...allPosts].sort(
+export const sortedBlogPosts = [...allBlogs].sort(
   (left, right) =>
     getPostModifiedAt(right).getTime() - getPostModifiedAt(left).getTime(),
 );

@@ -341,24 +341,24 @@
     overflow-wrap: anywhere;
   }
 
-  .post-list {
+  .blog-list {
     display: flex;
     flex-direction: column;
     border-top: 1px solid var(--border);
   }
 
-  .post-list li {
+  .blog-list li {
     border-bottom: 1px solid var(--border);
   }
 
-  .post-list-link {
+  .blog-list-link {
     display: block;
     padding: 16px 12px;
     margin-inline: -12px;
     border-radius: 6px;
   }
 
-  .post-list-link:hover {
+  .blog-list-link:hover {
     background: var(--muted);
   }
 

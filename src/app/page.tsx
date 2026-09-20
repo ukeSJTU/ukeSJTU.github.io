@@ -1,7 +1,7 @@
 import Link from "next/link";
+import { BlogList } from "@/components/blog-list";
 import { JsonLd } from "@/components/json-ld";
-import { PostList } from "@/components/post-list";
-import { getPostUrl, sortedPosts } from "@/lib/content/posts";
+import { getPostUrl, sortedBlogPosts } from "@/lib/content/blog";
 import { siteConfig } from "@/lib/site/config";
 
 export default function Home() {
@@ -18,7 +18,7 @@ export default function Home() {
       name: siteConfig.author.name,
       url: siteConfig.author.url,
     },
-    hasPart: sortedPosts.map((post) => ({
+    hasPart: sortedBlogPosts.map((post) => ({
       "@type": "BlogPosting",
       "@id": getPostUrl(post._meta.path),
       url: getPostUrl(post._meta.path),
@@ -48,19 +48,19 @@ export default function Home() {
         </Link>
       </header>
 
-      <section aria-labelledby="latest-posts" className="mt-8 sm:mt-9">
+      <section aria-labelledby="latest-notes" className="mt-8 sm:mt-9">
         <div className="mb-3 flex items-baseline justify-between gap-4">
-          <h2 className="text-2xl font-bold tracking-tight" id="latest-posts">
-            Latest posts
+          <h2 className="text-2xl font-bold tracking-tight" id="latest-notes">
+            Latest notes
           </h2>
           <Link
             className="text-primary text-sm font-medium underline underline-offset-4"
-            href="/posts"
+            href="/blog"
           >
-            All posts
+            View blog
           </Link>
         </div>
-        <PostList posts={sortedPosts.slice(0, 5)} />
+        <BlogList entries={sortedBlogPosts.slice(0, 5)} />
       </section>
     </main>
   );

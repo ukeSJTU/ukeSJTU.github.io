@@ -162,7 +162,7 @@ console.log(greeting);
 
 代码块元信息可以提供文件名、说明、行号，以及行和单词高亮：
 
-```ts title="src/lib/content/posts.ts" caption="日期解析函数示例" showLineNumbers {2-3} /parsePostDate/
+```ts title="src/lib/content/blog.ts" caption="日期解析函数示例" showLineNumbers {2-3} /parsePostDate/
 type PostDate = `${number}-${number}-${number}`;
 
 export function parsePostDate(value: PostDate) {

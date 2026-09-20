@@ -3,14 +3,14 @@ import {
   getPostModifiedAt,
   getPostUrl,
   parsePostDate,
-  sortedPosts,
-} from "@/lib/content/posts";
+  sortedBlogPosts,
+} from "@/lib/content/blog";
 import { absoluteUrl, siteConfig } from "@/lib/site/config";
 
 export const dynamic = "force-static";
 
 export function GET() {
-  const latestPost = sortedPosts.at(0);
+  const latestPost = sortedBlogPosts.at(0);
   const feed = new Feed({
     title: siteConfig.name,
     description: siteConfig.description,
@@ -30,7 +30,7 @@ export function GET() {
     },
   });
 
-  for (const post of sortedPosts) {
+  for (const post of sortedBlogPosts) {
     const url = getPostUrl(post._meta.path);
 
     feed.addItem({

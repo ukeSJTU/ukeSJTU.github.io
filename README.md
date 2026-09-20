@@ -16,17 +16,17 @@ The development server is available at [http://localhost:3000](http://localhost:
 
 ## Content
 
-Posts live in `content/posts`. Each Markdown file must include the following frontmatter:
+Blog notes live in `content/blog` and are published at `/blog/<path>`. Each Markdown file must include the following frontmatter:
 
 ```yaml
 ---
-title: "Post title"
-summary: "A short description of the post."
+title: "Note title"
+summary: "A short description of the note."
 publishedAt: "2026-09-19"
 ---
 ```
 
-An optional `updatedAt` field records when a post was revised. Nested directories are supported and become part of the post URL. Images used within Markdown belong in `public/` and can be referenced by their site-absolute path.
+An optional `updatedAt` field records when a note was revised. Nested directories are supported and become part of the note URL. Images used within Markdown belong in `public/` and can be referenced by their site-absolute path.
 
 The Markdown pipeline supports CommonMark, GitHub Flavored Markdown, CJK-friendly parsing, KaTeX, Shiki syntax highlighting, and Mermaid diagrams with light and dark themes.
 
@@ -35,7 +35,7 @@ The Markdown pipeline supports CommonMark, GitHub Flavored Markdown, CJK-friendl
 Code highlighting runs at build time. Fence metadata controls presentation without introducing MDX components:
 
 ````md
-```ts title="src/lib/content/posts.ts" caption="Optional caption" showLineNumbers {2,4-6} /parsePostDate/
+```ts title="src/lib/content/blog.ts" caption="Optional caption" showLineNumbers {2,4-6} /parsePostDate/
 export function parsePostDate(value: string) {
   return new Date(value);
 }
@@ -63,7 +63,7 @@ Use `pnpm preview` for a fresh production build and local preview, or `pnpm serv
 Lefthook installs the repository hooks automatically during `pnpm install`:
 
 - `pre-commit` checks staged files with Biome.
-- `commit-msg` enforces [Conventional Commits](https://www.conventionalcommits.org/) with Commitlint, for example `feat: add post search`.
+- `commit-msg` enforces [Conventional Commits](https://www.conventionalcommits.org/) with Commitlint, for example `feat: add blog search`.
 - `pre-push` runs the full lint and static build checks.
 
 Run a hook manually with `pnpm exec lefthook run <hook>`, such as `pnpm exec lefthook run pre-push`.

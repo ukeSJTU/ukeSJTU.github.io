@@ -2,14 +2,14 @@ import type { MetadataRoute } from "next";
 import {
   getPostModifiedDate,
   getPostUrl,
-  sortedPosts,
-} from "@/lib/content/posts";
+  sortedBlogPosts,
+} from "@/lib/content/blog";
 import { absoluteUrl, siteConfig } from "@/lib/site/config";
 
 export const dynamic = "force-static";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const latestPost = sortedPosts.at(0);
+  const latestPost = sortedBlogPosts.at(0);
 
   return [
     {
@@ -19,7 +19,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 1,
     },
     {
-      url: absoluteUrl("/posts"),
+      url: absoluteUrl("/blog"),
       lastModified: latestPost ? getPostModifiedDate(latestPost) : undefined,
       changeFrequency: "weekly",
       priority: 0.9,
@@ -29,7 +29,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly",
       priority: 0.6,
     },
-    ...sortedPosts.map((post) => ({
+    ...sortedBlogPosts.map((post) => ({
       url: getPostUrl(post._meta.path),
       lastModified: getPostModifiedDate(post),
       changeFrequency: "monthly" as const,

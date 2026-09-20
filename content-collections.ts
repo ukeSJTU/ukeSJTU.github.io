@@ -16,9 +16,9 @@ import { rehypeMermaidTheme } from "./src/lib/content/markdown/rehype-mermaid-th
 import { rehypeTaskListLabels } from "./src/lib/content/markdown/rehype-task-list-labels";
 import { remarkCodeMeta } from "./src/lib/content/markdown/remark-code-meta";
 
-const posts = defineCollection({
-  name: "posts",
-  directory: "content/posts",
+const blog = defineCollection({
+  name: "blog",
+  directory: "content/blog",
   include: "**/*.md",
   schema: z.object({
     title: z.string(),
@@ -52,5 +52,5 @@ const posts = defineCollection({
 });
 
 export default defineConfig({
-  content: [posts],
+  content: [blog],
 });

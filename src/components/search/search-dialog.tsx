@@ -226,7 +226,7 @@ export function SearchDialog({
         ? "Searching…"
         : normalizedQuery && !composing
           ? "No results found."
-          : "Search posts and pages.";
+          : "Search notes and pages.";
   const emptyHint =
     status === "error"
       ? "Check your connection and try again."
@@ -252,7 +252,7 @@ export function SearchDialog({
             } as CSSProperties)
           : undefined,
       }}
-      description="Search posts and pages in English or Chinese. Use arrow keys to choose a result and Enter to open it."
+      description="Search notes and pages in English or Chinese. Use arrow keys to choose a result and Enter to open it."
       onOpenChange={onOpenChange}
       open={open}
       title="Search site"
@@ -276,7 +276,7 @@ export function SearchDialog({
         }}
       >
         <CommandInput
-          aria-label="Search posts and pages"
+          aria-label="Search notes and pages"
           autoCapitalize="none"
           autoComplete="off"
           spellCheck={false}
@@ -387,7 +387,7 @@ export function SearchDialog({
             <kbd>↵</kbd> Open
           </span>
         </span>
-        <span className="sm:hidden">Search posts and pages</span>
+        <span className="sm:hidden">Search notes and pages</span>
         <DialogClose render={<Button className="h-10" variant="ghost" />}>
           Close <kbd className="ml-1 text-xs">Esc</kbd>
         </DialogClose>
