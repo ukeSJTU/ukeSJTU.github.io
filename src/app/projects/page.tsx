@@ -4,35 +4,32 @@ import { PageTransition } from "@/components/page-transition";
 import { ProjectList } from "@/components/project-list";
 import { getProjectUrl, sortedProjects } from "@/lib/content/projects";
 import { siteConfig } from "@/lib/site/config";
+import { createPageMetadata } from "@/lib/site/metadata";
+import { schemaEntity, siteAuthor } from "@/lib/site/structured-data";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = createPageMetadata({
   title: "Projects",
   description: `Selected software projects built by ${siteConfig.name}.`,
-  alternates: {
-    canonical: "/projects",
-  },
-};
+  path: "/projects",
+});
 
 export default function ProjectsPage() {
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "CollectionPage",
+    ...schemaEntity("CollectionPage", "/projects"),
     name: "Projects",
     description: metadata.description,
-    url: `${siteConfig.url}/projects`,
     inLanguage: siteConfig.language,
-    author: {
-      "@type": "Person",
-      name: siteConfig.author.name,
-      url: siteConfig.author.url,
-    },
+    author: siteAuthor,
     hasPart: sortedProjects.map((project) => ({
-      "@type": "SoftwareSourceCode",
+      ...(project.hasArticle
+        ? schemaEntity("SoftwareSourceCode", getProjectUrl(project))
+        : {
+            "@type": "SoftwareSourceCode",
+            url: project.demo ?? project.source,
+          }),
       name: project.name,
       description: project.description,
-      url: project.hasArticle
-        ? getProjectUrl(project._meta.path)
-        : (project.demo ?? project.source),
       codeRepository: project.source,
     })),
   };

@@ -6,7 +6,7 @@ import {
 } from "@/lib/content/blog";
 import { absoluteUrl, siteConfig } from "@/lib/site/config";
 
-export type Topic = (typeof allTopics)[number];
+export type Topic = Omit<(typeof allTopics)[number], "_meta">;
 
 export type TopicWithPosts = Topic & {
   posts: Post[];
@@ -36,7 +36,7 @@ function createTopicsWithPosts() {
 
   return [...allTopics]
     .sort((left, right) => topicNameCollator.compare(left.name, right.name))
-    .map((topic) => ({
+    .map(({ _meta, ...topic }) => ({
       ...topic,
       posts: postsByTopicSlug.get(topic.slug) ?? [],
     }));

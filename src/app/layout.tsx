@@ -3,19 +3,24 @@ import "katex/dist/katex.min.css";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteSidebar } from "@/components/layout/site-sidebar";
 import { ThemeProvider } from "@/components/theme-provider";
-import { absoluteUrl, siteConfig } from "@/lib/site/config";
+import { siteConfig } from "@/lib/site/config";
+import { createPageMetadata } from "@/lib/site/metadata";
 import { fontVariables } from "./fonts";
 import "./globals.css";
 
 const siteBasePath = process.env.PAGES_BASE_PATH ?? "";
 
 export const metadata: Metadata = {
+  ...createPageMetadata({
+    title: siteConfig.name,
+    description: siteConfig.description,
+    path: "/",
+  }),
   metadataBase: new URL(siteConfig.url),
   title: {
     default: siteConfig.name,
     template: `%s | ${siteConfig.name}`,
   },
-  description: siteConfig.description,
   applicationName: siteConfig.name,
   authors: [siteConfig.author],
   creator: siteConfig.author.name,
@@ -28,25 +33,6 @@ export const metadata: Metadata = {
     address: false,
     email: false,
     telephone: false,
-  },
-  alternates: {
-    canonical: "/",
-    types: {
-      "application/rss+xml": absoluteUrl("/rss.xml"),
-    },
-  },
-  openGraph: {
-    type: "website",
-    locale: siteConfig.locale,
-    url: "/",
-    siteName: siteConfig.name,
-    title: siteConfig.name,
-    description: siteConfig.description,
-  },
-  twitter: {
-    card: "summary",
-    title: siteConfig.name,
-    description: siteConfig.description,
   },
   robots: {
     index: true,

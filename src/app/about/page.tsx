@@ -2,14 +2,13 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { PageTransition } from "@/components/page-transition";
 import { siteConfig } from "@/lib/site/config";
+import { createPageMetadata } from "@/lib/site/metadata";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = createPageMetadata({
   title: "About",
   description: `About ${siteConfig.name} and this digital garden.`,
-  alternates: {
-    canonical: "/about",
-  },
-};
+  path: "/about",
+});
 
 export default function AboutPage() {
   return (

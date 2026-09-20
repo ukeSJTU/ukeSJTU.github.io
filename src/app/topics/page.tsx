@@ -9,28 +9,23 @@ import {
   topicsWithPosts,
 } from "@/lib/content/topics";
 import { siteConfig } from "@/lib/site/config";
+import { createPageMetadata } from "@/lib/site/metadata";
+import { schemaEntity, siteAuthor } from "@/lib/site/structured-data";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = createPageMetadata({
   title: "Topics",
   description: `Browse ${siteConfig.name}'s notes by topic.`,
-  alternates: {
-    canonical: "/topics",
-  },
-};
+  path: "/topics",
+});
 
 export default function TopicsPage() {
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "CollectionPage",
+    ...schemaEntity("CollectionPage", "/topics"),
     name: "Topics",
     description: metadata.description,
-    url: `${siteConfig.url}/topics`,
     inLanguage: siteConfig.language,
-    author: {
-      "@type": "Person",
-      name: siteConfig.author.name,
-      url: siteConfig.author.url,
-    },
+    author: siteAuthor,
     hasPart: topicsWithPosts.map((topic) => ({
       "@type": "DefinedTerm",
       name: topic.name,

@@ -34,7 +34,9 @@ The slug must be unique and use lowercase letters, numbers, and single hyphens. 
 
 Each note must reference between one and three topics by slug. Topics are defined as YAML files in `content/topics` and contain a unique `slug` and display `name`; builds fail when a note references an unknown topic. Topic slugs control their public URLs at `/topics/<slug>`.
 
-The Markdown pipeline supports CommonMark, GitHub Flavored Markdown, CJK-friendly parsing, KaTeX, Shiki syntax highlighting, and Mermaid diagrams with light and dark themes.
+Projects live in `content/projects`. Each project requires a unique `slug` using the same format as blog slugs, plus `name`, `description`, `year`, and `order`. `demo` and `source` are optional URLs. A non-empty Markdown body creates an article at `/projects/<slug>`; projects without a body appear only in the index. Keep the slug unchanged when moving or renaming a file to preserve public links.
+
+The shared Markdown compiler in `src/lib/content/markdown/compile-markdown.ts` supports CommonMark, GitHub Flavored Markdown, CJK-friendly parsing, KaTeX, Shiki syntax highlighting, and Mermaid diagrams with light and dark themes. Collection schemas and cross-document validation live in `content-collections.ts`. Pages use `src/lib/content` queries rather than generated collections or filesystem metadata.
 
 ### Code blocks
 
@@ -60,11 +62,24 @@ export function parsePostDate(value: string) {
 pnpm check
 ```
 
+`pnpm check` runs lint, tests, and the production build in that order.
+
 `pnpm lint` checks source files with Biome and Markdown files with rumdl. Use `pnpm format` to format both, or the `:code` and `:md` variants to run either tool independently.
 
 `pnpm build` writes the static site to `out/`, including the sitemap, robots file, RSS feed, manifest, and Pagefind search index.
 
 Use `pnpm preview` for a fresh production build and local preview, or `pnpm serve` to re-index and serve the existing `out/` directory.
+
+### Tests
+
+```bash
+pnpm test        # Run once
+pnpm test:watch  # Watch mode
+```
+
+Vitest tests live beside their source files as `*.test.ts`. The suite covers the real content build (Markdown output, heading anchors, and slug/topic validation), content queries, Pagefind loading/retry, search result conversion and asynchronous search state, and metadata/structured-data output. Most tests run in Node; search hook tests use React Testing Library with jsdom. Temporary content and generated-script fixtures keep tests independent of prior builds and current articles.
+
+Agree on the public interfaces and critical behaviors before adding tests. Assert observable results rather than private helpers, call counts, or full HTML snapshots. Mock only external inputs, not internal modules. For new behavior or bug fixes, add and run one failing test, make it pass, then move to the next behavior; existing behavior is protected by regression tests. There is no coverage-percentage gate. Full browser interactions and real Pagefind index integration still need production-preview checks.
 
 ## Git hooks
 
@@ -72,7 +87,7 @@ Lefthook installs the repository hooks automatically during `pnpm install`:
 
 - `pre-commit` checks staged source files with Biome and verifies staged Markdown formatting and lint rules with rumdl. It does not modify or stage files automatically.
 - `commit-msg` enforces [Conventional Commits](https://www.conventionalcommits.org/) with Commitlint, for example `feat: add blog search`.
-- `pre-push` runs the full lint and static build checks.
+- `pre-push` runs lint, tests, and the static build.
 
 Run a hook manually with `pnpm exec lefthook run <hook>`, such as `pnpm exec lefthook run pre-push`.
 

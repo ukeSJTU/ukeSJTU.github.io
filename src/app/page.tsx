@@ -5,27 +5,23 @@ import { PageTransition } from "@/components/page-transition";
 import { VolcanoHero } from "@/components/volcano-hero";
 import { getPostUrl, sortedBlogPosts } from "@/lib/content/blog";
 import { siteConfig } from "@/lib/site/config";
+import {
+  blogPostingReference,
+  schemaEntity,
+  siteAuthor,
+} from "@/lib/site/structured-data";
 
 export default function Home() {
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "WebSite",
-    "@id": `${siteConfig.url}/#website`,
-    url: siteConfig.url,
+    ...schemaEntity("WebSite", "/"),
     name: siteConfig.name,
     description: siteConfig.description,
     inLanguage: siteConfig.language,
-    author: {
-      "@type": "Person",
-      name: siteConfig.author.name,
-      url: siteConfig.author.url,
-    },
-    hasPart: sortedBlogPosts.map((post) => ({
-      "@type": "BlogPosting",
-      "@id": getPostUrl(post),
-      url: getPostUrl(post),
-      headline: post.title,
-    })),
+    author: siteAuthor,
+    hasPart: sortedBlogPosts.map((post) =>
+      blogPostingReference(post.title, getPostUrl(post)),
+    ),
   };
 
   return (

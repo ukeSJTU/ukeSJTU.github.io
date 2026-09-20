@@ -1,48 +1,6 @@
 import { defineCollection, defineConfig } from "@content-collections/core";
-import { compileMarkdown } from "@content-collections/markdown";
-import rehypeExtractToc from "@stefanprobst/rehype-extract-toc";
-import rehypeKatex from "rehype-katex";
-import rehypeMermaid from "rehype-mermaid";
-import rehypePrettyCode from "rehype-pretty-code";
-import rehypeSlug from "rehype-slug";
-import remarkCjkFriendlyParseOnly from "remark-cjk-friendly/parseOnly";
-import remarkCjkFriendlyGfmParseOnly from "remark-cjk-friendly-gfm-strikethrough/parseOnly";
-import remarkGfm from "remark-gfm";
-import remarkMath from "remark-math";
-import type { Pluggable } from "unified";
 import { z } from "zod";
-import { compileMarkdownWithTableOfContents } from "./src/lib/content/markdown/compile-markdown-with-table-of-contents";
-import { mermaidOptions } from "./src/lib/content/markdown/mermaid-options";
-import { prettyCodeOptions } from "./src/lib/content/markdown/pretty-code";
-import { rehypeCodeBlocks } from "./src/lib/content/markdown/rehype-code-blocks";
-import { rehypeMermaidTheme } from "./src/lib/content/markdown/rehype-mermaid-theme";
-import { rehypeTaskListLabels } from "./src/lib/content/markdown/rehype-task-list-labels";
-import { remarkCodeMeta } from "./src/lib/content/markdown/remark-code-meta";
-
-function createMarkdownOptions(afterSlug: Pluggable[] = []) {
-  return {
-    allowDangerousHtml: true,
-    remarkPlugins: [
-      [remarkGfm, { singleTilde: false }],
-      remarkCjkFriendlyParseOnly,
-      remarkCjkFriendlyGfmParseOnly,
-      remarkMath,
-      remarkCodeMeta,
-    ] as Pluggable[],
-    rehypePlugins: [
-      rehypeSlug,
-      ...afterSlug,
-      rehypeKatex,
-      [rehypeMermaid, mermaidOptions],
-      rehypeMermaidTheme,
-      [rehypePrettyCode, prettyCodeOptions],
-      rehypeCodeBlocks,
-      rehypeTaskListLabels,
-    ] as Pluggable[],
-  };
-}
-
-const markdownOptions = createMarkdownOptions();
+import { compileMarkdown } from "./src/lib/content/markdown/compile-markdown";
 
 const slugSchema = z
   .string()
@@ -50,6 +8,23 @@ const slugSchema = z
     /^[a-z0-9]+(?:-[a-z0-9]+)*$/,
     "Slug must contain lowercase letters, numbers, and single hyphens only",
   );
+
+function assertUniqueSlugs(
+  kind: string,
+  entries: { slug: string; _meta: { path: string } }[],
+) {
+  const pathsBySlug = new Map<string, string>();
+
+  for (const entry of entries) {
+    const existingPath = pathsBySlug.get(entry.slug);
+    if (existingPath !== undefined) {
+      throw new Error(
+        `Duplicate ${kind} slug "${entry.slug}" in "${existingPath}" and "${entry._meta.path}"`,
+      );
+    }
+    pathsBySlug.set(entry.slug, entry._meta.path);
+  }
+}
 
 const topics = defineCollection({
   name: "topics",
@@ -60,21 +35,7 @@ const topics = defineCollection({
     slug: slugSchema,
     name: z.string().trim().min(1),
   }),
-  onSuccess: (entries) => {
-    const topicPathsBySlug = new Map<string, string>();
-
-    for (const topic of entries) {
-      const existingPath = topicPathsBySlug.get(topic.slug);
-
-      if (existingPath) {
-        throw new Error(
-          `Duplicate topic slug "${topic.slug}" in "${existingPath}" and "${topic._meta.path}"`,
-        );
-      }
-
-      topicPathsBySlug.set(topic.slug, topic._meta.path);
-    }
-  },
+  onSuccess: (entries) => assertUniqueSlugs("topic", entries),
 });
 
 const blog = defineCollection({
@@ -110,17 +71,14 @@ const blog = defineCollection({
       );
     }
 
-    const compiled = await compileMarkdownWithTableOfContents(
-      context,
-      post,
-      createMarkdownOptions([rehypeExtractToc]),
-    );
+    const compiled = await compileMarkdown(context, post);
 
     return {
       ...post,
       ...compiled,
     };
   },
+  onSuccess: (entries) => assertUniqueSlugs("blog", entries),
 });
 
 const projects = defineCollection({
@@ -128,6 +86,7 @@ const projects = defineCollection({
   directory: "content/projects",
   include: "**/*.md",
   schema: z.object({
+    slug: slugSchema,
     name: z.string(),
     description: z.string(),
     year: z.number().int(),
@@ -143,10 +102,11 @@ const projects = defineCollection({
       ...project,
       hasArticle,
       html: hasArticle
-        ? await compileMarkdown(context, project, markdownOptions)
+        ? (await compileMarkdown(context, project)).html
         : undefined,
     };
   },
+  onSuccess: (entries) => assertUniqueSlugs("project", entries),
 });
 
 export default defineConfig({

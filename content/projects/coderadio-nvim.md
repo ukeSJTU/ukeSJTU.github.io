@@ -1,4 +1,5 @@
 ---
+slug: coderadio-nvim
 name: coderadio.nvim
 description: A Neovim plugin for streaming freeCodeCamp Code Radio, with live track metadata, volume controls, and statusline integration.
 year: 2025

@@ -1,26 +1,25 @@
-import {
-  IconArrowLeft,
-  IconBrandGithub,
-  IconExternalLink,
-} from "@tabler/icons-react";
+import { IconArrowLeft } from "@tabler/icons-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { JsonLd } from "@/components/json-ld";
 import { MarkdownRenderer } from "@/components/markdown/markdown-renderer";
 import { PageTransition } from "@/components/page-transition";
+import { ProjectLinks } from "@/components/project-links";
 import {
+  getProjectBySlug,
   getProjectPath,
   getProjectUrl,
   projectsWithArticles,
 } from "@/lib/content/projects";
-import { siteConfig } from "@/lib/site/config";
+import { createPageMetadata } from "@/lib/site/metadata";
+import { schemaEntity, siteAuthor } from "@/lib/site/structured-data";
 
 export const dynamicParams = false;
 
 export function generateStaticParams() {
   return projectsWithArticles.map((project) => ({
-    slug: project._meta.path,
+    slug: project.slug,
   }));
 }
 
@@ -28,70 +27,45 @@ export async function generateMetadata({
   params,
 }: PageProps<"/projects/[slug]">): Promise<Metadata> {
   const { slug } = await params;
-  const project = projectsWithArticles.find(
-    (candidate) => candidate._meta.path === slug,
-  );
+  const project = getProjectBySlug(slug);
 
-  if (!project) {
+  if (!project?.hasArticle) {
     return {
       title: "Project not found",
       robots: { index: false, follow: false },
     };
   }
 
-  const projectPath = getProjectPath(project._meta.path);
+  const projectPath = getProjectPath(project);
 
-  return {
+  return createPageMetadata({
     title: project.name,
     description: project.description,
-    alternates: {
-      canonical: projectPath,
-    },
-    openGraph: {
-      type: "article",
-      locale: siteConfig.locale,
-      url: projectPath,
-      siteName: siteConfig.name,
-      title: project.name,
-      description: project.description,
-      authors: [siteConfig.author.name],
-    },
-    twitter: {
-      card: "summary",
-      title: project.name,
-      description: project.description,
-    },
-  };
+    path: projectPath,
+    article: {},
+  });
 }
 
 export default async function ProjectPage({
   params,
 }: PageProps<"/projects/[slug]">) {
   const { slug } = await params;
-  const project = projectsWithArticles.find(
-    (candidate) => candidate._meta.path === slug,
-  );
+  const project = getProjectBySlug(slug);
 
   if (!project?.html) {
     notFound();
   }
 
-  const projectPath = getProjectPath(project._meta.path);
-  const projectUrl = getProjectUrl(project._meta.path);
+  const projectPath = getProjectPath(project);
+  const projectUrl = getProjectUrl(project);
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "SoftwareSourceCode",
-    "@id": `${projectUrl}#project`,
+    ...schemaEntity("SoftwareSourceCode", projectUrl),
     name: project.name,
     description: project.description,
     dateCreated: String(project.year),
-    url: projectUrl,
     codeRepository: project.source,
-    author: {
-      "@type": "Person",
-      name: siteConfig.author.name,
-      url: siteConfig.author.url,
-    },
+    author: siteAuthor,
   };
 
   return (
@@ -128,40 +102,12 @@ export default async function ProjectPage({
             >
               {project.description}
             </p>
-            <nav
-              aria-label={`${project.name} links`}
-              className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-3 text-sm font-medium"
-            >
-              {project.demo ? (
-                <a
-                  className="text-primary inline-flex items-center gap-1.5 underline underline-offset-4"
-                  href={project.demo}
-                  rel="noopener noreferrer"
-                  target="_blank"
-                >
-                  <IconExternalLink aria-hidden="true" className="size-4" />
-                  Demo
-                  <span className="sr-only"> (opens in a new tab)</span>
-                </a>
-              ) : null}
-              {project.source ? (
-                <a
-                  className="text-primary inline-flex items-center gap-1.5 underline underline-offset-4"
-                  href={project.source}
-                  rel="noopener noreferrer"
-                  target="_blank"
-                >
-                  <IconBrandGithub aria-hidden="true" className="size-4" />
-                  Source
-                  <span className="sr-only"> (opens in a new tab)</span>
-                </a>
-              ) : null}
-            </nav>
+            <ProjectLinks project={project} variant="detail" />
           </header>
 
           <MarkdownRenderer
             className="mt-6 max-w-3xl"
-            contentKey={project._meta.path}
+            contentKey={project.slug}
             html={project.html}
           />
         </article>

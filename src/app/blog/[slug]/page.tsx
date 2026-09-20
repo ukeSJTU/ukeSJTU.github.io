@@ -1,5 +1,4 @@
 import { IconArrowLeft } from "@tabler/icons-react";
-import { allBlogs } from "content-collections";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -11,15 +10,18 @@ import { PageTransition } from "@/components/page-transition";
 import {
   getPostBySlug,
   getPostModifiedAt,
+  getPostModifiedDate,
   getPostPath,
-  getPostUrl,
   parsePostDate,
+  sortedBlogPosts,
 } from "@/lib/content/blog";
-import { absoluteUrl, siteConfig } from "@/lib/site/config";
+import { siteConfig } from "@/lib/site/config";
+import { createPageMetadata } from "@/lib/site/metadata";
+import { blogPostingSchema } from "@/lib/site/structured-data";
 import styles from "./page.module.css";
 
 export function generateStaticParams() {
-  return allBlogs.map((post) => ({ slug: post.slug }));
+  return sortedBlogPosts.map((post) => ({ slug: post.slug }));
 }
 
 export const dynamicParams = false;
@@ -41,32 +43,12 @@ export async function generateMetadata({
   const publishedTime = parsePostDate(post.publishedAt).toISOString();
   const modifiedTime = getPostModifiedAt(post).toISOString();
 
-  return {
+  return createPageMetadata({
     title: post.title,
     description: post.summary,
-    alternates: {
-      canonical: postPath,
-      types: {
-        "application/rss+xml": absoluteUrl("/rss.xml"),
-      },
-    },
-    openGraph: {
-      type: "article",
-      locale: siteConfig.locale,
-      url: postPath,
-      siteName: siteConfig.name,
-      title: post.title,
-      description: post.summary,
-      publishedTime,
-      modifiedTime,
-      authors: [siteConfig.author.name],
-    },
-    twitter: {
-      card: "summary",
-      title: post.title,
-      description: post.summary,
-    },
-  };
+    path: postPath,
+    article: { publishedTime, modifiedTime },
+  });
 }
 
 export default async function BlogPostPage({
@@ -80,32 +62,10 @@ export default async function BlogPostPage({
   }
 
   const postPath = getPostPath(post);
-  const postUrl = getPostUrl(post);
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "BlogPosting",
-    "@id": `${postUrl}#article`,
-    url: postUrl,
-    mainEntityOfPage: postUrl,
-    headline: post.title,
-    description: post.summary,
-    datePublished: post.publishedAt,
-    dateModified: post.updatedAt ?? post.publishedAt,
-    inLanguage: siteConfig.language,
-    author: {
-      "@type": "Person",
-      name: siteConfig.author.name,
-      url: siteConfig.author.url,
-    },
-    publisher: {
-      "@type": "Person",
-      name: siteConfig.author.name,
-      url: siteConfig.author.url,
-    },
-    isPartOf: {
-      "@id": `${siteConfig.url}/#website`,
-    },
-  };
+  const jsonLd = blogPostingSchema(
+    { ...post, modifiedAt: getPostModifiedDate(post) },
+    postPath,
+  );
   const formattedPublishedAt = new Intl.DateTimeFormat(siteConfig.language, {
     dateStyle: "long",
     timeZone: "Asia/Shanghai",

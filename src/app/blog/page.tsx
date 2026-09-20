@@ -3,14 +3,13 @@ import { BlogList } from "@/components/blog-list";
 import { PageTransition } from "@/components/page-transition";
 import { sortedBlogPosts } from "@/lib/content/blog";
 import { siteConfig } from "@/lib/site/config";
+import { createPageMetadata } from "@/lib/site/metadata";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = createPageMetadata({
   title: "Blog",
   description: `Notes on technology, learning, and making things by ${siteConfig.name}.`,
-  alternates: {
-    canonical: "/blog",
-  },
-};
+  path: "/blog",
+});
 
 export default function BlogPage() {
   return (

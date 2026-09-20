@@ -2,13 +2,7 @@
 
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useRouter } from "next/navigation";
-import {
-  type CSSProperties,
-  type RefObject,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { type CSSProperties, type RefObject, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -21,35 +15,10 @@ import {
 } from "@/components/ui/command";
 import { DialogClose } from "@/components/ui/dialog";
 import { InputGroupButton } from "@/components/ui/input-group";
-import {
-  getCleanResultUrl,
-  loadPagefind,
-  type PagefindResultData,
-  resetPagefind,
-} from "@/lib/search/pagefind";
+import { useSearchViewport } from "./use-search-viewport";
+import { searchResultLimit, useSiteSearch } from "./use-site-search";
 
-const maximumResults = 8;
 const MotionCommandItem = motion.create(CommandItem);
-const dateFormatter = new Intl.DateTimeFormat("en", {
-  dateStyle: "medium",
-  timeZone: "UTC",
-});
-
-interface DisplayResult {
-  date?: string;
-  excerpt: string;
-  href: string;
-  id: string;
-  section?: string;
-  title: string;
-}
-
-interface SearchState {
-  query: string;
-  status: "idle" | "loading" | "ready" | "error";
-  results: DisplayResult[];
-  total: number;
-}
 
 interface SearchDialogProps {
   basePath?: string;
@@ -57,32 +26,6 @@ interface SearchDialogProps {
   open: boolean;
   returnFocusRef: RefObject<HTMLElement | null>;
   triggerRef: RefObject<HTMLButtonElement | null>;
-}
-
-function getDisplayResult(
-  id: string,
-  result: PagefindResultData,
-): DisplayResult {
-  const section = result.sub_results?.find(({ url }) => url.includes("#"));
-  const canonicalPath = getCleanResultUrl(result.meta.url ?? result.url);
-  const sectionHash = section?.url.includes("#")
-    ? section.url.slice(section.url.indexOf("#"))
-    : "";
-  const date = result.meta.date ? new Date(result.meta.date) : undefined;
-  return {
-    date:
-      date && !Number.isNaN(date.valueOf())
-        ? dateFormatter.format(date)
-        : undefined,
-    excerpt: section?.excerpt ?? result.excerpt,
-    href: canonicalPath.split("#")[0] + sectionHash,
-    id,
-    section:
-      section && section.title !== result.meta.title
-        ? section.title
-        : undefined,
-    title: result.meta.title ?? "Untitled",
-  };
 }
 
 export function SearchDialog({
@@ -98,107 +41,10 @@ export function SearchDialog({
   const queryRef = useRef("");
   const [query, setQuery] = useState("");
   const [composing, setComposing] = useState(false);
-  const [attempt, setAttempt] = useState(0);
-  const [viewport, setViewport] = useState<{ height: number; top: number }>();
-  const [state, setState] = useState<SearchState>({
-    query: "",
-    status: "idle",
-    results: [],
-    total: 0,
-  });
-  const completedSearch = useRef<{
-    basePath: string;
-    attempt: number;
-    state: SearchState;
-  } | null>(null);
+  const state = useSiteSearch({ basePath, query, open, composing });
+  const { status, results } = state;
+  const viewport = useSearchViewport(open);
   const normalizedQuery = query.trim();
-
-  // Hide stale items in the render that changes the query, before effects run.
-  const status = composing
-    ? "idle"
-    : state.query === normalizedQuery
-      ? state.status
-      : normalizedQuery
-        ? "loading"
-        : "idle";
-  const results = status === "ready" ? state.results : [];
-
-  useEffect(() => {
-    if (!open || composing) return;
-    const cached = completedSearch.current;
-    if (
-      cached?.basePath === basePath &&
-      cached.attempt === attempt &&
-      cached.state.query === normalizedQuery
-    ) {
-      setState(cached.state);
-      return;
-    }
-    let cancelled = false;
-    setState({
-      query: normalizedQuery,
-      status: normalizedQuery ? "loading" : "idle",
-      results: [],
-      total: 0,
-    });
-    const search = async () => {
-      try {
-        const pagefind = await loadPagefind(basePath);
-        if (cancelled || !normalizedQuery) return;
-        const response = await pagefind.debouncedSearch(
-          normalizedQuery,
-          {},
-          250,
-        );
-        if (cancelled || response === null) return;
-        const loadedResults = await Promise.all(
-          response.results
-            .slice(0, maximumResults)
-            .map(async (result) =>
-              getDisplayResult(result.id, await result.data()),
-            ),
-        );
-        if (cancelled) return;
-        const next: SearchState = {
-          query: normalizedQuery,
-          status: "ready",
-          results: loadedResults,
-          total: response.results.length,
-        };
-        completedSearch.current = { basePath, attempt, state: next };
-        setState(next);
-      } catch {
-        if (!cancelled)
-          setState({
-            query: normalizedQuery,
-            status: "error",
-            results: [],
-            total: 0,
-          });
-      }
-    };
-    void search();
-    return () => {
-      cancelled = true;
-    };
-  }, [basePath, normalizedQuery, open, composing, attempt]);
-
-  useEffect(() => {
-    const visualViewport = window.visualViewport;
-    if (!open || !visualViewport) return;
-    const update = () =>
-      setViewport({
-        height: visualViewport.height,
-        top: visualViewport.offsetTop,
-      });
-    update();
-    visualViewport.addEventListener("resize", update);
-    visualViewport.addEventListener("scroll", update);
-    return () => {
-      visualViewport.removeEventListener("resize", update);
-      visualViewport.removeEventListener("scroll", update);
-    };
-  }, [open]);
 
   function updateQuery(value: string) {
     queryRef.current = value.trim();
@@ -206,21 +52,13 @@ export function SearchDialog({
   }
 
   function retry() {
-    resetPagefind();
-    completedSearch.current = null;
-    setState({
-      query: normalizedQuery,
-      status: "loading",
-      results: [],
-      total: 0,
-    });
-    setAttempt((value) => value + 1);
+    state.retry();
     inputRef.current?.focus();
   }
 
   const countMessage =
-    state.total > maximumResults
-      ? `Showing ${maximumResults} of ${state.total} results. Refine your search for more.`
+    state.total > searchResultLimit
+      ? `Showing ${searchResultLimit} of ${state.total} results. Refine your search for more.`
       : `${state.total} ${state.total === 1 ? "result" : "results"}`;
   const emptyTitle =
     status === "error"

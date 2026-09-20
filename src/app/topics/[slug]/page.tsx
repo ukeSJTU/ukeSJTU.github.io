@@ -13,6 +13,8 @@ import {
   topicsWithPosts,
 } from "@/lib/content/topics";
 import { siteConfig } from "@/lib/site/config";
+import { createPageMetadata } from "@/lib/site/metadata";
+import { blogPostingReference, schemaEntity } from "@/lib/site/structured-data";
 
 export function generateStaticParams() {
   return topicsWithPosts.map((topic) => ({ slug: topic.slug }));
@@ -35,26 +37,11 @@ export async function generateMetadata({
 
   const description = `${topic.posts.length} ${topic.posts.length === 1 ? "note" : "notes"} filed under ${topic.name}.`;
 
-  return {
+  return createPageMetadata({
     title: topic.name,
     description,
-    alternates: {
-      canonical: getTopicPath(topic),
-    },
-    openGraph: {
-      type: "website",
-      locale: siteConfig.locale,
-      url: getTopicPath(topic),
-      siteName: siteConfig.name,
-      title: topic.name,
-      description,
-    },
-    twitter: {
-      card: "summary",
-      title: topic.name,
-      description,
-    },
-  };
+    path: getTopicPath(topic),
+  });
 }
 
 export default async function TopicPage({
@@ -71,9 +58,7 @@ export default async function TopicPage({
   const topicUrl = getTopicUrl(topic);
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "CollectionPage",
-    "@id": `${topicUrl}#collection`,
-    url: topicUrl,
+    ...schemaEntity("CollectionPage", topicUrl),
     name: topic.name,
     description: `${topic.posts.length} ${topic.posts.length === 1 ? "note" : "notes"} filed under ${topic.name}.`,
     inLanguage: siteConfig.language,
@@ -81,12 +66,9 @@ export default async function TopicPage({
       "@type": "DefinedTerm",
       name: topic.name,
     },
-    hasPart: topic.posts.map((post) => ({
-      "@type": "BlogPosting",
-      "@id": `${getPostUrl(post)}#article`,
-      url: getPostUrl(post),
-      headline: post.title,
-    })),
+    hasPart: topic.posts.map((post) =>
+      blogPostingReference(post.title, getPostUrl(post)),
+    ),
   };
 
   return (

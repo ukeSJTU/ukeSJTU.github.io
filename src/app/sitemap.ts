@@ -61,7 +61,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.8,
     })),
     ...projectsWithArticles.map((project) => ({
-      url: getProjectUrl(project._meta.path),
+      url: getProjectUrl(project),
       changeFrequency: "monthly" as const,
       priority: 0.7,
     })),
