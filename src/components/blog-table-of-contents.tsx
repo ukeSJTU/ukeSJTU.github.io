@@ -1,7 +1,8 @@
 "use client";
 
-import { motion, useReducedMotion } from "motion/react";
-import { useEffect, useState } from "react";
+import { IconArrowUp } from "@tabler/icons-react";
+import { animate, motion, useReducedMotion } from "motion/react";
+import { useEffect, useRef, useState } from "react";
 import type { TableOfContentsItem } from "@/lib/content/markdown/table-of-contents";
 import { cn } from "@/lib/utils";
 import styles from "./blog-table-of-contents.module.css";
@@ -68,6 +69,26 @@ export function BlogTableOfContents({
   items: TableOfContentsItem[];
 }) {
   const [activeId, setActiveId] = useState<string | null>(items[0]?.id ?? null);
+  const scrollAnimation = useRef<ReturnType<typeof animate> | null>(null);
+  const shouldReduceMotion = useReducedMotion();
+
+  useEffect(() => {
+    function stopScrollAnimation() {
+      scrollAnimation.current?.stop();
+      scrollAnimation.current = null;
+    }
+
+    window.addEventListener("touchstart", stopScrollAnimation, {
+      passive: true,
+    });
+    window.addEventListener("wheel", stopScrollAnimation, { passive: true });
+
+    return () => {
+      stopScrollAnimation();
+      window.removeEventListener("touchstart", stopScrollAnimation);
+      window.removeEventListener("wheel", stopScrollAnimation);
+    };
+  }, []);
 
   useEffect(() => {
     const headings = items
@@ -119,6 +140,28 @@ export function BlogTableOfContents({
     return null;
   }
 
+  function scrollToTop() {
+    scrollAnimation.current?.stop();
+
+    if (shouldReduceMotion) {
+      window.scrollTo({ top: 0 });
+      return;
+    }
+
+    scrollAnimation.current = animate(window.scrollY, 0, {
+      type: "spring",
+      stiffness: 115,
+      damping: 24,
+      mass: 0.8,
+      restDelta: 0.5,
+      restSpeed: 1,
+      onUpdate: (position) => window.scrollTo({ top: Math.max(0, position) }),
+      onComplete: () => {
+        scrollAnimation.current = null;
+      },
+    });
+  }
+
   return (
     <div className={cn(styles.root, className)}>
       <details className={styles.mobile}>
@@ -134,7 +177,18 @@ export function BlogTableOfContents({
       </details>
 
       <aside aria-label="Table of contents" className={styles.desktop}>
-        <p className={styles.title}>On this page</p>
+        <div className={styles.header}>
+          <p className={styles.title}>On this page</p>
+          <button
+            aria-label="Back to top"
+            className={styles.backToTop}
+            onClick={scrollToTop}
+            title="Back to top"
+            type="button"
+          >
+            <IconArrowUp aria-hidden="true" size={15} stroke={1.8} />
+          </button>
+        </div>
         <nav>
           <TableOfContentsLinks
             activeId={activeId}
