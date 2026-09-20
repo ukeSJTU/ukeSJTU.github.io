@@ -1,0 +1,14 @@
+min_version = { hard = "2026.9.7", soft = "2026.9.11" }
+
+[tools]
+node = "24"
+
+[settings]
+idiomatic_version_file_enable_tools = ["pnpm"]
+lockfile = true
+lockfile_mode = "merge"
+lockfile_platforms = ["macos-arm64", "linux-x64"]
+minimum_release_age = "24h"
+
+[tool_config]
+locked = true
