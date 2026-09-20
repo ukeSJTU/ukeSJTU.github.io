@@ -52,10 +52,24 @@
   line-height: 1.45;
   margin-left: 0.375rem;
   padding: 0.3rem 0.5rem;
+  position: relative;
   text-decoration: none;
   transition:
     background-color 120ms ease,
     color 120ms ease;
+}
+
+.indicator {
+  background: var(--muted);
+  border-radius: inherit;
+  box-shadow: inset 2px 0 var(--primary);
+  inset: 0;
+  position: absolute;
+}
+
+.linkLabel {
+  position: relative;
+  z-index: 1;
 }
 
 .link[data-depth="3"] {
@@ -69,6 +83,11 @@
 .link:hover {
   background: var(--muted);
   color: var(--foreground);
+}
+
+.link[data-active="true"] {
+  color: var(--foreground);
+  font-weight: 550;
 }
 
 .link:active {

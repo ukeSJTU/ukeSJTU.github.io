@@ -1,5 +1,6 @@
 "use client";
 
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useRouter } from "next/navigation";
 import {
   type CSSProperties,
@@ -28,6 +29,7 @@ import {
 } from "@/lib/search/pagefind";
 
 const maximumResults = 8;
+const MotionCommandItem = motion.create(CommandItem);
 const dateFormatter = new Intl.DateTimeFormat("en", {
   dateStyle: "medium",
   timeZone: "UTC",
@@ -91,6 +93,7 @@ export function SearchDialog({
   triggerRef,
 }: SearchDialogProps) {
   const router = useRouter();
+  const shouldReduceMotion = useReducedMotion();
   const inputRef = useRef<HTMLInputElement>(null);
   const queryRef = useRef("");
   const [query, setQuery] = useState("");
@@ -306,22 +309,32 @@ export function SearchDialog({
           }
         />
         <CommandEmpty className="min-h-0 overflow-y-auto px-5 py-6">
-          <p>{emptyTitle}</p>
-          {emptyHint ? (
-            <p className="search-secondary mt-2">{emptyHint}</p>
-          ) : null}
-          {status === "error" ? (
-            <Button
-              className="mt-4"
-              onClick={retry}
-              onKeyDown={(event) => {
-                if (event.key === "Enter") event.stopPropagation();
-              }}
-              variant="outline"
+          <AnimatePresence initial={false} mode="wait">
+            <motion.div
+              animate={{ opacity: 1, y: 0 }}
+              exit={shouldReduceMotion ? { opacity: 1 } : { opacity: 0, y: -4 }}
+              initial={shouldReduceMotion ? false : { opacity: 0, y: 5 }}
+              key={`${status}-${normalizedQuery.length > 0}`}
+              transition={{ duration: shouldReduceMotion ? 0 : 0.16 }}
             >
-              Try again
-            </Button>
-          ) : null}
+              <p>{emptyTitle}</p>
+              {emptyHint ? (
+                <p className="search-secondary mt-2">{emptyHint}</p>
+              ) : null}
+              {status === "error" ? (
+                <Button
+                  className="mt-4"
+                  onClick={retry}
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter") event.stopPropagation();
+                  }}
+                  variant="outline"
+                >
+                  Try again
+                </Button>
+              ) : null}
+            </motion.div>
+          </AnimatePresence>
         </CommandEmpty>
         <CommandList
           className="max-h-none flex-1"
@@ -330,45 +343,64 @@ export function SearchDialog({
         >
           {results.length > 0 ? (
             <CommandGroup className="p-2" heading={countMessage}>
-              {results.map((result) => (
-                <CommandItem
-                  className="cursor-pointer items-start px-3 py-3"
-                  key={result.id}
-                  onSelect={() => {
-                    if (
-                      status !== "ready" ||
-                      state.query !== queryRef.current ||
-                      composing
-                    )
-                      return;
-                    onOpenChange(false);
-                    router.push(result.href);
-                  }}
-                  showIndicator={false}
-                  value={result.id}
-                >
-                  <div className="flex min-w-0 flex-1 flex-col gap-1.5">
-                    <span className="text-base font-medium leading-snug">
-                      {result.title}
-                    </span>
-                    {result.section ? (
-                      <span className="text-primary text-xs leading-relaxed">
-                        {result.section}
+              <AnimatePresence initial={false} mode="popLayout">
+                {results.map((result, index) => (
+                  <MotionCommandItem
+                    animate={{ opacity: 1, y: 0 }}
+                    className="cursor-pointer items-start px-3 py-3"
+                    exit={
+                      shouldReduceMotion
+                        ? { opacity: 1 }
+                        : {
+                            opacity: 0,
+                            y: -4,
+                            transition: { duration: 0.1 },
+                          }
+                    }
+                    initial={shouldReduceMotion ? false : { opacity: 0, y: 7 }}
+                    key={result.id}
+                    layout={shouldReduceMotion ? false : "position"}
+                    onSelect={() => {
+                      if (
+                        status !== "ready" ||
+                        state.query !== queryRef.current ||
+                        composing
+                      )
+                        return;
+                      onOpenChange(false);
+                      router.push(result.href);
+                    }}
+                    showIndicator={false}
+                    transition={{
+                      delay: shouldReduceMotion ? 0 : index * 0.025,
+                      duration: shouldReduceMotion ? 0 : 0.18,
+                      ease: [0.22, 1, 0.36, 1],
+                    }}
+                    value={result.id}
+                  >
+                    <div className="flex min-w-0 flex-1 flex-col gap-1.5">
+                      <span className="text-base font-medium leading-snug">
+                        {result.title}
                       </span>
-                    ) : null}
-                    <p
-                      className="search-excerpt search-secondary line-clamp-2 leading-relaxed"
-                      // biome-ignore lint/security/noDangerouslySetInnerHtml: Pagefind escapes indexed HTML before inserting its own mark tags.
-                      dangerouslySetInnerHTML={{ __html: result.excerpt }}
-                    />
-                    {result.date ? (
-                      <span className="search-secondary text-xs">
-                        {result.date}
-                      </span>
-                    ) : null}
-                  </div>
-                </CommandItem>
-              ))}
+                      {result.section ? (
+                        <span className="text-primary text-xs leading-relaxed">
+                          {result.section}
+                        </span>
+                      ) : null}
+                      <p
+                        className="search-excerpt search-secondary line-clamp-2 leading-relaxed"
+                        // biome-ignore lint/security/noDangerouslySetInnerHtml: Pagefind escapes indexed HTML before inserting its own mark tags.
+                        dangerouslySetInnerHTML={{ __html: result.excerpt }}
+                      />
+                      {result.date ? (
+                        <span className="search-secondary text-xs">
+                          {result.date}
+                        </span>
+                      ) : null}
+                    </div>
+                  </MotionCommandItem>
+                ))}
+              </AnimatePresence>
             </CommandGroup>
           ) : null}
         </CommandList>
