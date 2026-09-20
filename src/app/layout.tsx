@@ -1,8 +1,9 @@
 import type { Metadata, Viewport } from "next";
 import "katex/dist/katex.min.css";
-import { SiteHeader } from "@/components/layout/site-header";
+import { SiteFooter } from "@/components/layout/site-footer";
+import { SiteSidebar } from "@/components/layout/site-sidebar";
 import { ThemeProvider } from "@/components/theme-provider";
-import { absoluteUrl, siteConfig, socialImageConfig } from "@/lib/site/config";
+import { absoluteUrl, siteConfig } from "@/lib/site/config";
 import { fontVariables } from "./fonts";
 import "./globals.css";
 
@@ -41,27 +42,11 @@ export const metadata: Metadata = {
     siteName: siteConfig.name,
     title: siteConfig.name,
     description: siteConfig.description,
-    images: [
-      {
-        url: absoluteUrl("/social-image.png"),
-        width: socialImageConfig.width,
-        height: socialImageConfig.height,
-        alt: socialImageConfig.alt,
-      },
-    ],
   },
   twitter: {
-    card: "summary_large_image",
+    card: "summary",
     title: siteConfig.name,
     description: siteConfig.description,
-    images: [
-      {
-        url: absoluteUrl("/social-image.png"),
-        width: socialImageConfig.width,
-        height: socialImageConfig.height,
-        alt: socialImageConfig.alt,
-      },
-    ],
   },
   robots: {
     index: true,
@@ -87,7 +72,7 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
-      lang="zh-CN"
+      lang={siteConfig.language}
       className={`${fontVariables} h-full antialiased`}
       suppressHydrationWarning
     >
@@ -99,8 +84,13 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           enableColorScheme
           enableSystem
         >
-          <SiteHeader basePath={siteBasePath} />
-          {children}
+          <div className="site-shell">
+            <SiteSidebar basePath={siteBasePath} />
+            <div className="site-content">
+              {children}
+              <SiteFooter basePath={siteBasePath} />
+            </div>
+          </div>
         </ThemeProvider>
       </body>
     </html>

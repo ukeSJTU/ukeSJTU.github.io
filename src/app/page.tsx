@@ -1,12 +1,7 @@
-import Image from "next/image";
 import Link from "next/link";
 import { JsonLd } from "@/components/json-ld";
-import {
-  getPostOgImage,
-  getPostPath,
-  getPostUrl,
-  sortedPosts,
-} from "@/lib/content/posts";
+import { PostList } from "@/components/post-list";
+import { getPostUrl, sortedPosts } from "@/lib/content/posts";
 import { siteConfig } from "@/lib/site/config";
 
 export default function Home() {
@@ -28,61 +23,44 @@ export default function Home() {
       "@id": getPostUrl(post._meta.path),
       url: getPostUrl(post._meta.path),
       headline: post.title,
-      image: getPostOgImage(post).url,
     })),
   };
 
   return (
-    <main
-      className="mx-auto flex min-h-screen w-full max-w-3xl flex-col gap-10 px-6 pt-6 pb-16 sm:px-10 sm:pt-8"
-      id="main-content"
-    >
+    <main className="page-content" id="main-content">
       <JsonLd data={jsonLd} />
-      <header className="flex flex-col gap-3">
-        <p className="text-muted-foreground text-sm font-medium tracking-widest uppercase">
-          Content Collections
+      <header className="home-intro">
+        <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
+          Hey, I'm {siteConfig.author.name}!
+        </h1>
+        <p className="mt-4 text-xl leading-relaxed">
+          Notes on technology, learning, and making things.
         </p>
-        <h1 className="text-4xl font-semibold tracking-tight">Posts</h1>
-        <p className="text-muted-foreground">
-          {sortedPosts.length} {sortedPosts.length === 1 ? "post" : "posts"}
+        <p className="text-muted-foreground mt-3 max-w-2xl leading-7">
+          Welcome to my digital garden. This is where I collect what I'm
+          learning, document my experiments, and keep ideas worth revisiting.
         </p>
+        <Link
+          className="text-primary mt-3 inline-block font-medium underline underline-offset-4"
+          href="/about"
+        >
+          More about me
+        </Link>
       </header>
 
-      <section className="flex flex-col gap-6">
-        {sortedPosts.map((post, index) => {
-          const ogImage = getPostOgImage(post);
-
-          return (
-            <Link
-              className="group border-border hover:bg-muted rounded-2xl border p-3 transition-colors"
-              href={getPostPath(post._meta.path)}
-              key={post._meta.path}
-            >
-              <article className="grid gap-5 sm:grid-cols-[16rem_minmax(0,1fr)] sm:items-center">
-                <div className="bg-muted aspect-[40/21] overflow-hidden rounded-xl">
-                  <Image
-                    alt={ogImage.alt}
-                    className="size-full object-cover transition-transform duration-300 group-hover:scale-[1.02]"
-                    height={630}
-                    loading={index === 0 ? "eager" : "lazy"}
-                    sizes="(min-width: 640px) 256px, calc(100vw - 72px)"
-                    src={ogImage.path}
-                    width={1200}
-                  />
-                </div>
-                <div className="flex min-w-0 flex-col gap-2 px-2 pb-2 sm:px-0 sm:pb-0 sm:pr-3">
-                  <h2 className="text-2xl font-semibold underline-offset-4 group-hover:underline">
-                    {post.title}
-                  </h2>
-                  <p className="text-muted-foreground">{post.summary}</p>
-                  <code className="text-muted-foreground block text-sm">
-                    /{post._meta.path}
-                  </code>
-                </div>
-              </article>
-            </Link>
-          );
-        })}
+      <section aria-labelledby="latest-posts" className="mt-8 sm:mt-9">
+        <div className="mb-3 flex items-baseline justify-between gap-4">
+          <h2 className="text-2xl font-bold tracking-tight" id="latest-posts">
+            Latest posts
+          </h2>
+          <Link
+            className="text-primary text-sm font-medium underline underline-offset-4"
+            href="/posts"
+          >
+            All posts
+          </Link>
+        </div>
+        <PostList posts={sortedPosts.slice(0, 5)} />
       </section>
     </main>
   );

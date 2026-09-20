@@ -8,9 +8,9 @@ import { type MouseEvent, type ReactNode, useRef } from "react";
 type CopyState = "idle" | "copied" | "error";
 
 const copyFeedback = {
-  copied: { label: "代码已复制", status: "代码已复制" },
-  error: { label: "复制失败", status: "代码复制失败" },
-  idle: { label: "复制代码", status: "" },
+  copied: { label: "Copied", status: "Code copied to clipboard" },
+  error: { label: "Copy failed", status: "Could not copy code" },
+  idle: { label: "Copy code", status: "" },
 } satisfies Record<CopyState, Record<"label" | "status", string>>;
 
 function updateCopyState(button: HTMLButtonElement, state: CopyState) {

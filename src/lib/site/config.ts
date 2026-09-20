@@ -1,19 +1,14 @@
 export const siteConfig = {
-  name: "ukeSJTU",
-  description: "ukeSJTU 的个人站点，记录技术、学习与创作。",
+  name: "ukeraser",
+  description:
+    "ukeraser's personal site. Notes on technology, learning, and making things.",
   url: "https://ukesjtu.github.io",
-  locale: "zh_CN",
-  language: "zh-CN",
+  locale: "en_US",
+  language: "en-US",
   author: {
-    name: "ukeSJTU",
+    name: "ukeraser",
     url: "https://github.com/ukeSJTU",
   },
-} as const;
-
-export const socialImageConfig = {
-  alt: `${siteConfig.name} — ${siteConfig.description}`,
-  width: 1200,
-  height: 630,
 } as const;
 
 export function absoluteUrl(path = "/") {

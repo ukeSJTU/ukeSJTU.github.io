@@ -1,8 +1,7 @@
 "use client";
-
-import { SearchIcon } from "lucide-react";
+import { IconSearch } from "@tabler/icons-react";
 import dynamic from "next/dynamic";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 
 const SearchDialog = dynamic(
@@ -15,10 +14,15 @@ const SearchDialog = dynamic(
 
 export function SiteSearch({ basePath = "" }: { basePath?: string }) {
   const [open, setOpen] = useState(false);
+  const [hasOpened, setHasOpened] = useState(false);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const returnFocusRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (
+        event.isComposing ||
+        event.repeat ||
         event.key.toLowerCase() !== "k" ||
         (!event.metaKey && !event.ctrlKey)
       ) {
@@ -26,6 +30,14 @@ export function SiteSearch({ basePath = "" }: { basePath?: string }) {
       }
 
       event.preventDefault();
+      if (!document.querySelector('[data-slot="dialog-content"]')) {
+        const active = document.activeElement;
+        returnFocusRef.current =
+          active instanceof HTMLElement && active !== document.body
+            ? active
+            : triggerRef.current;
+      }
+      setHasOpened(true);
       setOpen((current) => !current);
     };
 
@@ -37,18 +49,32 @@ export function SiteSearch({ basePath = "" }: { basePath?: string }) {
     <>
       <Button
         aria-label="Search site"
+        aria-haspopup="dialog"
+        aria-expanded={open}
+        aria-keyshortcuts="Control+k Meta+k"
         className="size-10"
-        onClick={() => setOpen(true)}
+        onClick={() => {
+          returnFocusRef.current = triggerRef.current;
+          setHasOpened(true);
+          setOpen(true);
+        }}
+        ref={triggerRef}
         size="icon-lg"
         title="Search site (Ctrl/⌘ K)"
         type="button"
         variant="ghost"
       >
-        <SearchIcon aria-hidden="true" />
+        <IconSearch aria-hidden="true" data-icon="inline-start" />
       </Button>
 
-      {open ? (
-        <SearchDialog basePath={basePath} onOpenChange={setOpen} open={open} />
+      {hasOpened ? (
+        <SearchDialog
+          basePath={basePath}
+          onOpenChange={setOpen}
+          open={open}
+          returnFocusRef={returnFocusRef}
+          triggerRef={triggerRef}
+        />
       ) : null}
     </>
   );

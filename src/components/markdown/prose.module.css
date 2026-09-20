@@ -3,13 +3,13 @@
   font-family: var(--font-prose);
   font-size: 1.0625rem;
   line-break: strict;
-  line-height: 1.85;
+  line-height: 1.8;
   overflow-wrap: anywhere;
   word-break: normal;
 }
 
 .prose > * + * {
-  margin-top: 1.25rem;
+  margin-top: 1rem;
 }
 
 .prose h1,
@@ -23,7 +23,7 @@
   font-weight: 650;
   letter-spacing: 0;
   line-height: 1.25;
-  margin-top: 2.5rem;
+  margin-top: 2rem;
   text-wrap: balance;
 }
 

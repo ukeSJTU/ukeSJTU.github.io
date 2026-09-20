@@ -23,12 +23,10 @@ Posts live in `content/posts`. Each Markdown file must include the following fro
 title: "Post title"
 summary: "A short description of the post."
 publishedAt: "2026-09-19"
-# Optional: use a repository image instead of an auto-generated OG image.
-ogImage: "/og/my-post.png"
 ---
 ```
 
-Optional `updatedAt` and `ogImage` fields can be used when a post is revised or needs a custom social image. Custom images belong in `public/` and `ogImage` contains their site-absolute path. Without `ogImage`, the build creates a deterministic gradient image from the post path and overlays the title. Nested directories are supported and become part of the post URL.
+An optional `updatedAt` field records when a post was revised. Nested directories are supported and become part of the post URL. Images used within Markdown belong in `public/` and can be referenced by their site-absolute path.
 
 The Markdown pipeline supports CommonMark, GitHub Flavored Markdown, CJK-friendly parsing, KaTeX, Shiki syntax highlighting, and Mermaid diagrams with light and dark themes.
 
@@ -56,7 +54,7 @@ export function parsePostDate(value: string) {
 pnpm check
 ```
 
-`pnpm build` writes the static site to `out/`, including the sitemap, robots file, RSS feed, manifest, social preview images, and Pagefind search index.
+`pnpm build` writes the static site to `out/`, including the sitemap, robots file, RSS feed, manifest, and Pagefind search index.
 
 Use `pnpm preview` for a fresh production build and local preview, or `pnpm serve` to re-index and serve the existing `out/` directory.
 

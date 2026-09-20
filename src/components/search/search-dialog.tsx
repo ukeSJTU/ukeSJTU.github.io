@@ -1,7 +1,14 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import {
+  type CSSProperties,
+  type RefObject,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+import { Button } from "@/components/ui/button";
 import {
   Command,
   CommandDialog,
@@ -11,10 +18,13 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
+import { DialogClose } from "@/components/ui/dialog";
+import { InputGroupButton } from "@/components/ui/input-group";
 import {
   getCleanResultUrl,
   loadPagefind,
   type PagefindResultData,
+  resetPagefind,
 } from "@/lib/search/pagefind";
 
 const maximumResults = 8;
@@ -23,22 +33,28 @@ const dateFormatter = new Intl.DateTimeFormat("en", {
   timeZone: "UTC",
 });
 
-type SearchStatus = "idle" | "loading" | "ready" | "error";
-
 interface DisplayResult {
   date?: string;
   excerpt: string;
   href: string;
   id: string;
-  path: string;
   section?: string;
   title: string;
+}
+
+interface SearchState {
+  query: string;
+  status: "idle" | "loading" | "ready" | "error";
+  results: DisplayResult[];
+  total: number;
 }
 
 interface SearchDialogProps {
   basePath?: string;
   onOpenChange: (open: boolean) => void;
   open: boolean;
+  returnFocusRef: RefObject<HTMLElement | null>;
+  triggerRef: RefObject<HTMLButtonElement | null>;
 }
 
 function getDisplayResult(
@@ -50,21 +66,15 @@ function getDisplayResult(
   const sectionHash = section?.url.includes("#")
     ? section.url.slice(section.url.indexOf("#"))
     : "";
-  const href = `${canonicalPath.split("#")[0]}${sectionHash}`;
-
-  let displayPath = href;
-  try {
-    displayPath = decodeURI(href);
-  } catch {
-    // Keep Pagefind's encoded URL when it contains a malformed escape sequence.
-  }
-
+  const date = result.meta.date ? new Date(result.meta.date) : undefined;
   return {
-    date: result.meta.date,
+    date:
+      date && !Number.isNaN(date.valueOf())
+        ? dateFormatter.format(date)
+        : undefined,
     excerpt: section?.excerpt ?? result.excerpt,
-    href,
+    href: canonicalPath.split("#")[0] + sectionHash,
     id,
-    path: displayPath,
     section:
       section && section.title !== result.meta.title
         ? section.title
@@ -73,81 +83,71 @@ function getDisplayResult(
   };
 }
 
-function formatDate(date: string | undefined) {
-  if (!date) {
-    return undefined;
-  }
-
-  const parsedDate = new Date(date);
-  return Number.isNaN(parsedDate.valueOf())
-    ? undefined
-    : dateFormatter.format(parsedDate);
-}
-
-function getEmptyMessage(status: SearchStatus, query: string) {
-  if (status === "error") {
-    return "Search is unavailable in this preview.";
-  }
-  if (status === "loading") {
-    return "Searching…";
-  }
-  if (query.trim()) {
-    return "No results found.";
-  }
-  return "Start typing to search posts and pages.";
-}
-
 export function SearchDialog({
   basePath = "",
   onOpenChange,
   open,
+  returnFocusRef,
+  triggerRef,
 }: SearchDialogProps) {
   const router = useRouter();
+  const inputRef = useRef<HTMLInputElement>(null);
+  const queryRef = useRef("");
   const [query, setQuery] = useState("");
-  const [resultCount, setResultCount] = useState(0);
-  const [results, setResults] = useState<DisplayResult[]>([]);
-  const [status, setStatus] = useState<SearchStatus>("idle");
+  const [composing, setComposing] = useState(false);
+  const [attempt, setAttempt] = useState(0);
+  const [viewport, setViewport] = useState<{ height: number; top: number }>();
+  const [state, setState] = useState<SearchState>({
+    query: "",
+    status: "idle",
+    results: [],
+    total: 0,
+  });
+  const completedSearch = useRef<{
+    basePath: string;
+    attempt: number;
+    state: SearchState;
+  } | null>(null);
+  const normalizedQuery = query.trim();
+
+  // Hide stale items in the render that changes the query, before effects run.
+  const status = composing
+    ? "idle"
+    : state.query === normalizedQuery
+      ? state.status
+      : normalizedQuery
+        ? "loading"
+        : "idle";
+  const results = status === "ready" ? state.results : [];
 
   useEffect(() => {
-    let cancelled = false;
-
-    void loadPagefind(basePath).catch(() => {
-      if (!cancelled) {
-        setStatus("error");
-      }
-    });
-
-    return () => {
-      cancelled = true;
-    };
-  }, [basePath]);
-
-  useEffect(() => {
-    const normalizedQuery = query.trim();
-
-    if (!normalizedQuery) {
-      setResults([]);
-      setResultCount(0);
-      setStatus("idle");
+    if (!open || composing) return;
+    const cached = completedSearch.current;
+    if (
+      cached?.basePath === basePath &&
+      cached.attempt === attempt &&
+      cached.state.query === normalizedQuery
+    ) {
+      setState(cached.state);
       return;
     }
-
     let cancelled = false;
-    setStatus("loading");
-
+    setState({
+      query: normalizedQuery,
+      status: normalizedQuery ? "loading" : "idle",
+      results: [],
+      total: 0,
+    });
     const search = async () => {
       try {
         const pagefind = await loadPagefind(basePath);
+        if (cancelled || !normalizedQuery) return;
         const response = await pagefind.debouncedSearch(
           normalizedQuery,
           {},
           250,
         );
-
-        if (cancelled || response === null) {
-          return;
-        }
-
+        if (cancelled || response === null) return;
         const loadedResults = await Promise.all(
           response.results
             .slice(0, maximumResults)
@@ -155,112 +155,243 @@ export function SearchDialog({
               getDisplayResult(result.id, await result.data()),
             ),
         );
-
-        if (cancelled) {
-          return;
-        }
-
-        setResults(loadedResults);
-        setResultCount(response.results.length);
-        setStatus("ready");
+        if (cancelled) return;
+        const next: SearchState = {
+          query: normalizedQuery,
+          status: "ready",
+          results: loadedResults,
+          total: response.results.length,
+        };
+        completedSearch.current = { basePath, attempt, state: next };
+        setState(next);
       } catch {
-        if (!cancelled) {
-          setResults([]);
-          setResultCount(0);
-          setStatus("error");
-        }
+        if (!cancelled)
+          setState({
+            query: normalizedQuery,
+            status: "error",
+            results: [],
+            total: 0,
+          });
       }
     };
-
     void search();
-
     return () => {
       cancelled = true;
     };
-  }, [basePath, query]);
+  }, [basePath, normalizedQuery, open, composing, attempt]);
 
-  const statusMessage =
-    status === "ready"
-      ? `${resultCount} ${resultCount === 1 ? "result" : "results"}`
+  useEffect(() => {
+    const visualViewport = window.visualViewport;
+    if (!open || !visualViewport) return;
+    const update = () =>
+      setViewport({
+        height: visualViewport.height,
+        top: visualViewport.offsetTop,
+      });
+    update();
+    visualViewport.addEventListener("resize", update);
+    visualViewport.addEventListener("scroll", update);
+    return () => {
+      visualViewport.removeEventListener("resize", update);
+      visualViewport.removeEventListener("scroll", update);
+    };
+  }, [open]);
+
+  function updateQuery(value: string) {
+    queryRef.current = value.trim();
+    setQuery(value);
+  }
+
+  function retry() {
+    resetPagefind();
+    completedSearch.current = null;
+    setState({
+      query: normalizedQuery,
+      status: "loading",
+      results: [],
+      total: 0,
+    });
+    setAttempt((value) => value + 1);
+    inputRef.current?.focus();
+  }
+
+  const countMessage =
+    state.total > maximumResults
+      ? `Showing ${maximumResults} of ${state.total} results. Refine your search for more.`
+      : `${state.total} ${state.total === 1 ? "result" : "results"}`;
+  const emptyTitle =
+    status === "error"
+      ? "Search couldn't load."
       : status === "loading"
-        ? "Searching"
-        : "";
+        ? "Searching…"
+        : normalizedQuery && !composing
+          ? "No results found."
+          : "Search posts and pages.";
+  const emptyHint =
+    status === "error"
+      ? "Check your connection and try again."
+      : status === "loading"
+        ? ""
+        : normalizedQuery && !composing
+          ? "Try a different word or a shorter phrase."
+          : "Type a word or phrase in English or Chinese.";
 
   return (
     <CommandDialog
-      className="top-4 translate-y-0 sm:top-[15vh] sm:max-w-2xl"
-      description="Search across posts and pages."
+      className="site-search-dialog top-[var(--search-top)] flex flex-col gap-0 sm:max-w-xl [--popover:var(--background)] [--popover-foreground:var(--foreground)]"
+      contentProps={{
+        initialFocus: inputRef,
+        finalFocus: () =>
+          returnFocusRef.current?.isConnected
+            ? returnFocusRef.current
+            : triggerRef.current,
+        style: viewport
+          ? ({
+              "--search-viewport-height": `${viewport.height}px`,
+              "--search-viewport-top": `${viewport.top}px`,
+            } as CSSProperties)
+          : undefined,
+      }}
+      description="Search posts and pages in English or Chinese. Use arrow keys to choose a result and Enter to open it."
       onOpenChange={onOpenChange}
       open={open}
-      showCloseButton
       title="Search site"
     >
-      <Command label="Site search" loop shouldFilter={false}>
+      <Command
+        label="Site search"
+        loop
+        shouldFilter={false}
+        onKeyDownCapture={(event) => {
+          if (
+            event.key === "Enter" &&
+            event.target === inputRef.current &&
+            (composing ||
+              event.nativeEvent.isComposing ||
+              event.nativeEvent.keyCode === 229 ||
+              status !== "ready")
+          ) {
+            event.preventDefault();
+            event.stopPropagation();
+          }
+        }}
+      >
         <CommandInput
-          autoFocus
-          className="pr-8"
-          onValueChange={setQuery}
-          placeholder="Search notes, code, and ideas…"
+          aria-label="Search posts and pages"
+          autoCapitalize="none"
+          autoComplete="off"
+          spellCheck={false}
+          onCompositionStart={() => setComposing(true)}
+          onCompositionEnd={() => setComposing(false)}
+          onValueChange={updateQuery}
+          placeholder="Search…"
+          ref={inputRef}
           value={query}
+          trailing={
+            query ? (
+              <InputGroupButton
+                aria-label="Clear search"
+                className="h-10 px-2"
+                onKeyDown={(event) => {
+                  if (event.key === "Enter") event.stopPropagation();
+                }}
+                onClick={() => {
+                  updateQuery("");
+                  inputRef.current?.focus();
+                }}
+                size="sm"
+              >
+                Clear
+              </InputGroupButton>
+            ) : null
+          }
         />
-        <CommandList className="max-h-[min(65vh,30rem)]" label="Search results">
-          <CommandEmpty className="text-muted-foreground px-6 py-12">
-            {getEmptyMessage(status, query)}
-          </CommandEmpty>
-
-          {results.length > 0 ? (
-            <CommandGroup
-              className="**:[[cmdk-group-heading]]:text-popover-foreground/80"
-              heading={statusMessage}
+        <CommandEmpty className="min-h-0 overflow-y-auto px-5 py-6">
+          <p>{emptyTitle}</p>
+          {emptyHint ? (
+            <p className="search-secondary mt-2">{emptyHint}</p>
+          ) : null}
+          {status === "error" ? (
+            <Button
+              className="mt-4"
+              onClick={retry}
+              onKeyDown={(event) => {
+                if (event.key === "Enter") event.stopPropagation();
+              }}
+              variant="outline"
             >
-              {results.map((result) => {
-                const formattedDate = formatDate(result.date);
-
-                return (
-                  <CommandItem
-                    className="items-start py-3 [&>svg:last-child]:hidden"
-                    key={result.id}
-                    onSelect={() => {
-                      onOpenChange(false);
-                      router.push(result.href);
-                    }}
-                    value={result.id}
-                  >
-                    <div className="flex min-w-0 flex-1 flex-col gap-1">
-                      <div className="flex min-w-0 items-baseline gap-2">
-                        <span className="truncate font-medium">
-                          {result.title}
-                        </span>
-                        {result.section ? (
-                          <span className="text-popover-foreground/80 truncate text-xs">
-                            {result.section}
-                          </span>
-                        ) : null}
-                      </div>
-                      <p
-                        className="text-popover-foreground/80 line-clamp-2 leading-relaxed [&_mark]:bg-primary/20 [&_mark]:text-foreground"
-                        // biome-ignore lint/security/noDangerouslySetInnerHtml: Pagefind escapes indexed HTML before inserting its own mark tags.
-                        dangerouslySetInnerHTML={{ __html: result.excerpt }}
-                      />
-                      <div className="text-popover-foreground/80 flex min-w-0 items-center justify-between gap-3 font-mono text-xs">
-                        <span className="truncate">{result.path}</span>
-                        {formattedDate ? (
-                          <time className="shrink-0" dateTime={result.date}>
-                            {formattedDate}
-                          </time>
-                        ) : null}
-                      </div>
-                    </div>
-                  </CommandItem>
-                );
-              })}
+              Try again
+            </Button>
+          ) : null}
+        </CommandEmpty>
+        <CommandList
+          className="max-h-none flex-1"
+          label="Search results"
+          aria-busy={status === "loading"}
+        >
+          {results.length > 0 ? (
+            <CommandGroup className="p-2" heading={countMessage}>
+              {results.map((result) => (
+                <CommandItem
+                  className="cursor-pointer items-start px-3 py-3"
+                  key={result.id}
+                  onSelect={() => {
+                    if (
+                      status !== "ready" ||
+                      state.query !== queryRef.current ||
+                      composing
+                    )
+                      return;
+                    onOpenChange(false);
+                    router.push(result.href);
+                  }}
+                  showIndicator={false}
+                  value={result.id}
+                >
+                  <div className="flex min-w-0 flex-1 flex-col gap-1.5">
+                    <span className="text-base font-medium leading-snug">
+                      {result.title}
+                    </span>
+                    {result.section ? (
+                      <span className="text-primary text-xs leading-relaxed">
+                        {result.section}
+                      </span>
+                    ) : null}
+                    <p
+                      className="search-excerpt search-secondary line-clamp-2 leading-relaxed"
+                      // biome-ignore lint/security/noDangerouslySetInnerHtml: Pagefind escapes indexed HTML before inserting its own mark tags.
+                      dangerouslySetInnerHTML={{ __html: result.excerpt }}
+                    />
+                    {result.date ? (
+                      <span className="search-secondary text-xs">
+                        {result.date}
+                      </span>
+                    ) : null}
+                  </div>
+                </CommandItem>
+              ))}
             </CommandGroup>
           ) : null}
         </CommandList>
-        <span aria-live="polite" className="sr-only">
-          {statusMessage}
+        <span aria-live="polite" aria-atomic="true" className="sr-only">
+          {status === "ready"
+            ? `${countMessage} for ${normalizedQuery}.`
+            : emptyTitle}
         </span>
       </Command>
+      <div className="search-secondary flex shrink-0 items-center justify-between gap-3 border-t px-4 py-1 text-xs">
+        <span aria-hidden="true" className="hidden items-center gap-3 sm:flex">
+          <span>
+            <kbd>↑↓</kbd> Navigate
+          </span>
+          <span>
+            <kbd>↵</kbd> Open
+          </span>
+        </span>
+        <span className="sm:hidden">Search posts and pages</span>
+        <DialogClose render={<Button className="h-10" variant="ghost" />}>
+          Close <kbd className="ml-1 text-xs">Esc</kbd>
+        </DialogClose>
+      </div>
     </CommandDialog>
   );
 }

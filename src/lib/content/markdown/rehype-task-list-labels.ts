@@ -37,9 +37,9 @@ export const rehypeTaskListLabels: Plugin<[], Root> = () => (tree) => {
       return;
     }
 
-    const label = getTaskText(parent) || "任务项";
-    const state = node.properties.checked ? "已完成" : "未完成";
+    const label = getTaskText(parent) || "Task";
+    const state = node.properties.checked ? "Completed" : "Not completed";
 
-    node.properties["aria-label"] = `${state}：${label}`;
+    node.properties["aria-label"] = `${state}: ${label}`;
   });
 };

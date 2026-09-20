@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" width="256" height="256" viewBox="0 0 256 256">
-  <title>迷你火山</title>
-  <desc>等距立体个人网站图标。暖灰色岩体、橙色熔岩与一块漂浮的烟。纯矢量色块，透明背景。</desc>
+  <title>Mini volcano</title>
+  <desc>An isometric volcano with warm gray rock, orange lava, and a floating puff of smoke on a transparent background.</desc>
   <g id="volcano" inkscape:groupmode="layer" inkscape:label="迷你火山" stroke="none" stroke-linejoin="round">
     <g id="mountain" inkscape:label="山体">
       <path id="mountain-left" inkscape:label="岩体 · 亮面" fill="#79737f" d="M28 172 94 96 128 116 128 230Z"/>

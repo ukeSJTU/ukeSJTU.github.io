@@ -37,6 +37,14 @@ export interface PagefindApi {
 
 let activeBasePath: string | undefined;
 let pagefindPromise: Promise<PagefindApi> | undefined;
+let retryVersion = 0;
+
+export function resetPagefind() {
+  pagefindPromise = undefined;
+  activeBasePath = undefined;
+  // A rejected native import is cached by the browser. Give explicit retries a fresh URL.
+  retryVersion += 1;
+}
 
 export function normalizeBasePath(basePath: string) {
   const trimmed = basePath.trim().replace(/^\/+|\/+$/g, "");
@@ -52,7 +60,7 @@ export function loadPagefind(basePath = "") {
 
   activeBasePath = normalizedBasePath;
   const bundlePath = `${normalizedBasePath}/pagefind/`;
-  const moduleUrl = `${bundlePath}pagefind.js`;
+  const moduleUrl = `${bundlePath}pagefind.js${retryVersion ? `?retry=${retryVersion}` : ""}`;
   const pending = import(
     /* webpackIgnore: true */
     /* turbopackIgnore: true */
