@@ -7,6 +7,7 @@ import { BlogComments } from "@/components/blog-comments";
 import { JsonLd } from "@/components/json-ld";
 import { MarkdownRenderer } from "@/components/markdown/markdown-renderer";
 import {
+  getPostBySlug,
   getPostModifiedAt,
   getPostPath,
   getPostUrl,
@@ -15,15 +16,16 @@ import {
 import { absoluteUrl, siteConfig } from "@/lib/site/config";
 
 export function generateStaticParams() {
-  return allBlogs.map((post) => ({ slug: post._meta.path.split("/") }));
+  return allBlogs.map((post) => ({ slug: post.slug }));
 }
+
+export const dynamicParams = false;
 
 export async function generateMetadata({
   params,
-}: PageProps<"/blog/[...slug]">): Promise<Metadata> {
+}: PageProps<"/blog/[slug]">): Promise<Metadata> {
   const { slug } = await params;
-  const path = slug.join("/");
-  const post = allBlogs.find((candidate) => candidate._meta.path === path);
+  const post = getPostBySlug(slug);
 
   if (!post) {
     return {
@@ -32,7 +34,7 @@ export async function generateMetadata({
     };
   }
 
-  const postPath = getPostPath(post._meta.path);
+  const postPath = getPostPath(post);
   const publishedTime = parsePostDate(post.publishedAt).toISOString();
   const modifiedTime = getPostModifiedAt(post).toISOString();
 
@@ -66,17 +68,16 @@ export async function generateMetadata({
 
 export default async function BlogPostPage({
   params,
-}: PageProps<"/blog/[...slug]">) {
+}: PageProps<"/blog/[slug]">) {
   const { slug } = await params;
-  const path = slug.join("/");
-  const post = allBlogs.find((candidate) => candidate._meta.path === path);
+  const post = getPostBySlug(slug);
 
   if (!post) {
     notFound();
   }
 
-  const postPath = getPostPath(post._meta.path);
-  const postUrl = getPostUrl(post._meta.path);
+  const postPath = getPostPath(post);
+  const postUrl = getPostUrl(post);
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
@@ -146,7 +147,7 @@ export default async function BlogPostPage({
 
         <MarkdownRenderer
           className="mt-6"
-          contentKey={post._meta.path}
+          contentKey={post.slug}
           html={post.html}
         />
       </article>

@@ -30,7 +30,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.6,
     },
     ...sortedBlogPosts.map((post) => ({
-      url: getPostUrl(post._meta.path),
+      url: getPostUrl(post),
       lastModified: getPostModifiedDate(post),
       changeFrequency: "monthly" as const,
       priority: 0.8,

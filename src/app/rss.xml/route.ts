@@ -31,7 +31,7 @@ export function GET() {
   });
 
   for (const post of sortedBlogPosts) {
-    const url = getPostUrl(post._meta.path);
+    const url = getPostUrl(post);
 
     feed.addItem({
       title: post.title,

@@ -21,6 +21,12 @@ const blog = defineCollection({
   directory: "content/blog",
   include: "**/*.md",
   schema: z.object({
+    slug: z
+      .string()
+      .regex(
+        /^[a-z0-9]+(?:-[a-z0-9]+)*$/,
+        "Slug must contain lowercase letters, numbers, and single hyphens only",
+      ),
     title: z.string(),
     summary: z.string(),
     publishedAt: z.iso.date(),

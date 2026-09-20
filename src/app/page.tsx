@@ -20,8 +20,8 @@ export default function Home() {
     },
     hasPart: sortedBlogPosts.map((post) => ({
       "@type": "BlogPosting",
-      "@id": getPostUrl(post._meta.path),
-      url: getPostUrl(post._meta.path),
+      "@id": getPostUrl(post),
+      url: getPostUrl(post),
       headline: post.title,
     })),
   };

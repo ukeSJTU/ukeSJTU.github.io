@@ -16,17 +16,18 @@ The development server is available at [http://localhost:3000](http://localhost:
 
 ## Content
 
-Blog notes live in `content/blog` and are published at `/blog/<path>`. Each Markdown file must include the following frontmatter:
+Blog notes live in `content/blog` and are published at `/blog/<slug>`. Each Markdown file must include the following frontmatter:
 
 ```yaml
 ---
+slug: "note-title"
 title: "Note title"
 summary: "A short description of the note."
 publishedAt: "2026-09-19"
 ---
 ```
 
-An optional `updatedAt` field records when a note was revised. Nested directories are supported and become part of the note URL. Images used within Markdown belong in `public/` and can be referenced by their site-absolute path.
+The slug must be unique and use lowercase letters, numbers, and single hyphens. It controls the public URL, so Markdown files can move into nested directories without changing their URLs. An optional `updatedAt` field records when a note was revised. Images used within Markdown belong in `public/` and can be referenced by their site-absolute path.
 
 The Markdown pipeline supports CommonMark, GitHub Flavored Markdown, CJK-friendly parsing, KaTeX, Shiki syntax highlighting, and Mermaid diagrams with light and dark themes.
 
