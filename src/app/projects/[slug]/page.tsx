@@ -132,18 +132,24 @@ export default async function ProjectPage({
               <a
                 className="text-primary inline-flex items-center gap-1.5 underline underline-offset-4"
                 href={project.demo}
+                rel="noopener noreferrer"
+                target="_blank"
               >
                 <IconExternalLink aria-hidden="true" className="size-4" />
                 Demo
+                <span className="sr-only"> (opens in a new tab)</span>
               </a>
             ) : null}
             {project.source ? (
               <a
                 className="text-primary inline-flex items-center gap-1.5 underline underline-offset-4"
                 href={project.source}
+                rel="noopener noreferrer"
+                target="_blank"
               >
                 <IconBrandGithub aria-hidden="true" className="size-4" />
                 Source
+                <span className="sr-only"> (opens in a new tab)</span>
               </a>
             ) : null}
           </nav>

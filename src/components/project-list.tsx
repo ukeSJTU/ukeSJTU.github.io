@@ -52,18 +52,24 @@ export function ProjectList({ entries }: { entries: Project[] }) {
                   <a
                     className="text-primary inline-flex items-center gap-1.5 underline-offset-4 hover:underline"
                     href={project.demo}
+                    rel="noopener noreferrer"
+                    target="_blank"
                   >
                     <IconExternalLink aria-hidden="true" className="size-4" />
                     Demo
+                    <span className="sr-only"> (opens in a new tab)</span>
                   </a>
                 ) : null}
                 {project.source ? (
                   <a
                     className="text-primary inline-flex items-center gap-1.5 underline-offset-4 hover:underline"
                     href={project.source}
+                    rel="noopener noreferrer"
+                    target="_blank"
                   >
                     <IconBrandGithub aria-hidden="true" className="size-4" />
                     Source
+                    <span className="sr-only"> (opens in a new tab)</span>
                   </a>
                 ) : null}
                 {project.hasArticle ? (
