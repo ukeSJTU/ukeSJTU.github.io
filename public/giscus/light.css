@@ -1,0 +1,100 @@
+/* giscus theme aligned with the site's light palette. */
+main {
+  color-scheme: light;
+  --color-prettylights-syntax-comment: #675e64;
+  --color-prettylights-syntax-constant: #26639c;
+  --color-prettylights-syntax-entity: #6851a2;
+  --color-prettylights-syntax-storage-modifier-import: #2c232e;
+  --color-prettylights-syntax-entity-tag: #246b5e;
+  --color-prettylights-syntax-keyword: #a13d5e;
+  --color-prettylights-syntax-string: #246b5e;
+  --color-prettylights-syntax-variable: #9d462c;
+  --color-prettylights-syntax-brackethighlighter-unmatched: #a13d5e;
+  --color-prettylights-syntax-invalid-illegal-text: #f8efe7;
+  --color-prettylights-syntax-invalid-illegal-bg: #a13d5e;
+  --color-prettylights-syntax-carriage-return-text: #f8efe7;
+  --color-prettylights-syntax-carriage-return-bg: #a13d5e;
+  --color-prettylights-syntax-string-regexp: #246b5e;
+  --color-prettylights-syntax-markup-list: #9d462c;
+  --color-prettylights-syntax-markup-heading: #6851a2;
+  --color-prettylights-syntax-markup-italic: #2c232e;
+  --color-prettylights-syntax-markup-bold: #2c232e;
+  --color-prettylights-syntax-markup-deleted-text: #a13d5e;
+  --color-prettylights-syntax-markup-deleted-bg: #a13d5e0c;
+  --color-prettylights-syntax-markup-inserted-text: #246b5e;
+  --color-prettylights-syntax-markup-inserted-bg: #246b5e0c;
+  --color-prettylights-syntax-markup-changed-text: #9d462c;
+  --color-prettylights-syntax-markup-changed-bg: #9d462c0c;
+  --color-prettylights-syntax-markup-ignored-text: #675e64;
+  --color-prettylights-syntax-markup-ignored-bg: #eee5de;
+  --color-prettylights-syntax-meta-diff-range: #6851a2;
+  --color-prettylights-syntax-brackethighlighter-angle: #675e64;
+  --color-prettylights-syntax-sublimelinter-gutter-mark: #675e64;
+  --color-prettylights-syntax-constant-other-reference-link: #26639c;
+  --color-btn-text: #2c232e;
+  --color-btn-bg: #eee5de;
+  --color-btn-border: #d2c9c4;
+  --color-btn-shadow: 0 0 transparent;
+  --color-btn-inset-shadow: 0 0 transparent;
+  --color-btn-hover-bg: #ded5d0;
+  --color-btn-hover-border: #d2c9c4;
+  --color-btn-active-bg: #d2c9c4;
+  --color-btn-active-border: #d2c9c4;
+  --color-btn-selected-bg: #ded5d0;
+  --color-btn-primary-text: #f8efe7;
+  --color-btn-primary-bg: #6851a2;
+  --color-btn-primary-border: #6851a2;
+  --color-btn-primary-shadow: 0 0 transparent;
+  --color-btn-primary-inset-shadow: 0 0 transparent;
+  --color-btn-primary-hover-bg: #59428f;
+  --color-btn-primary-hover-border: #59428f;
+  --color-btn-primary-selected-bg: #4e397f;
+  --color-btn-primary-selected-shadow: 0 0 transparent;
+  --color-btn-primary-disabled-text: #f8efe7cc;
+  --color-btn-primary-disabled-bg: #a99cc7;
+  --color-btn-primary-disabled-border: #a99cc7;
+  --color-action-list-item-default-hover-bg: #6851a21a;
+  --color-segmented-control-bg: #eee5de;
+  --color-segmented-control-button-bg: #fdf7f3;
+  --color-segmented-control-button-selected-border: #6851a2;
+  --color-fg-default: #2c232e;
+  --color-fg-muted: #675e64;
+  --color-fg-subtle: #72696d;
+  --color-canvas-default: #f8efe7;
+  --color-canvas-overlay: #fdf7f3;
+  --color-canvas-inset: #eee5de;
+  --color-canvas-subtle: #eee5de;
+  --color-border-default: #d2c9c4;
+  --color-border-muted: #ded5d0;
+  --color-neutral-muted: #72696d1f;
+  --color-accent-fg: #6851a2;
+  --color-accent-emphasis: #6851a2;
+  --color-accent-muted: #6851a266;
+  --color-accent-subtle: #6851a214;
+  --color-success-fg: #246b5e;
+  --color-attention-fg: #9d462c;
+  --color-attention-muted: #9d462c66;
+  --color-attention-subtle: #9d462c14;
+  --color-danger-fg: #a13d5e;
+  --color-danger-muted: #a13d5e66;
+  --color-danger-subtle: #a13d5e14;
+  --color-primer-shadow-inset: 0 0 transparent;
+  --color-scale-gray-1: #eee5de;
+  --color-scale-blue-1: #ded5d0;
+  --color-social-reaction-bg-hover: var(--color-scale-gray-1);
+  --color-social-reaction-bg-reacted-hover: var(--color-scale-blue-1);
+
+  font-family:
+    "Geist", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", system-ui,
+    sans-serif;
+}
+
+main .gsc-comment,
+main .gsc-comment-box-textarea,
+main .gsc-reactions-popover {
+  border-radius: 0.625rem;
+}
+
+main .gsc-loading-image {
+  background-image: url("https://github.githubassets.com/images/mona-loading-default.gif");
+}

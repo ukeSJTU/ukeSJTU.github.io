@@ -3,6 +3,7 @@ import { allBlogs } from "content-collections";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { BlogComments } from "@/components/blog-comments";
 import { JsonLd } from "@/components/json-ld";
 import { MarkdownRenderer } from "@/components/markdown/markdown-renderer";
 import {
@@ -149,6 +150,8 @@ export default async function BlogPostPage({
           html={post.html}
         />
       </article>
+
+      <BlogComments />
     </main>
   );
 }
