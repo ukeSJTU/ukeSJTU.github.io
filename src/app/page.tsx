@@ -2,7 +2,6 @@ import Link from "next/link";
 import { BlogList } from "@/components/blog-list";
 import { JsonLd } from "@/components/json-ld";
 import { PageTransition } from "@/components/page-transition";
-import { VolcanoHero } from "@/components/volcano-hero";
 import { getPostUrl, sortedBlogPosts } from "@/lib/content/blog";
 import { siteConfig } from "@/lib/site/config";
 import {
@@ -10,6 +9,7 @@ import {
   schemaEntity,
   siteAuthor,
 } from "@/lib/site/structured-data";
+import { VolcanoHero } from "./_components/volcano-hero";
 
 export default function Home() {
   const jsonLd = {

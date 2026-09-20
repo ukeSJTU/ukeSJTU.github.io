@@ -2,8 +2,6 @@ import { IconArrowLeft } from "@tabler/icons-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { BlogComments } from "@/components/blog-comments";
-import { BlogTableOfContents } from "@/components/blog-table-of-contents";
 import { JsonLd } from "@/components/json-ld";
 import { MarkdownRenderer } from "@/components/markdown/markdown-renderer";
 import { PageTransition } from "@/components/page-transition";
@@ -18,6 +16,8 @@ import {
 import { siteConfig } from "@/lib/site/config";
 import { createPageMetadata } from "@/lib/site/metadata";
 import { blogPostingSchema } from "@/lib/site/structured-data";
+import { BlogComments } from "./_components/blog-comments";
+import { BlogTableOfContents } from "./_components/blog-table-of-contents";
 import styles from "./page.module.css";
 
 export function generateStaticParams() {

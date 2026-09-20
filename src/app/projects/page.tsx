@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import { JsonLd } from "@/components/json-ld";
 import { PageTransition } from "@/components/page-transition";
-import { ProjectList } from "@/components/project-list";
 import { getProjectUrl, sortedProjects } from "@/lib/content/projects";
 import { siteConfig } from "@/lib/site/config";
 import { createPageMetadata } from "@/lib/site/metadata";
 import { schemaEntity, siteAuthor } from "@/lib/site/structured-data";
+import { ProjectList } from "./_components/project-list";
 
 export const metadata: Metadata = createPageMetadata({
   title: "Projects",

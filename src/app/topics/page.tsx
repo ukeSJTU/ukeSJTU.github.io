@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { JsonLd } from "@/components/json-ld";
 import { PageTransition } from "@/components/page-transition";
-import { TopicIndex } from "@/components/topic-index";
 import { sortedBlogPosts } from "@/lib/content/blog";
 import {
   getTopicUrl,
@@ -11,6 +10,7 @@ import {
 import { siteConfig } from "@/lib/site/config";
 import { createPageMetadata } from "@/lib/site/metadata";
 import { schemaEntity, siteAuthor } from "@/lib/site/structured-data";
+import { TopicIndex } from "./_components/topic-index";
 
 export const metadata: Metadata = createPageMetadata({
   title: "Topics",

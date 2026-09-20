@@ -5,7 +5,6 @@ import { notFound } from "next/navigation";
 import { JsonLd } from "@/components/json-ld";
 import { MarkdownRenderer } from "@/components/markdown/markdown-renderer";
 import { PageTransition } from "@/components/page-transition";
-import { ProjectLinks } from "@/components/project-links";
 import {
   getProjectBySlug,
   getProjectPath,
@@ -14,6 +13,7 @@ import {
 } from "@/lib/content/projects";
 import { createPageMetadata } from "@/lib/site/metadata";
 import { schemaEntity, siteAuthor } from "@/lib/site/structured-data";
+import { ProjectLinks } from "../_components/project-links";
 
 export const dynamicParams = false;
 
