@@ -38,6 +38,19 @@ const topics = defineCollection({
   onSuccess: (entries) => assertUniqueSlugs("topic", entries),
 });
 
+const series = defineCollection({
+  name: "series",
+  directory: "content/series",
+  include: "**/*.yaml",
+  parser: "yaml",
+  schema: z.object({
+    slug: slugSchema,
+    name: z.string().trim().min(1),
+    description: z.string().trim().min(1),
+  }),
+  onSuccess: (entries) => assertUniqueSlugs("series", entries),
+});
+
 const blog = defineCollection({
   name: "blog",
   directory: "content/blog",
@@ -55,6 +68,12 @@ const blog = defineCollection({
       .refine((values) => new Set(values).size === values.length, {
         error: "Topics must not contain duplicates",
       }),
+    series: z
+      .object({
+        slug: slugSchema,
+        order: z.number().int().positive(),
+      })
+      .optional(),
     content: z.string(),
   }),
   transform: async (post, context) => {
@@ -71,6 +90,17 @@ const blog = defineCollection({
       );
     }
 
+    if (
+      post.series &&
+      !context
+        .documents(series)
+        .some((entry) => entry.slug === post.series?.slug)
+    ) {
+      throw new Error(
+        `Unknown series in "${post._meta.path}": ${post.series.slug}`,
+      );
+    }
+
     const compiled = await compileMarkdown(context, post);
 
     return {
@@ -78,7 +108,23 @@ const blog = defineCollection({
       ...compiled,
     };
   },
-  onSuccess: (entries) => assertUniqueSlugs("blog", entries),
+  onSuccess: (entries) => {
+    assertUniqueSlugs("blog", entries);
+    const pathsByPosition = new Map<string, string>();
+
+    for (const post of entries) {
+      if (!post.series) continue;
+      const { slug, order } = post.series;
+      const key = `${slug}:${order}`;
+      const existingPath = pathsByPosition.get(key);
+      if (existingPath !== undefined) {
+        throw new Error(
+          `Duplicate order ${order} in series "${slug}" in "${existingPath}" and "${post._meta.path}"`,
+        );
+      }
+      pathsByPosition.set(key, post._meta.path);
+    }
+  },
 });
 
 const projects = defineCollection({
@@ -110,5 +156,5 @@ const projects = defineCollection({
 });
 
 export default defineConfig({
-  content: [topics, blog, projects],
+  content: [topics, series, blog, projects],
 });

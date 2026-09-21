@@ -14,9 +14,17 @@ const dateFormatter = new Intl.DateTimeFormat(siteConfig.language, {
   timeZone: "Asia/Shanghai",
 });
 
-export function BlogList({ entries }: { entries: Post[] }) {
+export function BlogList({
+  entries,
+  ordered = false,
+}: {
+  entries: Post[];
+  ordered?: boolean;
+}) {
+  const List = ordered ? "ol" : "ul";
+
   return (
-    <ul className={styles.list}>
+    <List className={styles.list}>
       {entries.map((post) => (
         <li key={post.slug}>
           <Link
@@ -41,6 +49,6 @@ export function BlogList({ entries }: { entries: Post[] }) {
           </Link>
         </li>
       ))}
-    </ul>
+    </List>
   );
 }

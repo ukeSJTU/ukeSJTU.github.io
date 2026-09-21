@@ -160,6 +160,118 @@ test("projects retain their public slug independently of the source filename", a
   });
 });
 
+const seriesDefinition =
+  "slug: test-series\nname: Test series\ndescription: A short introduction.\n";
+
+function seriesNote(slug: string, series: string) {
+  return note("A series note")
+    .replace("slug: test-note", `slug: ${slug}`)
+    .replace("topics: [markdown]", `topics: [markdown]\nseries: ${series}`);
+}
+
+test("series are independent definitions, including ones without posts", async () => {
+  const { allSeries, allBlogs, errors } = await buildContent({
+    "series/nested/renamed.yaml": seriesDefinition,
+    "blog/standalone.md": note("No series"),
+  });
+
+  expect(errors).toEqual([]);
+  expect(allSeries).toEqual([
+    expect.objectContaining({
+      slug: "test-series",
+      name: "Test series",
+      description: "A short introduction.",
+    }),
+  ]);
+  expect(allBlogs[0]).not.toHaveProperty("series");
+});
+
+test("series membership retains explicit, non-contiguous ordering", async () => {
+  const { allBlogs, errors } = await buildContent({
+    "series/test.yaml": seriesDefinition,
+    "series/another.yaml": seriesDefinition.replaceAll(
+      "test-series",
+      "another-series",
+    ),
+    "blog/first.md": seriesNote("first", "{ slug: test-series, order: 10 }"),
+    "blog/second.md": seriesNote("second", "{ slug: test-series, order: 30 }"),
+    "blog/other.md": seriesNote("other", "{ slug: another-series, order: 10 }"),
+  });
+
+  expect(errors).toEqual([]);
+  expect(allBlogs.find((post) => post.slug === "second")?.series).toEqual({
+    slug: "test-series",
+    order: 30,
+  });
+  expect(allBlogs).toHaveLength(3);
+});
+
+test.each([
+  "{ slug: test-series }",
+  "{ order: 10 }",
+  "{ slug: test-series, order: 0 }",
+  "{ slug: test-series, order: -1 }",
+  "{ slug: test-series, order: 1.5 }",
+  '{ slug: test-series, order: "10" }',
+  "[{ slug: test-series, order: 10 }]",
+  "null",
+])("invalid series membership is rejected: %s", async (membership) => {
+  const { allBlogs, errors } = await buildContent({
+    "series/test.yaml": seriesDefinition,
+    "blog/invalid.md": seriesNote("invalid", membership),
+  });
+
+  expect(allBlogs).toEqual([]);
+  expect(errors).toEqual([expect.stringContaining("series")]);
+});
+
+test("unknown series references identify the source article", async () => {
+  const { allBlogs, errors } = await buildContent({
+    "blog/unknown.md": seriesNote("unknown", "{ slug: missing, order: 10 }"),
+  });
+
+  expect(allBlogs).toEqual([]);
+  expect(errors).toEqual([
+    expect.stringContaining('Unknown series in "unknown": missing'),
+  ]);
+});
+
+test("duplicate series slugs fail the content build", async () => {
+  await expect(
+    buildContent({
+      "series/first.yaml": seriesDefinition,
+      "series/second.yaml": seriesDefinition,
+    }),
+  ).rejects.toThrow('Duplicate series slug "test-series"');
+});
+
+test("duplicate positions within a series fail with both source paths", async () => {
+  await expect(
+    buildContent({
+      "series/test.yaml": seriesDefinition,
+      "blog/first.md": seriesNote("first", "{ slug: test-series, order: 10 }"),
+      "blog/nested/second.md": seriesNote(
+        "second",
+        "{ slug: test-series, order: 10 }",
+      ),
+    }),
+  ).rejects.toThrow(
+    /Duplicate order 10 in series "test-series".*first.*nested\/second/,
+  );
+});
+
+test.each([
+  "slug: Bad Slug\nname: Test\ndescription: Introduction\n",
+  "slug: test-series\nname: ' '\ndescription: Introduction\n",
+  "slug: test-series\nname: Test\ndescription: ' '\n",
+])("invalid series definitions are rejected", async (definition) => {
+  const { allSeries, errors } = await buildContent({
+    "series/test.yaml": definition,
+  });
+  expect(allSeries).toEqual([]);
+  expect(errors).toHaveLength(1);
+});
+
 test("invalid public slugs are rejected before a note is published", async () => {
   const { allBlogs, errors } = await buildContent({
     "blog/invalid-slug.md": note("A note").replace(

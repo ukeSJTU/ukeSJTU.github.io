@@ -5,6 +5,7 @@ import {
   sortedBlogPosts,
 } from "@/lib/content/blog";
 import { getProjectUrl, projectsWithArticles } from "@/lib/content/projects";
+import { getSeriesUrl, seriesWithPosts } from "@/lib/content/series";
 import {
   getTopicsModifiedDate,
   getTopicUrl,
@@ -50,6 +51,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "weekly",
       priority: 0.8,
     },
+    {
+      url: absoluteUrl("/series"),
+      changeFrequency: "weekly",
+      priority: 0.8,
+    },
+    ...seriesWithPosts.map((series) => ({
+      url: getSeriesUrl(series),
+      changeFrequency: "weekly" as const,
+      priority: 0.7,
+    })),
     ...topicsWithPosts.map((topic) => ({
       url: getTopicUrl(topic),
       lastModified: topic.posts.at(0)

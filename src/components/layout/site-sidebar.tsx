@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  IconBooks,
   IconBrandGithub,
   IconFileText,
   IconFolderCode,
@@ -21,6 +22,7 @@ import styles from "./site-sidebar.module.css";
 const navigation = [
   { href: "/", label: "Home", icon: IconHome },
   { href: "/blog", label: "Blog", icon: IconFileText },
+  { href: "/series", label: "Series", icon: IconBooks },
   { href: "/projects", label: "Projects", icon: IconFolderCode },
   { href: "/about", label: "About", icon: IconUser },
 ] as const;
@@ -99,7 +101,10 @@ export function SiteSidebar({ basePath = "" }: { basePath?: string }) {
           })}
         </nav>
 
-        <nav aria-label="Topics and external links" className={styles.footer}>
+        <nav
+          aria-label="Collections and external links"
+          className={styles.footer}
+        >
           <a href={siteConfig.author.url}>
             <IconBrandGithub aria-hidden="true" className="size-4" /> GitHub
           </a>

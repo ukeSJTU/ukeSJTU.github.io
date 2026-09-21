@@ -13,10 +13,12 @@ import {
   parsePostDate,
   sortedBlogPosts,
 } from "@/lib/content/blog";
+import { getPostSeriesNavigation, getSeriesPath } from "@/lib/content/series";
 import { siteConfig } from "@/lib/site/config";
 import { createPageMetadata } from "@/lib/site/metadata";
 import { blogPostingSchema } from "@/lib/site/structured-data";
 import { BlogComments } from "./_components/blog-comments";
+import { BlogSeriesNavigation } from "./_components/blog-series-navigation";
 import { BlogTableOfContents } from "./_components/blog-table-of-contents";
 import styles from "./page.module.css";
 
@@ -62,6 +64,7 @@ export default async function BlogPostPage({
   }
 
   const postPath = getPostPath(post);
+  const seriesNavigation = getPostSeriesNavigation(post);
   const jsonLd = blogPostingSchema(
     { ...post, modifiedAt: getPostModifiedDateString(post) },
     postPath,
@@ -89,6 +92,21 @@ export default async function BlogPostPage({
           data-pagefind-meta={`url:${postPath}`}
         >
           <header className="border-border border-b pb-6">
+            {seriesNavigation && (
+              <p
+                className="text-muted-foreground mb-4 text-sm"
+                data-pagefind-ignore
+              >
+                Part of{" "}
+                <Link
+                  className="text-primary underline underline-offset-4"
+                  href={getSeriesPath(seriesNavigation.series)}
+                  transitionTypes={["nav-back"]}
+                >
+                  {seriesNavigation.series.name}
+                </Link>
+              </p>
+            )}
             <h1
               className="text-4xl font-semibold sm:text-5xl"
               data-pagefind-meta="title"
@@ -119,6 +137,9 @@ export default async function BlogPostPage({
           </div>
         </article>
 
+        {seriesNavigation && (
+          <BlogSeriesNavigation navigation={seriesNavigation} />
+        )}
         <BlogComments />
       </main>
     </PageTransition>

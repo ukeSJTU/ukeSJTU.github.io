@@ -1,9 +1,12 @@
 ---
 slug: "linux-cli-ln"
-title: "Linux CLI by Experiment: What ln Really Links"
+title: "What ln Really Links"
 summary: "Six hands-on experiments reveal how hard links, symbolic links, inodes, unlinking, path resolution, and atomic release switches actually work on Linux."
 publishedAt: "2025-03-18"
 updatedAt: "2026-09-20"
+series:
+  slug: "linux-through-commands"
+  order: 10
 topics:
   - "linux"
   - "command-line"
@@ -22,10 +25,10 @@ a file after every visible name has been removed? Why does replacing a file
 sometimes break the relationship between two hard links? Why is a relative
 symbolic link interpreted from a directory you may not expect?
 
-This is the first article in **Linux CLI by Experiment**, a series about learning
-command-line tools by observing the operating-system model beneath them. We will
-use `ln`, `stat`, `readlink`, and a few shell primitives to derive that model from
-actual behavior.
+This is the first article in **Understanding Linux Through Commands**, a series
+about learning command-line tools by observing the operating-system model beneath
+them. We will use `ln`, `stat`, `readlink`, and a few shell primitives to derive
+that model from actual behavior.
 
 The commands target GNU/Linux. GNU `stat` options such as `-c`, GNU `mv -T`, and
 some `ln` options differ on macOS and BSD systems.
