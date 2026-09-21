@@ -14,7 +14,7 @@ import remarkParse from "remark-parse";
 import remarkRehype from "remark-rehype";
 import { unified } from "unified";
 import { mermaidOptions } from "./mermaid-options";
-import { prettyCodeOptions } from "./pretty-code";
+import { prettyCodeOptions } from "./pretty-code-options";
 import { rehypeCodeBlocks } from "./rehype-code-blocks";
 import { rehypeMermaidTheme } from "./rehype-mermaid-theme";
 import { rehypeTaskListLabels } from "./rehype-task-list-labels";

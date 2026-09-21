@@ -7,8 +7,8 @@ import { MarkdownRenderer } from "@/components/markdown/markdown-renderer";
 import { PageTransition } from "@/components/page-transition";
 import {
   getPostBySlug,
-  getPostModifiedAt,
   getPostModifiedDate,
+  getPostModifiedDateString,
   getPostPath,
   parsePostDate,
   sortedBlogPosts,
@@ -41,7 +41,7 @@ export async function generateMetadata({
 
   const postPath = getPostPath(post);
   const publishedTime = parsePostDate(post.publishedAt).toISOString();
-  const modifiedTime = getPostModifiedAt(post).toISOString();
+  const modifiedTime = getPostModifiedDate(post).toISOString();
 
   return createPageMetadata({
     title: post.title,
@@ -63,7 +63,7 @@ export default async function BlogPostPage({
 
   const postPath = getPostPath(post);
   const jsonLd = blogPostingSchema(
-    { ...post, modifiedAt: getPostModifiedDate(post) },
+    { ...post, modifiedAt: getPostModifiedDateString(post) },
     postPath,
   );
   const formattedPublishedAt = new Intl.DateTimeFormat(siteConfig.language, {
@@ -111,11 +111,7 @@ export default async function BlogPostPage({
           </header>
 
           <div className={styles.contentLayout}>
-            <MarkdownRenderer
-              className={styles.articleBody}
-              contentKey={post.slug}
-              html={post.html}
-            />
+            <MarkdownRenderer className={styles.articleBody} html={post.html} />
             <BlogTableOfContents
               className={styles.tableOfContents}
               items={post.tableOfContents}

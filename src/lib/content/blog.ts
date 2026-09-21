@@ -7,7 +7,7 @@ export type Post = Omit<(typeof allBlogs)[number], "_meta" | "content">;
 const posts: Post[] = allBlogs.map(({ _meta, content, ...post }) => post);
 const postsBySlug = new Map(posts.map((post) => [post.slug, post]));
 
-export function parsePostDate(date: string) {
+export function parsePostDate(date: string): Date {
   return new Date(`${date}T00:00:00.000Z`);
 }
 
@@ -23,15 +23,15 @@ export function getPostUrl(post: Pick<Post, "slug">) {
   return absoluteUrl(getPostPath(post));
 }
 
-export function getPostModifiedAt(post: Post) {
-  return parsePostDate(getPostModifiedDate(post));
+export function getPostModifiedDate(post: Post): Date {
+  return parsePostDate(getPostModifiedDateString(post));
 }
 
-export function getPostModifiedDate(post: Post) {
+export function getPostModifiedDateString(post: Post): string {
   return post.updatedAt ?? post.publishedAt;
 }
 
 export const sortedBlogPosts = [...posts].sort(
   (left, right) =>
-    getPostModifiedAt(right).getTime() - getPostModifiedAt(left).getTime(),
+    getPostModifiedDate(right).getTime() - getPostModifiedDate(left).getTime(),
 );

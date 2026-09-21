@@ -15,6 +15,39 @@ pnpm dev
 
 The development server is available at [http://localhost:3000](http://localhost:3000).
 
+## Project structure
+
+| Location | Responsibility |
+| --- | --- |
+| `src/app` | Next.js routes, metadata entry points, root layout and global styles |
+| `src/app/**/_components` | UI used only by that page or route family; not a public route |
+| `src/components` | UI shared across route families, such as the blog list and JSON-LD renderer |
+| `src/components/layout`, `markdown`, `search`, `theme` | Shared UI grouped by responsibility, with its own styles and hooks |
+| `src/components/ui` | Used shadcn primitives; unused generated helpers are not retained as placeholders |
+| `src/lib/content` | Content queries and build-time Markdown compilation; only this layer reads generated collections |
+| `src/lib/search` | Pagefind loading and search-result conversion, without React rendering |
+| `src/lib/site` | Site configuration, metadata and structured-data helpers |
+| `content`, `public` | Authored content and publicly served assets respectively |
+
+Keep tests beside their source. Root configuration tests, such as `content-collections.test.ts`, stay beside the root configuration. Generated `.content-collections/`, `.next/` and `out/` directories are build output, not source.
+
+### Naming and dependencies
+
+- Use `kebab-case` filenames, `PascalCase` React component names and `camelCase` functions. Hooks use the `use-` filename prefix and `use` function prefix. Keep Next.js's reserved filenames unchanged.
+- Name modules for their actual responsibility: `code-block-copy-controller.tsx` handles copying; `pretty-code-options.ts` and `mermaid-options.ts` configure Markdown plugins.
+- Content date getters ending in `Date` return a JavaScript `Date`; those ending in `DateString` return the content's `YYYY-MM-DD` string. Frontmatter field names and public URLs remain independent of source filenames.
+- Use relative imports within a module or route family, and `@/` imports across them. Shared modules must not import route-private code. Avoid barrel files that mix client components with build-only code.
+- Import `cn` through `@/lib/utils`, including in UI primitives. Export only what other modules consume; keep feature-specific hooks with their feature rather than in a global hooks directory.
+
+### Style ownership
+
+- `src/app/globals.css` owns Tailwind setup, theme tokens, base rules and the shared `.page-content` container.
+- Feature styles live in adjacent `*.module.css` files. When moving a rule, preserve its cascade layer: a rule in `@layer components` must not become an unlayered override of Tailwind utilities.
+- `src/components/page-transition.css` is deliberately global and loaded by the root layout. Its transition names, including the sidebar identity, must agree with React's transition configuration; CSS Modules can rename those identities.
+- Markdown `data-*` attributes are a shared contract between build-time rehype plugins, prose styles and the copy controller. Check all three before changing or deleting an attribute.
+
+Dead-code reports are candidates, not deletion instructions. In particular, Giscus loads `public/giscus/*.css` by URL, Commitlint runs through Lefthook, and rumdl is installed through mise rather than npm. Check runtime consumers and framework entry points before removing files or dependencies.
+
 ## Content
 
 Blog notes live in `content/blog` and are published at `/blog/<slug>`. Each Markdown file must include the following frontmatter:
@@ -37,6 +70,8 @@ Each note must reference between one and three topics by slug. Topics are define
 Projects live in `content/projects`. Each project requires a unique `slug` using the same format as blog slugs, plus `name`, `description`, `year`, and `order`. `demo` and `source` are optional URLs. A non-empty Markdown body creates an article at `/projects/<slug>`; projects without a body appear only in the index. Keep the slug unchanged when moving or renaming a file to preserve public links.
 
 The shared Markdown compiler in `src/lib/content/markdown/compile-markdown.ts` supports CommonMark, GitHub Flavored Markdown, CJK-friendly parsing, KaTeX, Shiki syntax highlighting, and Mermaid diagrams with light and dark themes. Collection schemas and cross-document validation live in `content-collections.ts`. Pages use `src/lib/content` queries rather than generated collections or filesystem metadata.
+
+Markdown is trusted repository-owned input and supports raw HTML. Do not reuse this compiler or renderer for untrusted submissions without adding sanitization.
 
 ### Code blocks
 

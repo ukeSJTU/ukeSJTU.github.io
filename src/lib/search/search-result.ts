@@ -1,4 +1,4 @@
-import { getCleanResultUrl, type PagefindResultData } from "./pagefind";
+import type { PagefindResultData } from "./pagefind";
 
 const dateFormatter = new Intl.DateTimeFormat("en", {
   dateStyle: "medium",
@@ -14,12 +14,23 @@ export interface SearchResult {
   title: string;
 }
 
+function normalizeResultUrl(url: string) {
+  const hashIndex = url.indexOf("#");
+  const pathname = hashIndex === -1 ? url : url.slice(0, hashIndex);
+  const hash = hashIndex === -1 ? "" : url.slice(hashIndex);
+  const cleanPathname = pathname
+    .replace(/\/index\.html$/, "/")
+    .replace(/\.html$/, "");
+
+  return `${cleanPathname}${hash}`;
+}
+
 export function toSearchResult(
   id: string,
   result: PagefindResultData,
 ): SearchResult {
   const section = result.sub_results?.find(({ url }) => url.includes("#"));
-  const canonicalPath = getCleanResultUrl(result.meta.url ?? result.url);
+  const canonicalPath = normalizeResultUrl(result.meta.url ?? result.url);
   const sectionHash = section?.url.includes("#")
     ? section.url.slice(section.url.indexOf("#"))
     : "";

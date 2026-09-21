@@ -1,12 +1,12 @@
 import type { MetadataRoute } from "next";
 import {
-  getPostModifiedDate,
+  getPostModifiedDateString,
   getPostUrl,
   sortedBlogPosts,
 } from "@/lib/content/blog";
 import { getProjectUrl, projectsWithArticles } from "@/lib/content/projects";
 import {
-  getTopicsModifiedAt,
+  getTopicsModifiedDate,
   getTopicUrl,
   topicsWithPosts,
 } from "@/lib/content/topics";
@@ -20,13 +20,17 @@ export default function sitemap(): MetadataRoute.Sitemap {
   return [
     {
       url: siteConfig.url,
-      lastModified: latestPost ? getPostModifiedDate(latestPost) : undefined,
+      lastModified: latestPost
+        ? getPostModifiedDateString(latestPost)
+        : undefined,
       changeFrequency: "weekly",
       priority: 1,
     },
     {
       url: absoluteUrl("/blog"),
-      lastModified: latestPost ? getPostModifiedDate(latestPost) : undefined,
+      lastModified: latestPost
+        ? getPostModifiedDateString(latestPost)
+        : undefined,
       changeFrequency: "weekly",
       priority: 0.9,
     },
@@ -42,21 +46,21 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
     {
       url: absoluteUrl("/topics"),
-      lastModified: getTopicsModifiedAt(),
+      lastModified: getTopicsModifiedDate(),
       changeFrequency: "weekly",
       priority: 0.8,
     },
     ...topicsWithPosts.map((topic) => ({
       url: getTopicUrl(topic),
       lastModified: topic.posts.at(0)
-        ? getPostModifiedDate(topic.posts[0])
+        ? getPostModifiedDateString(topic.posts[0])
         : undefined,
       changeFrequency: "weekly" as const,
       priority: 0.7,
     })),
     ...sortedBlogPosts.map((post) => ({
       url: getPostUrl(post),
-      lastModified: getPostModifiedDate(post),
+      lastModified: getPostModifiedDateString(post),
       changeFrequency: "monthly" as const,
       priority: 0.8,
     })),

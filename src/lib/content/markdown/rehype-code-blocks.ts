@@ -50,8 +50,6 @@ const createCopyIcon = (
 };
 
 export const rehypeCodeBlocks: Plugin<[], Root> = () => (tree) => {
-  let nextCodeBlockIndex = 0;
-
   visit(tree, "element", (figure) => {
     if (
       figure.tagName !== "figure" ||
@@ -75,11 +73,7 @@ export const rehypeCodeBlocks: Plugin<[], Root> = () => (tree) => {
         : typeof pre.properties["data-language"] === "string"
           ? pre.properties["data-language"]
           : "plaintext";
-    const blockId = String(nextCodeBlockIndex);
-    nextCodeBlockIndex += 1;
-
     figure.properties["data-code-block"] = "";
-    figure.properties["data-code-block-index"] = blockId;
 
     const languageLabel = createToolbarItem(
       "span",
@@ -111,7 +105,6 @@ export const rehypeCodeBlocks: Plugin<[], Root> = () => (tree) => {
       "span",
       {
         "data-code-block-actions": "",
-        "data-code-block-index": blockId,
       },
       [copyButton, copyStatus],
     );

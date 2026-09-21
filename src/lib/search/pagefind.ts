@@ -1,4 +1,4 @@
-export interface PagefindSubResult {
+interface PagefindSubResult {
   title: string;
   url: string;
   excerpt: string;
@@ -46,7 +46,7 @@ export function resetPagefind() {
   retryVersion += 1;
 }
 
-export function normalizeBasePath(basePath: string) {
+function normalizeBasePath(basePath: string) {
   const trimmed = basePath.trim().replace(/^\/+|\/+$/g, "");
   return trimmed ? `/${trimmed}` : "";
 }
@@ -79,15 +79,4 @@ export function loadPagefind(basePath = "") {
   });
 
   return pagefindPromise;
-}
-
-export function getCleanResultUrl(url: string) {
-  const hashIndex = url.indexOf("#");
-  const pathname = hashIndex === -1 ? url : url.slice(0, hashIndex);
-  const hash = hashIndex === -1 ? "" : url.slice(hashIndex);
-  const cleanPathname = pathname
-    .replace(/\/index\.html$/, "/")
-    .replace(/\.html$/, "");
-
-  return `${cleanPathname}${hash}`;
 }

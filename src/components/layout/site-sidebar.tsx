@@ -13,7 +13,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { SiteSearch } from "@/components/search/site-search";
-import { ThemeToggle } from "@/components/theme-toggle";
+import { ThemeToggle } from "@/components/theme/theme-toggle";
 import { siteConfig } from "@/lib/site/config";
 import { cn } from "@/lib/utils";
 import styles from "./site-sidebar.module.css";

@@ -105,11 +105,7 @@ export default async function ProjectPage({
             <ProjectLinks project={project} variant="detail" />
           </header>
 
-          <MarkdownRenderer
-            className="mt-6 max-w-3xl"
-            contentKey={project.slug}
-            html={project.html}
-          />
+          <MarkdownRenderer className="mt-6 max-w-3xl" html={project.html} />
         </article>
       </main>
     </PageTransition>

@@ -56,6 +56,19 @@ test("recently revised notes precede newer publications, with publication dates 
   ]);
 });
 
+test.each([
+  ["revised", "2026-03-01", "2026-03-01T00:00:00.000Z"],
+  ["older", "2026-01-01", "2026-01-01T00:00:00.000Z"],
+])("%s exposes its effective modification date as a date string and a UTC Date", async (slug, dateString, timestamp) => {
+  const { getPostBySlug, getPostModifiedDate, getPostModifiedDateString } =
+    await import("./blog");
+  const found = getPostBySlug(slug);
+
+  assert(found);
+  expect(getPostModifiedDateString(found)).toBe(dateString);
+  expect(getPostModifiedDate(found).toISOString()).toBe(timestamp);
+});
+
 test("a note is found by its public slug rather than its source directory", async () => {
   const { getPostBySlug, getPostPath } = await import("./blog");
   const found = getPostBySlug("revised");

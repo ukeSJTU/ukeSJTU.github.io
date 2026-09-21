@@ -1,7 +1,7 @@
 import Link from "next/link";
 import {
-  getPostModifiedAt,
   getPostModifiedDate,
+  getPostModifiedDateString,
   getPostPath,
   type Post,
 } from "@/lib/content/blog";
@@ -30,9 +30,9 @@ export function BlogList({ entries }: { entries: Post[] }) {
               </h3>
               <time
                 className="text-muted-foreground shrink-0 text-sm tabular-nums"
-                dateTime={getPostModifiedDate(post)}
+                dateTime={getPostModifiedDateString(post)}
               >
-                {dateFormatter.format(getPostModifiedAt(post))}
+                {dateFormatter.format(getPostModifiedDate(post))}
               </time>
             </div>
             <p className="text-muted-foreground mt-2 leading-relaxed">

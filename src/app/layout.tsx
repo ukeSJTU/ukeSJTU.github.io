@@ -6,7 +6,7 @@ import "@/components/page-transition.css";
 import { SiteFooter } from "@/components/layout/site-footer";
 import styles from "@/components/layout/site-shell.module.css";
 import { SiteSidebar } from "@/components/layout/site-sidebar";
-import { ThemeProvider } from "@/components/theme-provider";
+import { ThemeProvider } from "@/components/theme/theme-provider";
 import { siteConfig } from "@/lib/site/config";
 import { createPageMetadata } from "@/lib/site/metadata";
 import { fontVariables } from "./fonts";
@@ -19,6 +19,8 @@ export const metadata: Metadata = {
     description: siteConfig.description,
     path: "/",
   }),
+  // Malformed repository configuration should fail the build, not use a fallback.
+  // pi-lens-ignore: unchecked-throwing-call
   metadataBase: new URL(siteConfig.url),
   title: {
     default: siteConfig.name,

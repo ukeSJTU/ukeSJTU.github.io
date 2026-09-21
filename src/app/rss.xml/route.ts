@@ -1,6 +1,6 @@
 import { Feed } from "feed";
 import {
-  getPostModifiedAt,
+  getPostModifiedDate,
   getPostUrl,
   parsePostDate,
   sortedBlogPosts,
@@ -19,7 +19,7 @@ export function GET() {
     language: siteConfig.language,
     favicon: absoluteUrl("/favicon.ico"),
     copyright: `© ${new Date().getFullYear()} ${siteConfig.author.name}`,
-    updated: latestPost ? getPostModifiedAt(latestPost) : undefined,
+    updated: latestPost ? getPostModifiedDate(latestPost) : undefined,
     generator: "Next.js + feed",
     feedLinks: {
       rss: absoluteUrl("/rss.xml"),
@@ -39,7 +39,7 @@ export function GET() {
       guid: url,
       link: url,
       description: post.summary,
-      date: getPostModifiedAt(post),
+      date: getPostModifiedDate(post),
       published: parsePostDate(post.publishedAt),
       author: [
         {

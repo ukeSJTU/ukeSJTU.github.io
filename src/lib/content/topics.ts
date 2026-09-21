@@ -1,10 +1,6 @@
 import { allTopics } from "content-collections";
-import {
-  getPostModifiedAt,
-  type Post,
-  sortedBlogPosts,
-} from "@/lib/content/blog";
 import { absoluteUrl, siteConfig } from "@/lib/site/config";
+import { getPostModifiedDate, type Post, sortedBlogPosts } from "./blog";
 
 export type Topic = Omit<(typeof allTopics)[number], "_meta">;
 
@@ -82,8 +78,8 @@ export function getTopicUrl(topic: Pick<Topic, "slug">) {
   return absoluteUrl(getTopicPath(topic));
 }
 
-export function getTopicsModifiedAt() {
+export function getTopicsModifiedDate(): Date | undefined {
   const latestPost = sortedBlogPosts.at(0);
 
-  return latestPost ? getPostModifiedAt(latestPost) : undefined;
+  return latestPost ? getPostModifiedDate(latestPost) : undefined;
 }

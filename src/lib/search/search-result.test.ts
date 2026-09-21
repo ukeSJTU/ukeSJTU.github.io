@@ -1,6 +1,20 @@
 import { expect, test } from "vitest";
 import { toSearchResult } from "./search-result";
 
+test.each([
+  ["/index.html", "/"],
+  ["/blog/note.html", "/blog/note"],
+])("search results normalize %s when canonical metadata is absent", (url, href) => {
+  expect(
+    toSearchResult("hit", {
+      url,
+      excerpt: "A note",
+      plain_excerpt: "A note",
+      meta: {},
+    }),
+  ).toMatchObject({ href, title: "Untitled" });
+});
+
 test("search results use the canonical page path and the matching section anchor", () => {
   expect(
     toSearchResult("hit", {

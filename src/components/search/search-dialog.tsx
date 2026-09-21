@@ -236,6 +236,7 @@ export function SearchDialog({
                           styles.secondary,
                           "line-clamp-2 leading-relaxed",
                         )}
+                        // pi-lens-ignore: dangerously-set-inner-html
                         // biome-ignore lint/security/noDangerouslySetInnerHtml: Pagefind escapes indexed HTML before inserting its own mark tags.
                         dangerouslySetInnerHTML={{ __html: result.excerpt }}
                       />

@@ -28,13 +28,7 @@ function updateCopyState(button: HTMLButtonElement, state: CopyState) {
   }
 }
 
-export function CodeBlockEnhancer({
-  children,
-  contentKey,
-}: {
-  children: ReactNode;
-  contentKey: string;
-}) {
+export function CodeBlockCopyController({ children }: { children: ReactNode }) {
   const feedbackTimers = useRef(
     new WeakMap<HTMLButtonElement, ReturnType<typeof setTimeout>>(),
   );
@@ -77,11 +71,7 @@ export function CodeBlockEnhancer({
   }
 
   return (
-    <div
-      className="contents"
-      data-code-block-enhancer={contentKey}
-      onClick={handleClick}
-    >
+    <div className="contents" onClick={handleClick}>
       {children}
     </div>
   );
