@@ -2,12 +2,9 @@
 
 import {
   IconBooks,
-  IconBrandGithub,
   IconFileText,
   IconFolderCode,
   IconHome,
-  IconRss,
-  IconTags,
   IconUser,
 } from "@tabler/icons-react";
 import Image from "next/image";
@@ -17,6 +14,7 @@ import { SiteSearch } from "@/components/search/site-search";
 import { ThemeToggle } from "@/components/theme/theme-toggle";
 import { siteConfig } from "@/lib/site/config";
 import { cn } from "@/lib/utils";
+import { SidebarLinks } from "./sidebar-links";
 import styles from "./site-sidebar.module.css";
 
 const navigation = [
@@ -101,25 +99,9 @@ export function SiteSidebar({ basePath = "" }: { basePath?: string }) {
           })}
         </nav>
 
-        <nav
-          aria-label="Collections and external links"
-          className={styles.footer}
-        >
-          <a href={siteConfig.author.url}>
-            <IconBrandGithub aria-hidden="true" className="size-4" /> GitHub
-          </a>
-          <Link
-            aria-current={
-              isCurrentPath(pathname, "/topics") ? "page" : undefined
-            }
-            href="/topics"
-          >
-            <IconTags aria-hidden="true" className="size-4" /> Topics
-          </Link>
-          <a href={`${basePath}/rss.xml`}>
-            <IconRss aria-hidden="true" className="size-4" /> RSS
-          </a>
-        </nav>
+        <div className={styles.footer}>
+          <SidebarLinks basePath={basePath} pathname={pathname} />
+        </div>
       </header>
     </>
   );

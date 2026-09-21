@@ -8,14 +8,30 @@ export function SiteFooter({ basePath = "" }: { basePath?: string }) {
         <span>
           © {new Date().getFullYear()} {siteConfig.author.name}
         </span>
-        <a href="https://creativecommons.org/licenses/by/4.0/" rel="license">
+        <a
+          href="https://creativecommons.org/licenses/by/4.0/"
+          rel="license noopener noreferrer"
+          target="_blank"
+        >
           Content: CC BY 4.0
         </a>
       </p>
       <nav aria-label="Footer navigation">
-        <a href={siteConfig.author.url}>GitHub</a>
+        <a
+          href={siteConfig.author.url}
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          GitHub
+        </a>
         <a href={`${basePath}/rss.xml`}>RSS</a>
-        <a href={`${siteConfig.author.url}/ukesjtu.github.io`}>Source</a>
+        <a
+          href={siteConfig.sourceUrl}
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          Source
+        </a>
       </nav>
     </footer>
   );
