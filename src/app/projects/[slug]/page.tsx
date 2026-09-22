@@ -1,9 +1,7 @@
-import { IconArrowLeft } from "@tabler/icons-react";
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { JsonLd } from "@/components/json-ld";
-import { MarkdownRenderer } from "@/components/markdown/markdown-renderer";
+import { ReadingLayout } from "@/components/markdown/reading-layout";
 import { PageTransition } from "@/components/page-transition";
 import {
   getProjectBySlug,
@@ -72,40 +70,31 @@ export default async function ProjectPage({
     <PageTransition>
       <main className="page-content" id="main-content">
         <JsonLd data={jsonLd} />
-        <Link
-          className="text-muted-foreground inline-flex items-center gap-2 text-sm underline underline-offset-4"
-          href="/projects"
-          transitionTypes={["nav-back"]}
-        >
-          <IconArrowLeft aria-hidden="true" className="size-4" /> Back to
-          projects
-        </Link>
-
-        <article
-          className="mt-6"
-          data-pagefind-body
-          data-pagefind-meta={`url:${projectPath}`}
-        >
-          <header className="border-border border-b pb-6">
-            <p className="text-muted-foreground text-sm font-medium tabular-nums">
-              {project.year}
-            </p>
-            <h1
-              className="mt-3 text-4xl font-semibold tracking-tight sm:text-5xl"
-              data-pagefind-meta="title"
-            >
-              {project.name}
-            </h1>
-            <p
-              className="text-muted-foreground mt-4 max-w-2xl text-lg leading-relaxed"
-              data-pagefind-meta="summary"
-            >
-              {project.description}
-            </p>
-            <ProjectLinks project={project} variant="detail" />
-          </header>
-
-          <MarkdownRenderer className="mt-6 max-w-3xl" html={project.html} />
+        <article data-pagefind-body data-pagefind-meta={`url:${projectPath}`}>
+          <ReadingLayout
+            html={project.html}
+            tableOfContents={project.tableOfContents}
+            header={
+              <>
+                <p className="text-muted-foreground text-sm font-medium tabular-nums">
+                  {project.year}
+                </p>
+                <h1
+                  className="mt-3 text-4xl font-semibold tracking-tight sm:text-5xl"
+                  data-pagefind-meta="title"
+                >
+                  {project.name}
+                </h1>
+                <p
+                  className="text-muted-foreground mt-4 max-w-2xl text-lg leading-relaxed"
+                  data-pagefind-meta="summary"
+                >
+                  {project.description}
+                </p>
+                <ProjectLinks project={project} />
+              </>
+            }
+          />
         </article>
       </main>
     </PageTransition>

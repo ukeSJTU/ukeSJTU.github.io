@@ -23,7 +23,7 @@ function post(
     title: slug,
     summary: "Fixture note",
     publishedAt,
-    topics: ["test-topic"],
+    tags: ["test-tag"],
     series,
     content: "A note",
     html: "<p>A note</p>",

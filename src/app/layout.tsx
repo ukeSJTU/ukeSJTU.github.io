@@ -79,7 +79,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             <SiteSidebar basePath={siteBasePath} />
             <div className={styles.content}>
               {children}
-              <SiteFooter basePath={siteBasePath} />
+              <SiteFooter />
             </div>
           </div>
         </ThemeProvider>

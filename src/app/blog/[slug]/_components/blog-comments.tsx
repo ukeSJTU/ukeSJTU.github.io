@@ -21,22 +21,22 @@ export function BlogComments() {
   return (
     <section
       aria-labelledby="comments-heading"
-      className="border-border mt-12 border-t pt-8"
+      className="border-border mt-12 scroll-mt-8 border-t pt-8"
+      data-pagefind-ignore
+      id="comments"
+      tabIndex={-1}
     >
       <header className="mb-6">
         <h2 className="text-2xl font-semibold" id="comments-heading">
-          Discussion
+          Comments
         </h2>
-        <p className="text-muted-foreground mt-2 text-sm">
-          Sign in with GitHub to leave a comment.
-        </p>
       </header>
 
       <Giscus
         category="Announcements"
         categoryId="DIC_kwDOUg4m_84DGABz"
         emitMetadata="0"
-        id="comments"
+        id="giscus-comments"
         inputPosition="top"
         lang="en"
         loading="lazy"

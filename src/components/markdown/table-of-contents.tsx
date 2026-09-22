@@ -5,7 +5,7 @@ import { animate, motion, useReducedMotion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import type { TableOfContentsItem } from "@/lib/content/markdown/table-of-contents";
 import { cn } from "@/lib/utils";
-import styles from "./blog-table-of-contents.module.css";
+import styles from "./table-of-contents.module.css";
 
 function TableOfContentsLinks({
   activeId,
@@ -61,7 +61,7 @@ function TableOfContentsLinks({
   );
 }
 
-export function BlogTableOfContents({
+export function TableOfContents({
   className,
   items,
 }: {

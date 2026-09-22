@@ -7,7 +7,7 @@ updatedAt: "2026-09-20"
 series:
   slug: "linux-through-commands"
   order: 10
-topics:
+tags:
   - "linux"
   - "command-line"
 ---

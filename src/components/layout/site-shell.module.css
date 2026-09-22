@@ -3,37 +3,32 @@
     display: flex;
     flex-direction: column;
     width: 100%;
-    max-width: 1376px;
+    max-width: 1440px;
     min-height: 100svh;
     margin-inline: auto;
   }
-
   .content {
     display: flex;
     flex: 1;
     flex-direction: column;
     min-width: 0;
-    padding: 28px 24px 20px;
+    padding: 36px 24px 24px;
   }
-
   .content > main {
-    margin-bottom: 48px;
+    margin-bottom: 80px;
   }
-
   @media (min-width: 768px) {
     .content {
-      padding: 32px 32px 20px;
+      padding: 48px 40px 24px;
     }
   }
-
   @media (min-width: 1024px) {
     .shell {
       display: grid;
-      grid-template-columns: 260px minmax(0, 1fr);
+      grid-template-columns: 240px minmax(0, 1fr);
     }
-
     .content {
-      padding: 40px 40px 20px;
+      padding: 56px 48px 24px;
     }
   }
 }

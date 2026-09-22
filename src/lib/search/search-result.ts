@@ -6,6 +6,7 @@ const dateFormatter = new Intl.DateTimeFormat("en", {
 });
 
 export interface SearchResult {
+  type: "Article" | "Project" | "Series" | "Tag" | "Page";
   date?: string;
   excerpt: string;
   href: string;
@@ -36,7 +37,20 @@ export function toSearchResult(
     : "";
   const date = result.meta.date ? new Date(result.meta.date) : undefined;
 
+  const collection = canonicalPath.split("/")[1];
+  const types = {
+    blog: "Article",
+    projects: "Project",
+    series: "Series",
+    tags: "Tag",
+  } as const;
+  const type =
+    canonicalPath.split("/")[2] && collection in types
+      ? types[collection as keyof typeof types]
+      : "Page";
+
   return {
+    type,
     date:
       date && !Number.isNaN(date.valueOf())
         ? dateFormatter.format(date)

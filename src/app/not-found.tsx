@@ -1,32 +1,30 @@
-import { IconArrowLeft } from "@tabler/icons-react";
 import Link from "next/link";
 import { PageTransition } from "@/components/page-transition";
-import { buttonVariants } from "@/components/ui/button";
+import { SearchTrigger } from "@/components/search/search-trigger";
+import { VolcanoHero } from "./_components/volcano-hero";
 
 export default function NotFound() {
   return (
     <PageTransition>
-      <main className="page-content flex flex-1 items-center" id="main-content">
-        <div className="flex w-full flex-col items-start">
-          <h1
-            aria-label="404 — Page not found"
-            className="text-primary font-mono text-[clamp(8rem,32vw,16rem)] leading-[0.72] font-semibold tracking-[-0.09em] tabular-nums"
-          >
-            404
-          </h1>
-
-          <div className="mt-12 flex w-full max-w-xl flex-col items-start gap-6 sm:mt-14 sm:flex-row sm:items-center sm:justify-between">
-            <p className="text-xl font-medium text-balance">
-              Looks like this page wandered off.
-            </p>
-            <Link
-              className={buttonVariants({ size: "lg", variant: "outline" })}
-              href="/"
-            >
-              <IconArrowLeft aria-hidden="true" data-icon="inline-start" />
-              Back home
-            </Link>
-          </div>
+      <main
+        className="page-content flex flex-1 flex-col items-center justify-center py-12 text-center"
+        id="main-content"
+      >
+        <div className="w-32 [&>div]:w-full">
+          <VolcanoHero />
+        </div>
+        <p className="text-muted-foreground mt-6 text-sm">404</p>
+        <h1 className="mt-3 text-4xl font-semibold tracking-tight">
+          Page not found
+        </h1>
+        <p className="text-muted-foreground mt-4">
+          This address doesn't lead to a page on this site.
+        </p>
+        <div className="mt-7 flex items-center gap-6">
+          <SearchTrigger />
+          <Link className="text-primary underline underline-offset-4" href="/">
+            Home
+          </Link>
         </div>
       </main>
     </PageTransition>

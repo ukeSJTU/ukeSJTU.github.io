@@ -8,7 +8,7 @@ This is **ukeraser's personal website**, published at <https://ukesjtu.github.io
 
 - **Application:** Next.js App Router, React and TypeScript, statically exported to GitHub Pages. Preserve compatibility with static export; do not introduce request-time server features without discussing the deployment implications.
 - **Presentation:** Tailwind CSS, CSS Modules and shadcn/ui built on Base UI.
-- **Content:** Markdown articles and projects, plus YAML topic and series definitions, processed by Content Collections at build time. The Markdown pipeline includes Shiki, KaTeX and Mermaid.
+- **Content:** Markdown articles and projects, plus YAML tag and series definitions, processed by Content Collections at build time. The Markdown pipeline includes Shiki, KaTeX and Mermaid.
 - **Search:** Pagefind indexes the exported site. The browser loads the search bundle lazily.
 - **Comments:** Giscus connects article comments to this repository's GitHub Discussions. Threads are mapped by pathname, so changing an article URL can affect its comments as well as incoming links.
 - **Toolchain:** mise manages Node.js, pnpm and rumdl. Read `package.json`, `mise.toml` and the lockfiles for current versions rather than assuming them.
@@ -53,7 +53,7 @@ These tasks improve explanation, structure, technical accuracy, examples or word
 | `src/lib/search` | Pagefind loading and result conversion, without React rendering |
 | `src/lib/site` | Site configuration, metadata and structured-data helpers |
 | `content-collections.ts` | Collection schemas and cross-document validation |
-| `content/` | Blog articles, project descriptions, topic and series definitions |
+| `content/` | Blog articles, project descriptions, tag and series definitions |
 | `public/` | Public assets, including images and Giscus theme stylesheets |
 
 Do not hand-edit generated `.content-collections/`, `.next/` or `out/` files. `CLAUDE.md` delegates to this file; do not maintain a second copy of these instructions there.
@@ -78,18 +78,20 @@ slug: "note-title"
 title: "Note title"
 summary: "A short description of the note."
 publishedAt: "2026-09-19"
-topics:
+tags:
   - "markdown"
 ---
 ```
 
 - Blog articles live in `content/blog` and publish at `/blog/<slug>`. `updatedAt` is an optional date in the same format as `publishedAt`.
 - Slugs use lowercase letters, numbers and single hyphens, and must be unique within their collection. The slug, not the Markdown filename, controls the public URL.
-- Each article references one to three distinct existing topics. Topic definitions live in `content/topics/*.yaml` and require `slug` and `name`; their pages are `/topics/<slug>`.
+- Each article references one to three distinct existing tags. Tag definitions live in `content/tags/*.yaml` and require `slug` and `name`; their pages are `/tags/<slug>`. Tags have no descriptions. The former Topics routes were intentionally removed without redirects.
 - Series definitions live in `content/series/*.yaml` and require `slug`, `name` and a short `description`. `/series` lists them by name; `/series/<slug>` lists their articles in reading order. Empty series are public and searchable.
-- A blog may optionally declare `series: { slug: "series-slug", order: 10 }`. Membership is authored only in the blog, not duplicated in the series definition. The order must be a positive integer unique within that series; gaps are allowed. It controls series lists and previous/next links, not public numbering, article URLs or the global recency order.
+- A blog may optionally declare `series: { slug: "series-slug", order: 10 }`. Membership is authored only in the blog, not duplicated in the series definition. The order must be a positive integer unique within that series; gaps are allowed. It controls series lists and previous/next links, not article URLs or the global recency order. Series detail pages display consecutive reading-position numbers, not the raw order values.
 - Local preview articles under `content/blog/_series-preview/` are temporary writing outlines, not publication-ready content. Keep them out of commits (the local `.git/info/exclude` can guard against accidental staging) and remove them before publishing a local build. Git exclusion does not prevent Content Collections from including them in a build; there is no draft filter.
 - Projects live in `content/projects` and require `slug`, `name`, `description`, `year` and `order`. `demo` and `source` are optional URLs. A non-empty Markdown body creates a detail page at `/projects/<slug>`; otherwise the project appears only in the index.
+- Home's mixed selected-work references are ordered in `src/lib/content/featured.ts`; titles and descriptions come from existing content, not duplicate editorial fields. Latest notes remain a separate recency list.
+- `/resume` is the English HTML résumé; `/resume.pdf` is the separately maintained Chinese download. The PDF currently contains a blank placeholder, clearly disclosed on the page. Confirm résumé wording and current-role dates and replace the PDF before publication; never automatically publish private résumé sources.
 - Images belong in `public/` and can be referenced by site-absolute paths. Preserve attribution and licensing for third-party material.
 - Use the existing Markdown features rather than introducing MDX: GFM, CJK-friendly parsing, math, Mermaid, and highlighted code fences. Fence metadata supports titles, captions, line numbers and line/word highlighting; preserve these annotations when editing examples. The rendering showcase demonstrates supported syntax.
 - Markdown is trusted repository-owned input and supports raw HTML. Do not reuse its compiler or renderer for untrusted submissions without adding sanitization.

@@ -14,7 +14,7 @@ function post(
     summary: "Fixture note",
     publishedAt,
     updatedAt,
-    topics: ["markdown"],
+    tags: ["markdown"],
     content: "A note",
     html: "<p>A note</p>",
     tableOfContents: [],
@@ -67,6 +67,18 @@ test.each([
   assert(found);
   expect(getPostModifiedDateString(found)).toBe(dateString);
   expect(getPostModifiedDate(found).toISOString()).toBe(timestamp);
+});
+
+test.each([
+  [undefined, undefined],
+  ["2026-01-01", undefined],
+  ["2025-12-31", undefined],
+  ["2026-02-01", "2026-02-01"],
+])("only a later revision is presented as an update: %s", async (updatedAt, expected) => {
+  const { getPostUpdatedDateString } = await import("./blog");
+  expect(getPostUpdatedDateString(post("note", "2026-01-01", updatedAt))).toBe(
+    expected,
+  );
 });
 
 test("a note is found by its public slug rather than its source directory", async () => {

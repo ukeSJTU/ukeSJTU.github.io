@@ -11,14 +11,13 @@
     flex-direction: column;
     align-items: flex-start;
     gap: 8px;
-    padding: 16px;
-    border: 1px solid var(--border);
-    border-radius: 6px;
+    padding-block: 20px;
+    border-top: 1px solid var(--border);
     overflow-wrap: anywhere;
   }
 
   .link:hover {
-    background: var(--muted);
+    color: var(--primary);
   }
 
   @media (min-width: 640px) {

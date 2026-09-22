@@ -15,6 +15,20 @@ test.each([
   ).toMatchObject({ href, title: "Untitled" });
 });
 
+test.each([
+  ["/blog/note", "Article"],
+  ["/series/path", "Series"],
+  ["/projects/tool", "Project"],
+  ["/tags/linux", "Tag"],
+  ["/resume", "Page"],
+  ["/projects", "Page"],
+])("search results identify %s as %s", (url, type) => {
+  expect(
+    toSearchResult("hit", { url, excerpt: "", plain_excerpt: "", meta: {} })
+      .type,
+  ).toBe(type);
+});
+
 test("search results use the canonical page path and the matching section anchor", () => {
   expect(
     toSearchResult("hit", {
@@ -33,6 +47,7 @@ test("search results use the canonical page path and the matching section anchor
     }),
   ).toEqual({
     id: "hit",
+    type: "Article",
     href: "/blog/note#details",
     title: "Note",
     section: "Details",

@@ -1,9 +1,9 @@
-import { IconArrowLeft } from "@tabler/icons-react";
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { BlogList } from "@/components/blog-list";
+import { EmptyArticles } from "@/components/empty-articles";
 import { JsonLd } from "@/components/json-ld";
+import { PageHeading } from "@/components/page-heading";
 import { PageTransition } from "@/components/page-transition";
 import { getPostUrl } from "@/lib/content/blog";
 import {
@@ -62,37 +62,16 @@ export default async function SeriesPage({
     <PageTransition>
       <main className="page-content" id="main-content">
         <JsonLd data={jsonLd} />
-        <Link
-          className="text-muted-foreground inline-flex items-center gap-2 text-sm underline underline-offset-4"
-          href="/series"
-          transitionTypes={["nav-back"]}
-        >
-          <IconArrowLeft aria-hidden="true" className="size-4" /> Back to series
-        </Link>
-        <header
-          className="mt-6 max-w-2xl pb-8 sm:pb-10"
+        <div
           data-pagefind-body
           data-pagefind-meta={`url:${getSeriesPath(series)}`}
         >
-          <h1
-            className="text-4xl font-semibold tracking-tight sm:text-5xl"
-            data-pagefind-meta="title"
-          >
-            {series.name}
-          </h1>
-          <p
-            className="text-muted-foreground mt-4 text-lg leading-relaxed"
-            data-pagefind-meta="summary"
-          >
-            {series.description}
-          </p>
-          <p
-            className="text-muted-foreground mt-3 text-sm"
-            data-pagefind-ignore
-          >
-            {series.posts.length} {series.posts.length === 1 ? "note" : "notes"}
-          </p>
-        </header>
+          <PageHeading
+            title={series.name}
+            description={series.description}
+            detail={`${series.posts.length} ${series.posts.length === 1 ? "article" : "articles"}`}
+          />
+        </div>
         <section aria-labelledby="series-notes">
           <h2 className="sr-only" id="series-notes">
             Notes in reading order
@@ -100,7 +79,7 @@ export default async function SeriesPage({
           {series.posts.length > 0 ? (
             <BlogList entries={series.posts} ordered />
           ) : (
-            <p className="text-muted-foreground">No notes yet.</p>
+            <EmptyArticles />
           )}
         </section>
       </main>

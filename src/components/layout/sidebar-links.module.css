@@ -1,50 +1,19 @@
 @layer components {
-  .socialLinks,
-  .secondaryLinks {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-  }
-
   .socialLinks {
-    gap: 8px;
-    margin-left: -6px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
   }
-
   .socialLinks a {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 32px;
-    height: 32px;
-    border-radius: 6px;
+    width: 40px;
+    height: 40px;
+    border-radius: 4px;
   }
-
   .socialLinks a:hover {
     color: var(--primary);
     background: var(--muted);
-  }
-
-  .secondaryLinks {
-    gap: 20px;
-  }
-
-  .secondaryLinks a,
-  .unavailable {
-    display: inline-flex;
-    align-items: center;
-    min-height: 24px;
-  }
-
-  .secondaryLinks a:hover,
-  .secondaryLinks a[aria-current="page"] {
-    color: var(--primary);
-    text-decoration: underline;
-    text-underline-offset: 4px;
-  }
-
-  .unavailable {
-    opacity: 0.5;
-    cursor: default;
   }
 }

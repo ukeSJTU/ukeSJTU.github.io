@@ -4,7 +4,7 @@ title: "Reading Code Radio's API: From Raw Responses to a Reusable Client Model"
 summary: "A practical tour of Code Radio's REST and SSE payloads, with a small normalization layer you can use to build your own player, plugin, or status UI."
 publishedAt: "2025-12-19"
 updatedAt: "2026-09-20"
-topics:
+tags:
   - "apis"
 ---
 

@@ -7,10 +7,10 @@ import {
 import { getProjectUrl, projectsWithArticles } from "@/lib/content/projects";
 import { getSeriesUrl, seriesWithPosts } from "@/lib/content/series";
 import {
-  getTopicsModifiedDate,
-  getTopicUrl,
-  topicsWithPosts,
-} from "@/lib/content/topics";
+  getTagsModifiedDate,
+  getTagUrl,
+  tagsWithPosts,
+} from "@/lib/content/tags";
 import { absoluteUrl, siteConfig } from "@/lib/site/config";
 
 export const dynamic = "force-static";
@@ -36,6 +36,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.9,
     },
     {
+      url: absoluteUrl("/resume"),
+      changeFrequency: "monthly",
+      priority: 0.6,
+    },
+    {
       url: absoluteUrl("/about"),
       changeFrequency: "monthly",
       priority: 0.6,
@@ -46,8 +51,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.8,
     },
     {
-      url: absoluteUrl("/topics"),
-      lastModified: getTopicsModifiedDate(),
+      url: absoluteUrl("/tags"),
+      lastModified: getTagsModifiedDate(),
       changeFrequency: "weekly",
       priority: 0.8,
     },
@@ -61,10 +66,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "weekly" as const,
       priority: 0.7,
     })),
-    ...topicsWithPosts.map((topic) => ({
-      url: getTopicUrl(topic),
-      lastModified: topic.posts.at(0)
-        ? getPostModifiedDateString(topic.posts[0])
+    ...tagsWithPosts.map((tag) => ({
+      url: getTagUrl(tag),
+      lastModified: tag.posts.at(0)
+        ? getPostModifiedDateString(tag.posts[0])
         : undefined,
       changeFrequency: "weekly" as const,
       priority: 0.7,

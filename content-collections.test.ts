@@ -21,7 +21,7 @@ slug: test-note
 title: Test note
 summary: A test note
 publishedAt: "2026-01-01"
-topics: [markdown]
+tags: [markdown]
 ---
 ${content}`;
 }
@@ -44,7 +44,7 @@ async function buildContent(files: Record<string, string>) {
   );
 
   for (const [path, content] of Object.entries({
-    "topics/markdown.yaml": "slug: markdown\nname: Markdown\n",
+    "tags/markdown.yaml": "slug: markdown\nname: Markdown\n",
     ...files,
   })) {
     const destination = join(directory, "content", path);
@@ -105,17 +105,17 @@ test.each([
   expect(html).toContain('aria-label="Copy code"');
 });
 
-test("notes referencing an unknown topic are rejected with a useful diagnostic", async () => {
+test("notes referencing an unknown tag are rejected with a useful diagnostic", async () => {
   const { allBlogs, errors } = await buildContent({
-    "blog/unknown-topic.md": note("A note").replace(
-      "topics: [markdown]",
-      "topics: [missing-topic]",
+    "blog/unknown-tag.md": note("A note").replace(
+      "tags: [markdown]",
+      "tags: [missing-tag]",
     ),
   });
 
   expect(allBlogs).toEqual([]);
   expect(errors).toEqual([
-    expect.stringContaining('Unknown topics in "unknown-topic": missing-topic'),
+    expect.stringContaining('Unknown tags in "unknown-tag": missing-tag'),
   ]);
 });
 
@@ -128,12 +128,12 @@ test("duplicate blog slugs fail the content build before any page imports them",
   ).rejects.toThrow('Duplicate blog slug "test-note"');
 });
 
-test("topic slugs must be unique even when the source filenames differ", async () => {
+test("tag slugs must be unique even when the source filenames differ", async () => {
   await expect(
     buildContent({
-      "topics/another-file.yaml": "slug: markdown\nname: Another name\n",
+      "tags/another-file.yaml": "slug: markdown\nname: Another name\n",
     }),
-  ).rejects.toThrow('Duplicate topic slug "markdown"');
+  ).rejects.toThrow('Duplicate tag slug "markdown"');
 });
 
 test("duplicate project slugs fail the content build even without articles", async () => {
@@ -147,6 +147,16 @@ test("duplicate project slugs fail the content build even without articles", asy
   ).rejects.toThrow('Duplicate project slug "same-project"');
 });
 
+test("tags define article taxonomy without accepting the retired topics field", async () => {
+  const { allBlogs, errors } = await buildContent({
+    "tags/markdown.yaml": "slug: markdown\nname: Markdown\n",
+    "blog/tagged.md": note("A tagged note"),
+  });
+  expect(errors).toEqual([]);
+  expect(allBlogs[0]).toMatchObject({ slug: "test-note", tags: ["markdown"] });
+  expect(allBlogs[0]).not.toHaveProperty("topics");
+});
+
 test("projects retain their public slug independently of the source filename", async () => {
   const { allProjects, errors } = await buildContent({
     "projects/nested/renamed.md":
@@ -157,6 +167,7 @@ test("projects retain their public slug independently of the source filename", a
   expect(allProjects[0]).toMatchObject({
     slug: "stable-project",
     hasArticle: true,
+    tableOfContents: [{ depth: 2, id: "details", text: "Details" }],
   });
 });
 
@@ -166,7 +177,7 @@ const seriesDefinition =
 function seriesNote(slug: string, series: string) {
   return note("A series note")
     .replace("slug: test-note", `slug: ${slug}`)
-    .replace("topics: [markdown]", `topics: [markdown]\nseries: ${series}`);
+    .replace("tags: [markdown]", `tags: [markdown]\nseries: ${series}`);
 }
 
 test("series are independent definitions, including ones without posts", async () => {

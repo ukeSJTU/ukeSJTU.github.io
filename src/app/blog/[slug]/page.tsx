@@ -1,26 +1,25 @@
-import { IconArrowLeft } from "@tabler/icons-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { JsonLd } from "@/components/json-ld";
-import { MarkdownRenderer } from "@/components/markdown/markdown-renderer";
+import { ReadingLayout } from "@/components/markdown/reading-layout";
 import { PageTransition } from "@/components/page-transition";
 import {
+  formatPostDate,
   getPostBySlug,
   getPostModifiedDate,
   getPostModifiedDateString,
   getPostPath,
+  getPostUpdatedDateString,
   parsePostDate,
   sortedBlogPosts,
 } from "@/lib/content/blog";
 import { getPostSeriesNavigation, getSeriesPath } from "@/lib/content/series";
-import { siteConfig } from "@/lib/site/config";
+import { getTagBySlug, getTagPath } from "@/lib/content/tags";
 import { createPageMetadata } from "@/lib/site/metadata";
 import { blogPostingSchema } from "@/lib/site/structured-data";
 import { BlogComments } from "./_components/blog-comments";
 import { BlogSeriesNavigation } from "./_components/blog-series-navigation";
-import { BlogTableOfContents } from "./_components/blog-table-of-contents";
-import styles from "./page.module.css";
 
 export function generateStaticParams() {
   return sortedBlogPosts.map((post) => ({ slug: post.slug }));
@@ -69,78 +68,77 @@ export default async function BlogPostPage({
     { ...post, modifiedAt: getPostModifiedDateString(post) },
     postPath,
   );
-  const formattedPublishedAt = new Intl.DateTimeFormat(siteConfig.language, {
-    dateStyle: "long",
-    timeZone: "Asia/Shanghai",
-  }).format(parsePostDate(post.publishedAt));
+  const updatedAt = getPostUpdatedDateString(post);
 
   return (
     <PageTransition>
       <main className="page-content" id="main-content">
         <JsonLd data={jsonLd} />
-        <Link
-          className="text-muted-foreground inline-flex items-center gap-2 text-sm underline underline-offset-4"
-          href="/blog"
-          transitionTypes={["nav-back"]}
-        >
-          <IconArrowLeft aria-hidden="true" className="size-4" /> Back to blog
-        </Link>
-
-        <article
-          className="mt-6"
-          data-pagefind-body
-          data-pagefind-meta={`url:${postPath}`}
-        >
-          <header className="border-border border-b pb-6">
-            {seriesNavigation && (
-              <p
-                className="text-muted-foreground mb-4 text-sm"
-                data-pagefind-ignore
-              >
-                Part of{" "}
-                <Link
-                  className="text-primary underline underline-offset-4"
-                  href={getSeriesPath(seriesNavigation.series)}
-                  transitionTypes={["nav-back"]}
+        <article data-pagefind-body data-pagefind-meta={`url:${postPath}`}>
+          <ReadingLayout
+            html={post.html}
+            tableOfContents={post.tableOfContents}
+            header={
+              <>
+                <div className="text-muted-foreground flex flex-wrap items-baseline gap-x-5 gap-y-2 text-xs">
+                  <time dateTime={post.publishedAt}>
+                    Published {formatPostDate(post.publishedAt)}
+                  </time>
+                  {updatedAt && (
+                    <time dateTime={updatedAt}>
+                      Updated {formatPostDate(updatedAt)}
+                    </time>
+                  )}
+                  <a
+                    className="text-primary ml-auto underline underline-offset-4"
+                    href="#comments"
+                    data-pagefind-ignore
+                  >
+                    Comments
+                  </a>
+                </div>
+                <h1 data-pagefind-meta="title">{post.title}</h1>
+                <p data-pagefind-meta="summary">{post.summary}</p>
+                <div
+                  className="text-muted-foreground mt-6 space-y-2 text-sm"
+                  data-pagefind-ignore
                 >
-                  {seriesNavigation.series.name}
-                </Link>
-              </p>
+                  {seriesNavigation && (
+                    <p>
+                      Series:{" "}
+                      <Link
+                        className="text-primary underline underline-offset-4"
+                        href={getSeriesPath(seriesNavigation.series)}
+                      >
+                        {seriesNavigation.series.name}
+                      </Link>
+                    </p>
+                  )}
+                  <p className="flex flex-wrap gap-x-3 gap-y-1">
+                    Tags:{" "}
+                    {post.tags.map((slug) => {
+                      const tag = getTagBySlug(slug);
+                      return tag ? (
+                        <Link
+                          className="text-primary underline underline-offset-4"
+                          href={getTagPath(tag)}
+                          key={slug}
+                        >
+                          {tag.name}
+                        </Link>
+                      ) : null;
+                    })}
+                  </p>
+                </div>
+              </>
+            }
+          >
+            {seriesNavigation && (
+              <BlogSeriesNavigation navigation={seriesNavigation} />
             )}
-            <h1
-              className="text-4xl font-semibold sm:text-5xl"
-              data-pagefind-meta="title"
-            >
-              {post.title}
-            </h1>
-            <p
-              className="text-muted-foreground mt-4 text-lg"
-              data-pagefind-meta="summary"
-            >
-              {post.summary}
-            </p>
-            <time
-              className="text-muted-foreground mt-3 block text-sm"
-              data-pagefind-meta="date[datetime]"
-              dateTime={post.publishedAt}
-            >
-              Published on {formattedPublishedAt}
-            </time>
-          </header>
-
-          <div className={styles.contentLayout}>
-            <MarkdownRenderer className={styles.articleBody} html={post.html} />
-            <BlogTableOfContents
-              className={styles.tableOfContents}
-              items={post.tableOfContents}
-            />
-          </div>
+            <BlogComments />
+          </ReadingLayout>
         </article>
-
-        {seriesNavigation && (
-          <BlogSeriesNavigation navigation={seriesNavigation} />
-        )}
-        <BlogComments />
       </main>
     </PageTransition>
   );

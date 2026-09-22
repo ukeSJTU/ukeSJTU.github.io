@@ -1,10 +1,20 @@
 import { siteConfig } from "@/lib/site/config";
 import styles from "./site-footer.module.css";
 
-export function SiteFooter({ basePath = "" }: { basePath?: string }) {
+export function SiteFooter() {
   return (
     <footer className={styles.footer}>
-      <p className="flex flex-wrap items-center gap-x-4 gap-y-1">
+      <div className={styles.divider} aria-hidden="true">
+        <svg aria-hidden="true" fill="none" viewBox="0 0 48 30">
+          <path
+            d="m2 28 15-19 7 4 7-4 15 19M17 9l7 4 7-4M22 5l-1-3m6 3 2-3"
+            stroke="currentColor"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      </div>
+      <div className={styles.content}>
         <span>
           © {new Date().getFullYear()} {siteConfig.author.name}
         </span>
@@ -15,16 +25,6 @@ export function SiteFooter({ basePath = "" }: { basePath?: string }) {
         >
           Content: CC BY 4.0
         </a>
-      </p>
-      <nav aria-label="Footer navigation">
-        <a
-          href={siteConfig.author.url}
-          rel="noopener noreferrer"
-          target="_blank"
-        >
-          GitHub
-        </a>
-        <a href={`${basePath}/rss.xml`}>RSS</a>
         <a
           href={siteConfig.sourceUrl}
           rel="noopener noreferrer"
@@ -32,7 +32,7 @@ export function SiteFooter({ basePath = "" }: { basePath?: string }) {
         >
           Source
         </a>
-      </nav>
+      </div>
     </footer>
   );
 }

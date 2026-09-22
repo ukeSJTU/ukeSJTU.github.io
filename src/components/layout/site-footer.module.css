@@ -1,26 +1,35 @@
 @layer components {
   .footer {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px 24px;
     width: 100%;
     max-width: 1000px;
     margin: auto auto 0;
-    padding-top: 16px;
-    border-top: 1px solid var(--border);
     color: var(--muted-foreground);
-    font-size: 13px;
-    line-height: 1.6;
+    font-size: 12px;
+    line-height: 1.7;
   }
-
-  .footer nav {
+  .divider {
     display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
+    align-items: flex-end;
+    gap: 14px;
+    margin-bottom: 18px;
   }
-
+  .divider::before,
+  .divider::after {
+    content: "";
+    flex: 1;
+    border-top: 1px solid var(--border);
+  }
+  .divider svg {
+    width: 36px;
+    height: 24px;
+    margin-bottom: -1px;
+  }
+  .content {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 6px 24px;
+  }
   .footer a:hover {
     color: var(--primary);
     text-decoration: underline;

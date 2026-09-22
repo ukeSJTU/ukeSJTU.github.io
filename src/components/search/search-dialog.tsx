@@ -69,7 +69,7 @@ export function SearchDialog({
         ? "Searching…"
         : normalizedQuery && !composing
           ? "No results found."
-          : "Search notes and pages.";
+          : "Type to search notes and pages.";
   const emptyHint =
     status === "error"
       ? "Check your connection and try again."
@@ -77,7 +77,7 @@ export function SearchDialog({
         ? ""
         : normalizedQuery && !composing
           ? "Try a different word or a shorter phrase."
-          : "Type a word or phrase in English or Chinese.";
+          : "";
 
   return (
     <CommandDialog
@@ -173,7 +173,7 @@ export function SearchDialog({
                   }}
                   variant="outline"
                 >
-                  Try again
+                  Retry
                 </Button>
               ) : null}
             </motion.div>
@@ -222,6 +222,14 @@ export function SearchDialog({
                     value={result.id}
                   >
                     <div className="flex min-w-0 flex-1 flex-col gap-1.5">
+                      <span
+                        className={cn(
+                          styles.secondary,
+                          "text-[10px] tracking-wider uppercase",
+                        )}
+                      >
+                        {result.type}
+                      </span>
                       <span className="text-base font-medium leading-snug">
                         {result.title}
                       </span>
@@ -240,11 +248,6 @@ export function SearchDialog({
                         // biome-ignore lint/security/noDangerouslySetInnerHtml: Pagefind escapes indexed HTML before inserting its own mark tags.
                         dangerouslySetInnerHTML={{ __html: result.excerpt }}
                       />
-                      {result.date ? (
-                        <span className={cn(styles.secondary, "text-xs")}>
-                          {result.date}
-                        </span>
-                      ) : null}
                     </div>
                   </MotionCommandItem>
                 ))}

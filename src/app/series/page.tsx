@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import styles from "@/components/content-list.module.css";
 import { JsonLd } from "@/components/json-ld";
+import { PageHeading } from "@/components/page-heading";
 import { PageTransition } from "@/components/page-transition";
 import {
   getSeriesPath,
@@ -10,7 +12,6 @@ import {
 import { siteConfig } from "@/lib/site/config";
 import { createPageMetadata } from "@/lib/site/metadata";
 import { schemaEntity, siteAuthor } from "@/lib/site/structured-data";
-import styles from "./page.module.css";
 
 export const metadata: Metadata = createPageMetadata({
   title: "Series",
@@ -37,32 +38,23 @@ export default function SeriesIndexPage() {
     <PageTransition>
       <main className="page-content" id="main-content">
         <JsonLd data={jsonLd} />
-        <header className="max-w-2xl pb-8 sm:pb-10">
-          <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl">
-            Series
-          </h1>
-          <p className="text-muted-foreground mt-4 text-lg leading-relaxed">
-            Notes connected by a theme, arranged in a reading order.
-          </p>
-        </header>
+        <PageHeading title="Series" />
         <ul className={styles.list}>
           {seriesWithPosts.map((series) => (
-            <li key={series.slug}>
+            <li className={styles.item} key={series.slug}>
               <Link
                 className={styles.link}
                 href={getSeriesPath(series)}
                 transitionTypes={["nav-forward"]}
               >
-                <div className="flex flex-col gap-2 sm:flex-row sm:items-baseline sm:justify-between sm:gap-6">
-                  <h2 className="text-xl font-semibold">{series.name}</h2>
-                  <span className="text-muted-foreground shrink-0 text-sm">
+                <div className={styles.row}>
+                  <h2 className={styles.title}>{series.name}</h2>
+                  <span className={styles.detail}>
                     {series.posts.length}{" "}
-                    {series.posts.length === 1 ? "note" : "notes"}
+                    {series.posts.length === 1 ? "article" : "articles"}
                   </span>
                 </div>
-                <p className="text-muted-foreground mt-2 leading-relaxed">
-                  {series.description}
-                </p>
+                <p className={styles.description}>{series.description}</p>
               </Link>
             </li>
           ))}

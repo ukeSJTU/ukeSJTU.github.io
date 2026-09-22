@@ -1,54 +1,60 @@
 import Link from "next/link";
 import {
-  getPostModifiedDate,
-  getPostModifiedDateString,
+  formatPostDate,
   getPostPath,
+  getPostUpdatedDateString,
   type Post,
 } from "@/lib/content/blog";
-import { siteConfig } from "@/lib/site/config";
 import { cn } from "@/lib/utils";
-import styles from "./blog-list.module.css";
-
-const dateFormatter = new Intl.DateTimeFormat(siteConfig.language, {
-  dateStyle: "medium",
-  timeZone: "Asia/Shanghai",
-});
+import styles from "./content-list.module.css";
 
 export function BlogList({
   entries,
   ordered = false,
+  compact = false,
 }: {
   entries: Post[];
   ordered?: boolean;
+  compact?: boolean;
 }) {
   const List = ordered ? "ol" : "ul";
-
   return (
-    <List className={styles.list}>
-      {entries.map((post) => (
-        <li key={post.slug}>
-          <Link
-            className={cn(styles.link, "group")}
-            href={getPostPath(post)}
-            transitionTypes={["nav-forward"]}
-          >
-            <div className="flex flex-col gap-2 sm:flex-row sm:items-baseline sm:justify-between sm:gap-6">
-              <h3 className="text-xl font-semibold underline-offset-4 group-hover:underline">
-                {post.title}
-              </h3>
-              <time
-                className="text-muted-foreground shrink-0 text-sm tabular-nums"
-                dateTime={getPostModifiedDateString(post)}
-              >
-                {dateFormatter.format(getPostModifiedDate(post))}
-              </time>
-            </div>
-            <p className="text-muted-foreground mt-2 leading-relaxed">
-              {post.summary}
-            </p>
-          </Link>
-        </li>
-      ))}
+    <List
+      className={cn(
+        styles.list,
+        ordered && styles.ordered,
+        compact && styles.compact,
+      )}
+    >
+      {entries.map((post) => {
+        const updated = getPostUpdatedDateString(post);
+        const date = updated ?? post.publishedAt;
+        return (
+          <li className={styles.item} key={post.slug}>
+            <Link
+              className={styles.link}
+              href={getPostPath(post)}
+              transitionTypes={["nav-forward"]}
+            >
+              <div>
+                <div className={styles.row}>
+                  <h2 className={styles.title}>{post.title}</h2>
+                  {!ordered && (
+                    <time className={styles.detail} dateTime={date}>
+                      {updated ? "Updated" : "Published"} {formatPostDate(date)}
+                    </time>
+                  )}
+                </div>
+                {!compact && (
+                  <p className={cn(styles.description, styles.clamped)}>
+                    {post.summary}
+                  </p>
+                )}
+              </div>
+            </Link>
+          </li>
+        );
+      })}
     </List>
   );
 }

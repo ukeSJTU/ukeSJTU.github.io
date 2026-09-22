@@ -26,16 +26,16 @@ function assertUniqueSlugs(
   }
 }
 
-const topics = defineCollection({
-  name: "topics",
-  directory: "content/topics",
+const tags = defineCollection({
+  name: "tags",
+  directory: "content/tags",
   include: "**/*.yaml",
   parser: "yaml",
   schema: z.object({
     slug: slugSchema,
     name: z.string().trim().min(1),
   }),
-  onSuccess: (entries) => assertUniqueSlugs("topic", entries),
+  onSuccess: (entries) => assertUniqueSlugs("tag", entries),
 });
 
 const series = defineCollection({
@@ -61,12 +61,12 @@ const blog = defineCollection({
     summary: z.string(),
     publishedAt: z.iso.date(),
     updatedAt: z.iso.date().optional(),
-    topics: z
+    tags: z
       .array(slugSchema)
       .min(1)
       .max(3)
       .refine((values) => new Set(values).size === values.length, {
-        error: "Topics must not contain duplicates",
+        error: "Tags must not contain duplicates",
       }),
     series: z
       .object({
@@ -77,16 +77,14 @@ const blog = defineCollection({
     content: z.string(),
   }),
   transform: async (post, context) => {
-    const knownTopicSlugs = new Set(
-      context.documents(topics).map((topic) => topic.slug),
+    const knownTagSlugs = new Set(
+      context.documents(tags).map((tag) => tag.slug),
     );
-    const unknownTopicSlugs = post.topics.filter(
-      (topic) => !knownTopicSlugs.has(topic),
-    );
+    const unknownTagSlugs = post.tags.filter((tag) => !knownTagSlugs.has(tag));
 
-    if (unknownTopicSlugs.length > 0) {
+    if (unknownTagSlugs.length > 0) {
       throw new Error(
-        `Unknown topics in "${post._meta.path}": ${unknownTopicSlugs.join(", ")}`,
+        `Unknown tags in "${post._meta.path}": ${unknownTagSlugs.join(", ")}`,
       );
     }
 
@@ -143,18 +141,20 @@ const projects = defineCollection({
   }),
   transform: async (project, context) => {
     const hasArticle = project.content.trim().length > 0;
+    const compiled = hasArticle
+      ? await compileMarkdown(context, project)
+      : undefined;
 
     return {
       ...project,
       hasArticle,
-      html: hasArticle
-        ? (await compileMarkdown(context, project)).html
-        : undefined,
+      html: compiled?.html,
+      tableOfContents: compiled?.tableOfContents ?? [],
     };
   },
   onSuccess: (entries) => assertUniqueSlugs("project", entries),
 });
 
 export default defineConfig({
-  content: [topics, series, blog, projects],
+  content: [tags, series, blog, projects],
 });

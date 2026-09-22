@@ -31,6 +31,21 @@ export function getPostModifiedDateString(post: Post): string {
   return post.updatedAt ?? post.publishedAt;
 }
 
+export function getPostUpdatedDateString(
+  post: Pick<Post, "publishedAt" | "updatedAt">,
+): string | undefined {
+  return post.updatedAt && post.updatedAt > post.publishedAt
+    ? post.updatedAt
+    : undefined;
+}
+
+export function formatPostDate(date: string): string {
+  return new Intl.DateTimeFormat("en", {
+    dateStyle: "medium",
+    timeZone: "UTC",
+  }).format(parsePostDate(date));
+}
+
 export const sortedBlogPosts = [...posts].sort(
   (left, right) =>
     getPostModifiedDate(right).getTime() - getPostModifiedDate(left).getTime(),

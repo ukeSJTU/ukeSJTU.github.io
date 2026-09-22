@@ -3,6 +3,7 @@ import { IconSearch } from "@tabler/icons-react";
 import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { openSearchEvent } from "./search-trigger";
 
 const SearchDialog = dynamic(
   () =>
@@ -41,8 +42,19 @@ export function SiteSearch({ basePath = "" }: { basePath?: string }) {
       setOpen((current) => !current);
     };
 
+    function handleOpen(event: Event) {
+      const origin = (event as CustomEvent<unknown>).detail;
+      returnFocusRef.current =
+        origin instanceof HTMLElement ? origin : triggerRef.current;
+      setHasOpened(true);
+      setOpen(true);
+    }
     document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
+    document.addEventListener(openSearchEvent, handleOpen);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      document.removeEventListener(openSearchEvent, handleOpen);
+    };
   }, []);
 
   return (
@@ -52,19 +64,20 @@ export function SiteSearch({ basePath = "" }: { basePath?: string }) {
         aria-haspopup="dialog"
         aria-expanded={open}
         aria-keyshortcuts="Control+k Meta+k"
-        className="size-10"
+        className="text-muted-foreground w-full justify-start gap-2 font-normal"
         onClick={() => {
           returnFocusRef.current = triggerRef.current;
           setHasOpened(true);
           setOpen(true);
         }}
         ref={triggerRef}
-        size="icon-lg"
+        size="lg"
         title="Search site (Ctrl/⌘ K)"
         type="button"
-        variant="ghost"
+        variant="outline"
       >
         <IconSearch aria-hidden="true" data-icon="inline-start" />
+        Search <kbd className="ml-auto text-[10px]">⌘ / Ctrl K</kbd>
       </Button>
 
       {hasOpened ? (

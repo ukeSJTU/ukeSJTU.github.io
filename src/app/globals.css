@@ -124,7 +124,7 @@
   --secondary: #403e41;
   --secondary-foreground: #fcfcfa;
   --muted: #403e41;
-  --muted-foreground: #939293;
+  --muted-foreground: #b3aeb5;
   --accent: #5b595c;
   --accent-foreground: #fcfcfa;
   --destructive: #ff6188;
@@ -201,5 +201,9 @@
     max-width: 1000px;
     margin-inline: auto;
     overflow-wrap: anywhere;
+  }
+
+  .reading-page {
+    max-width: 720px;
   }
 }

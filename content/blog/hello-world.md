@@ -3,7 +3,7 @@ slug: "hello-world"
 title: "Hello, Markdown 世界"
 summary: "CommonMark、GFM、数学公式与中文排版的综合测试页。"
 publishedAt: "2026-09-19"
-topics:
+tags:
   - "markdown"
 ---
 
