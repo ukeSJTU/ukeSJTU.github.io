@@ -11,12 +11,12 @@ test("page metadata gives canonical and social previews the same page identity",
   expect(metadata).toMatchObject({
     title: "About",
     description: "About this garden",
-    alternates: { canonical: "https://ukesjtu.github.io/about" },
+    alternates: { canonical: "https://ukeraser.is-a.dev/about" },
     openGraph: {
       type: "website",
       title: "About",
       description: "About this garden",
-      url: "https://ukesjtu.github.io/about",
+      url: "https://ukeraser.is-a.dev/about",
     },
     twitter: {
       card: "summary",
@@ -39,13 +39,13 @@ test("article metadata retains publication dates and authors alongside shared de
 
   expect(metadata.openGraph).toMatchObject({
     type: "article",
-    url: "https://ukesjtu.github.io/blog/a-note",
+    url: "https://ukeraser.is-a.dev/blog/a-note",
     title: "A note",
     publishedTime: "2026-01-01T00:00:00.000Z",
     modifiedTime: "2026-02-01T00:00:00.000Z",
     authors: ["ukeraser"],
   });
   expect(metadata.alternates?.types).toEqual({
-    "application/rss+xml": "https://ukesjtu.github.io/rss.xml",
+    "application/rss+xml": "https://ukeraser.is-a.dev/rss.xml",
   });
 });

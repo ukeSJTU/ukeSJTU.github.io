@@ -13,19 +13,19 @@ test("article listings and detail markup identify the same entity and preserve a
 
   expect(reference).toEqual({
     "@type": "BlogPosting",
-    "@id": "https://ukesjtu.github.io/blog/a-note#article",
-    url: "https://ukesjtu.github.io/blog/a-note",
+    "@id": "https://ukeraser.is-a.dev/blog/a-note#article",
+    url: "https://ukeraser.is-a.dev/blog/a-note",
     headline: "A note",
   });
   expect(detail).toMatchObject({
     "@context": "https://schema.org",
-    "@id": "https://ukesjtu.github.io/blog/a-note#article",
-    mainEntityOfPage: "https://ukesjtu.github.io/blog/a-note",
+    "@id": "https://ukeraser.is-a.dev/blog/a-note#article",
+    mainEntityOfPage: "https://ukeraser.is-a.dev/blog/a-note",
     headline: "A note",
     description: "A summary",
     datePublished: "2026-01-01",
     dateModified: "2026-02-01",
-    isPartOf: { "@id": "https://ukesjtu.github.io/#website" },
+    isPartOf: { "@id": "https://ukeraser.is-a.dev/#website" },
     author: { "@type": "Person", name: "ukeraser" },
   });
 });

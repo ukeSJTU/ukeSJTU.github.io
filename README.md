@@ -1,6 +1,6 @@
 # ukeraser's website
 
-The source code for my personal website, [ukesjtu.github.io](https://ukesjtu.github.io), where I share technical notes, experiments and projects.
+The source code for my personal website, [ukeraser.is-a.dev](https://ukeraser.is-a.dev), where I share technical notes, experiments and projects.
 
 This repository is open source, but it is **a personal website, not a template or theme**. The code and content are tailored to my own use rather than designed to be cloned and deployed unchanged. You are welcome to explore the source, learn from it and borrow ideas for your own projects under the licenses below.
 

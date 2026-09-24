@@ -4,7 +4,7 @@ This file is for AI assistants working with the owner of this repository. `READM
 
 ## What this repository is
 
-This is **ukeraser's personal website**, published at <https://ukesjtu.github.io>. It contains technical notes, learning experiments and software projects. It is an open-source personal site, not a reusable theme or a starter template.
+This is **ukeraser's personal website**, published at <https://ukeraser.is-a.dev>. It contains technical notes, learning experiments and software projects. It is an open-source personal site, not a reusable theme or a starter template.
 
 - **Application:** Next.js App Router, React and TypeScript, statically exported to GitHub Pages. Preserve compatibility with static export; do not introduce request-time server features without discussing the deployment implications.
 - **Presentation:** Tailwind CSS, CSS Modules and shadcn/ui built on Base UI.

@@ -1,4 +1,4 @@
 {
-  "origins": ["https://ukesjtu.github.io"],
+  "origins": ["https://ukeraser.is-a.dev", "https://ukesjtu.github.io"],
   "originsRegex": ["http://localhost:[0-9]+"]
 }
